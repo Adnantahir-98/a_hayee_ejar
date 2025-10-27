@@ -31,7 +31,6 @@ export default function MainNavbar() {
             alt="Main Logo"
             width={120}
             height={40}
-            priority
             style={{ objectFit: 'contain' }}
           />
         </Navbar.Brand>

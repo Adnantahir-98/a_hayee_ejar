@@ -70,7 +70,7 @@ body {
 
 .hero-homg-bg-img {
   background: url('/home/slider.png');
-  height: 80vh;
+  height: 704px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -132,7 +132,7 @@ body {
 
 .what-new-bg {
   background: url('/home/property1.jpg');
-  height: 70vh;
+  height: 626px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -140,7 +140,7 @@ body {
 
 .promote-section-bg {
   background: url('/images/promote-section.png');
-  height: 70vh;
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

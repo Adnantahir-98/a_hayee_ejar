@@ -205,7 +205,7 @@ const Page = () => {
 
       <section style={{ backgroundColor: '#383838ff' }}>
         <Container>
-          <h1 className='display-1 fw-bolder mt-5 font-bold text-white'>Here's what's new</h1>
+          <h1 className='display-1 fw-bolder mt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
           <h3 className='text-white'>more here &gt; </h3>
 
           <Row className='what-new-bg m-auto rounded-lg my-5'>
@@ -258,7 +258,7 @@ const Page = () => {
               <span style={{ fontSize: '110px' }}>Promote</span> <br />
               <span>Your estate today!</span>
             </h1>
-            <Button variant="warning" className='mt-4 w-25 m-auto fw-bold font-bold' style={{ marginBottom: '72%', fontSize: '40px', marginLeft: 25, marginRight: 25 }} onClick={handleShow}>Promote Here</Button>
+            <Button variant="warning" className='mt-4 w-25 m-auto fw-bold font-bold mb-5' style={{ marginBottom: '72%', fontSize: '40px', marginLeft: 25, marginRight: 25 }} onClick={handleShow}>Promote Here</Button>
           </Row>
         </Container>
       </section>
