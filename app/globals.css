@@ -169,7 +169,7 @@ body {
 
 
 .browse-rentsec {
-  background: url('/images/promote-section.png') center / cover no-repeat;
+  background: url('/images/browse-section.png') center / cover no-repeat;
   position: relative;
 }
 
@@ -190,7 +190,7 @@ body {
 .brdrd-imges {
   border: 8px solid #2c2c2cda !important;
   border-radius: 9px;
-  padding: 50px 0;
+  /* padding: 50px 0; */
   background-color: rgba(255, 255, 255, 0.6);
 }
 
@@ -214,4 +214,10 @@ body {
     justify-content: center;
     gap: 2rem;
   }
+}
+
+@media (min-width: 1200px) {
+    .display-1 {
+        font-size: 7rem;
+    }
 }

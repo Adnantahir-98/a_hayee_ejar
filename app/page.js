@@ -175,8 +175,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/apartments-black.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Apartments</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Apartments</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -184,8 +184,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Full Floors</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Full Floors</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
                         Explore
                       </Button>
                     </div>
@@ -193,8 +193,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Offices</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Offices</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
                         Explore
                       </Button>
                     </div>
@@ -202,8 +202,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/villa.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Villas</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Villas</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
                         Explore
                       </Button>
                     </div>
@@ -211,8 +211,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Stores</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Stores</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
                         Explore
                       </Button>
                     </div>
@@ -220,8 +220,8 @@ const Page = () => {
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
-                      <h1 className="text-dark mt-0 pt-0">Storages</h1>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                      <h2 className="text-dark mt-0 pt-0">Storages</h2>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
                         Explore
                       </Button>
                     </div>
@@ -231,7 +231,8 @@ const Page = () => {
 
               <Col
                 md={6}
-                className="d-flex flex-column justify-content-between align-items-center text-center browse-text-col my-5 py-5"
+                className="d-flex flex-column justify-content-between align-items-center text-center browse-text-col my-5 py-5 px-5"
+                style={{paddingTop:'180px !important',paddingBottom:'180px !important'}}
               >
                 <h1 className="display-1 fw-bolder">Browse.</h1>
                 <h1 className="display-1 fw-bolder">Rent.</h1>
