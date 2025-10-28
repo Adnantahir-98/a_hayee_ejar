@@ -166,46 +166,89 @@ const Page = () => {
       </section>
 
 
-      <section className='mt-0 pt-0' style={{ background: 'rgba(0, 255, 255, 0.5)' }}>
-        <Container>
-          <Row className='mt-5'>
-            <Col md={6} className='mt-5 pt-5'>
-              <Row>
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
+      <section className="browse-rentsec position-relative">
+        <div className="overlay">
+          <Container>
+            <Row className="align-items-stretch">
+              <Col md={6} className="my-5 py-5">
+                <Row>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/apartments-black.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Apartments</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Full Floors</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Offices</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/villa.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Villas</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Stores</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="brdrd-imges text-center my-3">
+                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <h1 className="text-dark mt-0 pt-0">Storages</h1>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 23 }}>
+                        Explore
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
 
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
+              <Col
+                md={6}
+                className="d-flex flex-column justify-content-between align-items-center text-center browse-text-col my-5 py-5"
+              >
+                <h1 className="display-1 fw-bolder">Browse.</h1>
+                <h1 className="display-1 fw-bolder">Rent.</h1>
+                <h1 className="display-1 fw-bolder">Settle In!</h1>
+              </Col>
+            </Row>
+          </Container>
+        </div>
 
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
-                <Col md={6}>
-                  <img src="/logo.svg" />
-                </Col>
-              </Row>
-            </Col>
-            <Col md={6}>
-              <h1 className="text-center display-1 fw-bolder mt-5 pt-5">Browse.</h1>
-              <h1 className="text-center display-1 fw-bolder mt-5 pt-5">Rent.</h1>
-              <h1 className="text-center display-1 fw-bolder mt-5 pt-5">Settle In!</h1>
-            </Col>
-          </Row>
-        </Container>
+        <hr className="hr-line-browse" />
       </section>
+
 
 
       <section style={{ backgroundColor: '#383838ff' }}>
         <Container>
-          <h1 className='display-1 fw-bolder mt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
+          <h1 className='display-1 fw-bolder pt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
           <h3 className='text-white'>more here &gt; </h3>
 
           <Row className='what-new-bg m-auto rounded-lg my-5'>
@@ -253,7 +296,7 @@ const Page = () => {
           </Row>
 
 
-          <Row className='promote-section-bg m-auto rounded-lg text-center my-5'>
+          <Row className='promote-section-bg m-auto rounded-lg text-center mt-5 mb-0'>
             <h1 className='display-1 fw-bolder text-white font-bold' style={{ marginTop: '15%' }}>
               <span style={{ fontSize: '110px' }}>Promote</span> <br />
               <span>Your estate today!</span>
