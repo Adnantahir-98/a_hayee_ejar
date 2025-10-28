@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Container, Row, Col, Button, } from 'react-bootstrap'
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -19,6 +19,10 @@ import { BsBuilding } from "react-icons/bs";
 import { FaStore } from "react-icons/fa6";
 import { GoStack } from "react-icons/go";
 
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import SearchIcon from '@mui/icons-material/Search';
+
 import { Fade, Slide } from "react-awesome-reveal";
 
 
@@ -26,6 +30,11 @@ const Page = () => {
 
   const [show, setShow] = useState(false);
   const [advanceshow, setAdvanceShow] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const handleCloseSearch = () => setShowSearch(false);
+  const handleShowSearch = () => setShowSearch(true);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -33,6 +42,15 @@ const Page = () => {
   // Advance button Pop-Up Modal
   const handleAdvanceClose = () => setAdvanceShow(false);
   const handleAdvanceShow = () => setAdvanceShow(true);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -185,7 +203,7 @@ const Page = () => {
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
                       <h2 className="text-dark mt-0 pt-0">Full Floors</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -194,7 +212,7 @@ const Page = () => {
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" />
                       <h2 className="text-dark mt-0 pt-0">Offices</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -203,7 +221,7 @@ const Page = () => {
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/villa.svg" alt="browser-apartment for rent" />
                       <h2 className="text-dark mt-0 pt-0">Villas</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -212,7 +230,7 @@ const Page = () => {
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
                       <h2 className="text-dark mt-0 pt-0">Stores</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -221,7 +239,7 @@ const Page = () => {
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" />
                       <h2 className="text-dark mt-0 pt-0">Storages</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19,borderRadius: 15  }}>
+                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
                         Explore
                       </Button>
                     </div>
@@ -232,7 +250,7 @@ const Page = () => {
               <Col
                 md={6}
                 className="d-flex flex-column justify-content-between align-items-center text-center browse-text-col my-5 py-5 px-5"
-                style={{paddingTop:'180px !important',paddingBottom:'180px !important'}}
+                style={{ paddingTop: '180px !important', paddingBottom: '180px !important' }}
               >
                 <h1 className="display-1 fw-bolder">Browse.</h1>
                 <h1 className="display-1 fw-bolder">Rent.</h1>
@@ -252,7 +270,7 @@ const Page = () => {
           <h1 className='display-1 fw-bolder pt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
           <h3 className='text-white'>more here &gt; </h3>
 
-          <Row className='what-new-bg m-auto rounded-lg my-5'>
+          <Row className='what-new-bg m-auto rounded-lg my-5 pb-4' style={{position: 'relative'}}>
             <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '15px !important' }}>
               <img src="/logo.svg" className="m-auto mt-4" style={{ width: '90px', height: '40px' }} />
               <h2 className='display-5 fw-bolder text-white' style={{ marginTop: '75%' }}>
@@ -262,6 +280,8 @@ const Page = () => {
                 Apartment - 3 bedroom <br />
                 with a balcony
               </h3>
+            </Col>
+            <Col md={4} style={{position: 'absolute', bottom: '50px', left: '42%'}}>
               <Button
                 variant="success"
                 className="text-white font-bold mb-3"
@@ -275,7 +295,7 @@ const Page = () => {
             </Col>
           </Row>
 
-          <Row className='what-new-bg m-auto rounded-lg'>
+          <Row className='what-new-bg m-auto rounded-lg pb-4' style={{position: 'relative'}}>
             <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '15px !important', position: 'relative' }}>
 
               <h2 className='display-5 fw-bolder text-white' style={{ marginTop: '15%', marginBottom: '15%' }}>
@@ -284,15 +304,18 @@ const Page = () => {
               <h3 className='text-white'>
                 In Abdullah Al Salim
               </h3>
-              <Button variant="success" className='text-white font-bold mt-4' style={{
-                fontSize: '22px',
-              }}>learn more</Button>
-              <img src="/logo.svg" className="m-auto" style={{
-                width: '90px', height: '40px', position: 'absolute',
-                bottom: '15px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }} />
+            </Col>
+            <Col md={4} style={{position: 'absolute', bottom: '50px', left: '42%'}}>
+              <Button
+                variant="success"
+                className="text-white font-bold mb-3"
+                style={{
+                  fontSize: '22px',
+                  width: '70%',
+                }}
+              >
+                Learn More
+              </Button>
             </Col>
           </Row>
 
@@ -506,6 +529,58 @@ const Page = () => {
         </Modal.Body>
       </Modal>
 
+      <Box sx={{ '& > :not(style)': { m: 1 } }} className={`${scrolled ? '' : 'searchbtn'}`} onClick={handleShowSearch}>
+        <Fab size="medium" className='bg-warning' aria-label="add" style={{ position: 'fixed', top: '12%', left: '5%', padding: '30px' }}>
+          <SearchIcon className='display-1 text-white' />
+        </Fab>
+      </Box>
+
+      <Modal show={showSearch} onHide={handleCloseSearch} dialogClassName="Searchmodal">
+        <Modal.Header closeButton>
+        </Modal.Header>
+        <Modal.Body>
+          <Fade direction="left">
+            <Row className='rounded px-5 pb-4 text-dark w-75 text-center m-auto mt-3' style={{ background: 'rgba(255,255,255, 0.85)' }}>
+              <Col md={3} className='m-auto'>
+                <Fade direction="right" fraction={0.5} cascade delay={80}>
+                  <Dropdown>
+                    <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
+                      Areas
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem href="#/action-1">Action</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </Fade>
+              </Col>
+              <Col md={4} className='m-auto'>
+                <Fade direction="right" fraction={0.5} cascade delay={130}>
+                  <Dropdown>
+                    <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
+                      Select Property Type
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem href="#/action-1">Action</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </Fade>
+              </Col>
+              <Col md={3} className='text-end m-auto'>
+                <Fade direction="right" fraction={0.5} cascade delay={140}>
+                  <Button variant="success">
+                    Search
+                  </Button>
+                </Fade>
+              </Col>
+              <Col md={2} className='text-end m-auto'>
+                <Fade direction="right" fraction={0.5} cascade delay={150}>
+                  <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
+                </Fade>
+              </Col>
+            </Row>
+          </Fade>
+        </Modal.Body>
+      </Modal>
     </>
   )
 }

@@ -67,6 +67,9 @@ body {
   gap: clamp(1.8rem, 7vw, 10rem);
 }
 
+.searchbtn {
+  display: none;
+}
 
 .hero-homg-bg-img {
   background: url('/home/slider.png');
@@ -116,6 +119,13 @@ body {
 .custom-modal .modal-body {
   background-color: #131a27e8;
   color: white;
+}
+
+.Searchmodal {
+  max-width: 900px;
+  width: 90%;
+  margin: auto;
+  margin-top: 250px;
 }
 
 .place-clr {
@@ -217,7 +227,7 @@ body {
 }
 
 @media (min-width: 1200px) {
-    .display-1 {
-        font-size: 7rem;
-    }
+  .display-1 {
+    font-size: 7rem;
+  }
 }
