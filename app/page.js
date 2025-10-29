@@ -59,22 +59,21 @@ const Page = () => {
         <Container>
           <Row className='pt-20' style={{ marginBottom: 40 }}>
             <Col md={8}>
-              <h1 className='font-bold' style={{ color: 'white', fontSize: 40 }} >
+              <h1 className='font-bold wellcome-section' style={{ color: 'white' }} >
                 Welcome to <br />
-                <strong className='display-1 font-normal' style={{ fontSize: 112 }}>Ejar</strong> <br />
-                Your rent is a click away
+                <strong className='display-1 font-normal ejar-fontstyle'>Ejar</strong> <br />
+                <span className='font-normal'>Your rent is a click away</span>
               </h1>
             </Col>
             <Col
               md={4}
-              className="d-flex flex-column justify-content-center align-items-center text-center"
-              style={{ paddingTop: 150 }}
+              className="d-flex flex-column justify-content-center align-items-center text-center promote-section"
+
             >
               <h4
-                className="mt-5 font-bold text-white"
-                style={{ fontSize: 40 }}
+                className=" font-normal text-white promote-font"
               >
-                Promote your <br /> estate <br />
+                Promote your <br className='d-none d-lg-block' /> estate <br />
                 <Button
                   variant="success"
                   className="px-5 font-bold mt-3"
@@ -86,99 +85,85 @@ const Page = () => {
               </h4>
             </Col>
           </Row>
+          <span className='d-none d-lg-flex'>
+            <Row className='rounded-lg mt-auto '
+              style={{
+                background: 'rgb(255 255 255 / 34%);',
+                position: 'absolute',
+                bottom: '0',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(255,255,255,0.25)',
+                width: '80%',
+              }}>
+              <Fade direction="left">
+                <Row className='rounded px-5 py-4 text-dark w-60 text-center m-auto mt-5' style={{ background: 'rgba(255,255,255, 0.85)' }}>
+                  <Col md={3} className='m-auto'>
+                    <Fade direction="right" fraction={0.5} cascade delay={80}>
+                      <Dropdown>
+                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark ">
+                          Areas
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </Fade>
+                  </Col>
+                  <Col md={4} className='m-auto'>
+                    <Fade direction="right" fraction={0.5} cascade delay={130}>
+                      <Dropdown>
+                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark ">
+                          Select Property Type
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </Fade>
+                  </Col>
+                  <Col md={3} className='text-end m-auto'>
+                    <Fade direction="right" fraction={0.5} cascade delay={140}>
+                      <Button variant="success">
+                        Search
+                      </Button>
+                    </Fade>
+                  </Col>
+                  <Col md={2} className='text-end m-auto'>
+                    <Fade direction="right" fraction={0.5} cascade delay={150}>
+                      <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
+                    </Fade>
+                  </Col>
+                </Row>
+              </Fade>
 
-          <Row className='rounded-lg mt-auto d-none d-lg-flex'
-            style={{
-              background: 'rgb(255 255 255 / 34%);',
-              position: 'absolute',
-              bottom: '0',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: 'rgba(255,255,255,0.25)',
-              width: '80%',
-            }}>
-            <Fade direction="left">
-              <Row className='rounded px-5 py-4 text-dark w-75 text-center m-auto mt-5' style={{ background: 'rgba(255,255,255, 0.85)' }}>
-                <Col md={3} className='m-auto'>
-                  <Fade direction="right" fraction={0.5} cascade delay={80}>
-                    <Dropdown>
-                      <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
-                        Areas
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem href="#/action-1">Action</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </Fade>
-                </Col>
-                <Col md={4} className='m-auto'>
-                  <Fade direction="right" fraction={0.5} cascade delay={130}>
-                    <Dropdown>
-                      <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
-                        Select Property Type
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem href="#/action-1">Action</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </Fade>
-                </Col>
-                <Col md={3} className='text-end m-auto'>
-                  <Fade direction="right" fraction={0.5} cascade delay={140}>
-                    <Button variant="success">
-                      Search
-                    </Button>
-                  </Fade>
-                </Col>
-                <Col md={2} className='text-end m-auto'>
-                  <Fade direction="right" fraction={0.5} cascade delay={150}>
-                    <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
-                  </Fade>
-                </Col>
-              </Row>
-            </Fade>
+              <Slide direction="down" fraction={0.5} cascade delay={130}>
+                <div className="property-type-scroll m-auto py-4">
+                  {[
+                    { img: "/icons/apartments.svg", text: "Apartments" },
+                    { img: "/icons/apartments-black.svg", text: "Whole Floor" },
+                    { img: "/icons/villa.svg", text: "Vilas" },
+                    { img: "/icons/artboard-6.svg", text: "Offices" },
+                    { img: "/icons/stores.svg", text: "Stores" },
+                    { img: "/icons/storage.svg", text: "Storages" },
+                  ].map(({ img, text }, i) => (
+                    <div className="property-item" key={i}>
+                      <Button
+                        variant="secondary"
+                        style={{ fontWeight: "700" }}
+                        className="d-flex align-items-center gap-2 w-100"
+                      >
+                        <img src={img} style={{ width: "40px" }} alt={text} />
+                        <span>{text}</span>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Slide>
 
-            <Slide direction="down" fraction={0.5} cascade delay={130}>
-              <Row className='m-auto py-4'>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/apartments.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Apartments</span>
-                  </Button>
-                </Col>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/apartments-black.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Whole Floor</span>
-                  </Button>
-                </Col>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/villa.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Vilas</span>
-                  </Button>
-                </Col>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/artboard-6.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Offices</span>
-                  </Button>
-                </Col>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/stores.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Stores</span>
-                  </Button>
-                </Col>
-                <Col md={2}>
-                  <Button variant="secondary" style={{ fontWeight: '700' }} className='d-flex'>
-                    <img src={"/icons/storage.svg"} style={{ width: '40px' }} />
-                    <span style={{ alignContent: 'center' }}>Storages</span>
-                  </Button>
-                </Col>
-              </Row>
-            </Slide>
-          </Row>
+
+            </Row>
+          </span>
 
         </Container>
       </section>
@@ -188,58 +173,58 @@ const Page = () => {
         <div className="overlay">
           <Container>
             <Row className="align-items-stretch">
-              <Col md={6} className="my-5 py-5">
-                <Row>
+              <Col md={6} className="my-5 py-5" >
+                <Row className="align-items-stretch">
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/apartments-black.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/apartments-black.svg" alt="browser-apartment for rent broswer-img" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Apartments</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Full Floors</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Offices</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/villa.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Villas</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Stores</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/storage.svg" alt="browser-apartment for rent" />
+                      <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Storages</h2>
-                      <Button variant="success" className="px-5 font-bold my-4" style={{ fontSize: 19, borderRadius: 15 }}>
+                      <Button variant="success" className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
@@ -249,7 +234,7 @@ const Page = () => {
 
               <Col
                 md={6}
-                className="d-flex flex-column justify-content-between align-items-center text-center browse-text-col my-5 py-5 px-5"
+                className="d-flex d-none d-lg-flex flex-column text-black justify-content-between align-items-center text-center browse-text-col my-5 py-5 px-5"
                 style={{ paddingTop: '180px !important', paddingBottom: '180px !important' }}
               >
                 <h1 className="display-1 fw-bolder">Browse.</h1>
@@ -260,34 +245,37 @@ const Page = () => {
           </Container>
         </div>
 
-        <hr className="hr-line-browse" />
+        <hr className="hr-line-browse" style={{ border: '1px solid black' }} />
       </section>
 
 
 
-      <section style={{ backgroundColor: '#383838ff' }}>
+      <section style={{ backgroundColor: '#383838ff', paddingBottom: 30 }}>
         <Container>
           <h1 className='display-1 fw-bolder pt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
-          <h3 className='text-white'>more here &gt; </h3>
+          <h3 className='text-white' style={{ fontFamily: 'arial' }}>more here &gt; </h3>
 
-          <Row className='what-new-bg m-auto rounded-lg my-5 pb-4' style={{position: 'relative'}}>
-            <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '15px !important' }}>
+          <Row className='what-new-bg m-auto rounded-lg my-5 pb-4' style={{ position: 'relative' }}>
+            <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '13px !important' }}>
               <img src="/logo.svg" className="m-auto mt-4" style={{ width: '90px', height: '40px' }} />
-              <h2 className='display-5 fw-bolder text-white' style={{ marginTop: '75%' }}>
+              <h1 className='display-5 fw-bolder text-white' style={{ marginTop: '75%', fontFamily: 'arial' }}>
                 Sabah Al Salim
-              </h2>
+              </h1>
               <h3 className='text-white'>
                 Apartment - 3 bedroom <br />
                 with a balcony
               </h3>
             </Col>
-            <Col md={4} style={{position: 'absolute', bottom: '50px', left: '42%'}}>
+            <Col md={4} style={{ position: 'absolute', bottom: '50px', left: '42%' }}>
               <Button
                 variant="success"
-                className="text-white font-bold mb-3"
+                className="text-white mb-3"
                 style={{
                   fontSize: '22px',
-                  width: '70%',
+                  borderRadius: '18px',
+                  width: '60%',
+                  fontWeight: '700',
+                  fontFamily: 'arial'
                 }}
               >
                 Learn More
@@ -295,7 +283,7 @@ const Page = () => {
             </Col>
           </Row>
 
-          <Row className='what-new-bg m-auto rounded-lg pb-4' style={{position: 'relative'}}>
+          <Row className='what-new-bg m-auto rounded-lg pb-4' style={{ position: 'relative' }}>
             <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '15px !important', position: 'relative' }}>
 
               <h2 className='display-5 fw-bolder text-white' style={{ marginTop: '15%', marginBottom: '15%' }}>
@@ -305,13 +293,16 @@ const Page = () => {
                 In Abdullah Al Salim
               </h3>
             </Col>
-            <Col md={4} style={{position: 'absolute', bottom: '50px', left: '42%'}}>
+            <Col md={4} style={{ position: 'absolute', bottom: '50px', left: '42%' }}>
               <Button
                 variant="success"
                 className="text-white font-bold mb-3"
                 style={{
                   fontSize: '22px',
-                  width: '70%',
+                  borderRadius: '18px',
+                  width: '60%',
+                  fontWeight: '700',
+                  fontFamily: 'arial'
                 }}
               >
                 Learn More
@@ -320,10 +311,10 @@ const Page = () => {
           </Row>
 
 
-          <Row className='promote-section-bg m-auto rounded-lg text-center mt-5 mb-0'>
-            <h1 className='display-1 fw-bolder text-white font-bold' style={{ marginTop: '15%' }}>
+          <Row className='promote-section-bg m-auto rounded-lg text-center mt-5'>
+            <h1 className='display-1 fw-bolder text-white font-bold' style={{ marginTop: '15%', paddingBottom: 100 }}>
               <span style={{ fontSize: '110px' }}>Promote</span> <br />
-              <span>Your estate today!</span>
+              <span style={{ fontSize: 65 }}>Your estate today!</span>
             </h1>
             <Button variant="warning" className='mt-4 w-25 m-auto fw-bold font-bold mb-5' style={{ marginBottom: '72%', fontSize: '40px', marginLeft: 25, marginRight: 25 }} onClick={handleShow}>Promote Here</Button>
           </Row>
@@ -518,7 +509,7 @@ const Page = () => {
           </Dropdown>
 
           <Form className='text-white'>
-            <small id="radio" class="form-text text-secondary pb-1">Basement</small>
+            <small id="radio" className="form-text text-secondary pb-1">Basement</small>
             <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
             <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
           </Form>
@@ -535,16 +526,16 @@ const Page = () => {
         </Fab>
       </Box>
 
-      <Modal show={showSearch} onHide={handleCloseSearch} dialogClassName="Searchmodal">
+      <Modal show={showSearch} onHide={handleCloseSearch} dialogClassName="Searchmodal" contentClassName="bg-grey-modal">
         <Modal.Header closeButton>
         </Modal.Header>
         <Modal.Body>
           <Fade direction="left">
-            <Row className='rounded px-5 pb-4 text-dark w-75 text-center m-auto mt-3' style={{ background: 'rgba(255,255,255, 0.85)' }}>
+            <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto mt-3' >
               <Col md={3} className='m-auto'>
                 <Fade direction="right" fraction={0.5} cascade delay={80}>
                   <Dropdown>
-                    <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
+                    <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark w-100">
                       Areas
                     </DropdownToggle>
                     <DropdownMenu>
@@ -553,10 +544,10 @@ const Page = () => {
                   </Dropdown>
                 </Fade>
               </Col>
-              <Col md={4} className='m-auto'>
+              <Col md={5} className='m-auto'>
                 <Fade direction="right" fraction={0.5} cascade delay={130}>
                   <Dropdown>
-                    <DropdownToggle variant="default" id="dropdown-basic" className='border-0'>
+                    <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 w-100 px-4 py-2 bg-light text-dark ">
                       Select Property Type
                     </DropdownToggle>
                     <DropdownMenu>
@@ -565,7 +556,7 @@ const Page = () => {
                   </Dropdown>
                 </Fade>
               </Col>
-              <Col md={3} className='text-end m-auto'>
+              <Col md={2} className='text-end m-auto'>
                 <Fade direction="right" fraction={0.5} cascade delay={140}>
                   <Button variant="success">
                     Search

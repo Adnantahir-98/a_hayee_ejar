@@ -1,3 +1,7 @@
+/* =======================================
+   🧱 Base & Global Styles
+======================================= */
+
 @import "tailwindcss";
 
 :root {
@@ -27,6 +31,10 @@ body {
 }
 
 
+/* =======================================
+   🌐 Navbar
+======================================= */
+
 .custom-navbar {
   transition: all 0.35s ease-in-out;
   background-color: transparent;
@@ -38,6 +46,12 @@ body {
   background-color: rgba(55, 55, 55, 0.85);
   box-shadow: none;
   backdrop-filter: blur(8px);
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.8rem, 7vw, 10rem);
 }
 
 .navbar-nav .nav-link {
@@ -61,15 +75,14 @@ body {
   box-shadow: none;
 }
 
-.navbar-nav {
-  display: flex;
-  align-items: center;
-  gap: clamp(1.8rem, 7vw, 10rem);
-}
-
 .searchbtn {
   display: none;
 }
+
+
+/* =======================================
+   🏠 Hero Section
+======================================= */
 
 .hero-homg-bg-img {
   background: url('/home/slider.png');
@@ -79,10 +92,14 @@ body {
   background-size: cover;
 }
 
-/* Pop-Up Modal Classes */
+
+/* =======================================
+   💬 Modal Styles
+======================================= */
+
+/* Promote Modal */
 .Promote-modal {
   max-width: 900px;
-  /* whatever size you want */
   width: 90%;
   margin: auto;
 }
@@ -96,7 +113,6 @@ body {
   background-color: rgba(255, 255, 255, 0.712);
   color: white;
   border-bottom: none;
-  /* optional: remove header border */
 }
 
 .Promote-modal .modal-body {
@@ -104,23 +120,16 @@ body {
   color: white;
 }
 
-
-.custom-modal .modal-content {
-  background-color: #131a27e8;
-  color: white;
-}
-
-.custom-modal .modal-header {
+/* Custom Modal */
+.custom-modal .modal-content,
+.custom-modal .modal-header,
+.custom-modal .modal-body {
   background-color: #131a27e8;
   color: white;
   border-bottom: none;
 }
 
-.custom-modal .modal-body {
-  background-color: #131a27e8;
-  color: white;
-}
-
+/* Search Modal */
 .Searchmodal {
   max-width: 900px;
   width: 90%;
@@ -128,17 +137,15 @@ body {
   margin-top: 250px;
 }
 
-.place-clr {
-  background-color: rgba(255, 255, 255, 0.07);
-  border: 1px solid #ccc;
-  color: white;
+.bg-grey-modal {
+  background-color: #d3d3d3 !important;
+  width: 80% !important;
 }
 
-.place-clr::placeholder {
-  color: #aaa;
-  opacity: 1;
-}
 
+/* =======================================
+   🏙️ Page Sections
+======================================= */
 
 .what-new-bg {
   background: url('/home/property1.jpg');
@@ -156,27 +163,9 @@ body {
   background-size: cover;
 }
 
-.btn-success {
-  background-color: #4DB6AC;
-  border-color: #4DB6AC;
-  font-weight: 800;
+.promote-section {
+  padding-top: 150px;
 }
-
-.font-normal {
-  font-family: "Changa", sans-serif;
-  font-weight: 600;
-}
-
-.font-bold {
-  font-family: "Changa", sans-serif;
-  font-weight: 900;
-}
-
-
-.bg-dark {
-  background-color: #000 !important;
-}
-
 
 .browse-rentsec {
   background: url('/images/browse-section.png') center / cover no-repeat;
@@ -197,14 +186,8 @@ body {
   justify-content: space-between;
 }
 
-.brdrd-imges {
-  border: 8px solid #2c2c2cda !important;
-  border-radius: 9px;
-  /* padding: 50px 0; */
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
 .hr-line-browse {
+  border: 1px solid black;
   position: absolute;
   top: 15%;
   left: 53%;
@@ -214,8 +197,97 @@ body {
   height: 120vh;
 }
 
+.broswer-img {
+  width: 70%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-@media (max-width: 991.98px) {
+
+/* =======================================
+   🎨 Utility & Helper Classes
+======================================= */
+
+.place-clr {
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid #ccc;
+  color: white;
+}
+
+.place-clr::placeholder {
+  color: #aaa;
+  opacity: 1;
+}
+
+.btn-success {
+  background-color: #4DB6AC;
+  border-color: #4DB6AC;
+  font-weight: 800;
+}
+
+.font-normal {
+  font-family: "Changa", sans-serif;
+  font-weight: 600;
+}
+
+.font-bold {
+  font-family: "Changa", sans-serif;
+  font-weight: 900;
+}
+
+.bg-dark {
+  background-color: #000 !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.brdrd-imges {
+  border: 8px solid #2c2c2cda !important;
+  border-radius: 9px;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.display-5 {
+  font-size: calc(1.28rem + 1.9vw);
+  font-weight: 900;
+}
+
+.myButton {
+  font-size: 19px;
+  border-radius: 15px;
+}
+
+.promote-font {
+  font-size: 40px;
+  margin-top: 40px;
+}
+
+.wellcome-section {
+  font-size: 40px;
+}
+
+.ejar-fontstyle {
+  font-family: "Changa", sans-serif;
+  font-weight: 900;
+  font-size: 112px;
+}
+
+.property-type-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* =======================================
+   📱 Responsive Design (Media Queries)
+======================================= */
+
+/* Medium screens (tablets) */
+@media (max-width: 992px) {
   .hr-line-browse {
     display: none !important;
   }
@@ -224,8 +296,112 @@ body {
     justify-content: center;
     gap: 2rem;
   }
+
+  .myButton {
+    font-size: 7px;
+  }
+
+  .wellcome-section {
+    text-align: center;
+    font-size: 28px;
+  }
+
+  .promote-font {
+    font-size: 40px;
+    margin-top: 5px;
+  }
+
+  .promote-section {
+    padding-top: 0%;
+  }
+
+  .ejar-fontstyle {
+    font-weight: 600;
+    font-size: 90px;
+  }
+
+  .hero-homg-bg-img {
+    height: 447px;
+  }
 }
 
+/* Small screens (phones) */
+@media (max-width: 600px) {
+  .myButton {
+    font-size: 15px;
+  }
+
+  .wellcome-section {
+    text-align: center;
+    font-size: 28px;
+  }
+
+  .promote-font {
+    font-size: 40px;
+  }
+
+  .ejar-fontstyle {
+    font-weight: 600;
+    font-size: 90px;
+  }
+
+  .hero-homg-bg-img {
+    height: 447px;
+  }
+}
+
+@media (max-width: 768px) {
+  .property-type-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.8rem;
+    -webkit-overflow-scrolling: touch;
+    /* smooth iOS scroll */
+    padding-bottom: 1rem;
+  }
+
+  .property-type-scroll::-webkit-scrollbar {
+    display: none;
+    /* hide scrollbar */
+  }
+
+  .property-item {
+    flex: 0 0 auto;
+    width: 160px;
+    /* adjust button width */
+  }
+
+  .property-type-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll for iOS */
+  }
+
+  .property-type-row::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for cleaner look */
+  }
+
+  .property-type-row .col {
+    flex: 0 0 auto;
+    width: 70%;
+    /* Adjust width per button */
+    max-width: 180px;
+  }
+
+  .property-type-row button {
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+
+/* Large screens (desktop ≥1200px) */
 @media (min-width: 1200px) {
   .display-1 {
     font-size: 7rem;
