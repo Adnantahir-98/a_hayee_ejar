@@ -120,6 +120,10 @@ body {
   color: white;
 }
 
+.Promote {
+  font-size: 110px;
+}
+
 /* Custom Modal */
 .custom-modal .modal-content,
 .custom-modal .modal-header,
@@ -148,7 +152,15 @@ body {
 ======================================= */
 
 .what-new-bg {
-  background: url('/home/property1.jpg');
+  background: url('/images/Empty-Apartment-with-Wooden-Floor.png');
+  height: 670px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.what-new-bg-2 {
+  background: url('/images/Empty-Apartment-with-Wooden-Floor-1.png');
   height: 626px;
   background-position: center;
   background-repeat: no-repeat;
@@ -265,8 +277,28 @@ body {
   margin-top: 40px;
 }
 
+.Promote-Subtitle {
+  font-size: 65px;
+}
+
+.Promote-button {
+  margin-bottom: 72%;
+  font-size: 40px;
+  margin-left: 25;
+  margin-right: 25;
+  width: 25%;
+}
+
 .wellcome-section {
   font-size: 40px;
+}
+
+.section-border {
+  height: 92%;
+  margin-top: 3%;
+  margin-left: 3%;
+  border-width: 15px !important;
+  position: relative
 }
 
 .ejar-fontstyle {
@@ -280,6 +312,17 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
+}
+
+.learn-more-button {
+  position: absolute;
+  bottom: 50px;
+  left: 42%;
+}
+
+.section-title {
+  margin-top: 75%;
+  font-family: arial
 }
 
 /* =======================================
@@ -315,6 +358,8 @@ body {
     padding-top: 0%;
   }
 
+
+
   .ejar-fontstyle {
     font-weight: 600;
     font-size: 90px;
@@ -322,6 +367,12 @@ body {
 
   .hero-homg-bg-img {
     height: 447px;
+  }
+  .section-title {
+    margin-top: 158%;
+  }
+  .Promote-button {
+    width: 52%;
   }
 }
 
@@ -347,6 +398,45 @@ body {
 
   .hero-homg-bg-img {
     height: 447px;
+  }
+
+  .Promote {
+    font-size: 80px;
+  }
+
+  .Promote-Subtitle {
+    font-size: 50px;
+  }
+
+  .Promote-button {
+    color: #fff;
+    margin-bottom: 72%;
+    font-size: 32px;
+    margin-left: 25;
+    margin-right: 25;
+    width: 65%;
+  }
+
+  .section-border {
+    height: 100%;
+    margin-top: 0%;
+    margin-left: 0%;
+    border-width: 15px !important;
+    position: relative
+  }
+
+  .learn-more-button {
+    position: absolute;
+    bottom: 50px;
+    left: 20%;
+  }
+
+  .what-new-bg {
+    height: 500px;
+  }
+
+  .section-title {
+    margin-top: 39%;
   }
 }
 
@@ -398,6 +488,32 @@ body {
   .property-type-row button {
     width: 100%;
     white-space: nowrap;
+  }
+
+  .Promote {
+    font-size: 80px;
+  }
+
+  .Promote-Subtitle {
+    font-size: 50px;
+  }
+
+  .learn-more-button {
+    position: absolute;
+    bottom: 50px;
+    left: 20%;
+  }
+
+  .section-border {
+    height: 100%;
+    margin-top: 0%;
+    margin-left: 0%;
+    border-width: 15px !important;
+    position: relative
+  }
+  .Promote-button {
+    width: 52%;
+    font-size: 20px;
   }
 }
 

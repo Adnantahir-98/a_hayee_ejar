@@ -173,7 +173,7 @@ const Page = () => {
         <div className="overlay">
           <Container>
             <Row className="align-items-stretch">
-              <Col md={6} className="my-5 py-5" >
+              <Col md={12} lg={6} className="my-5 py-5" >
                 <Row className="align-items-stretch">
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
@@ -256,9 +256,9 @@ const Page = () => {
           <h3 className='text-white' style={{ fontFamily: 'arial' }}>more here &gt; </h3>
 
           <Row className='what-new-bg m-auto rounded-lg my-5 pb-4' style={{ position: 'relative' }}>
-            <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '13px !important' }}>
+            <Col md={4} className='border border-warning text-center section-border'>
               <img src="/logo.svg" className="m-auto mt-4" style={{ width: '90px', height: '40px' }} />
-              <h1 className='display-5 fw-bolder text-white' style={{ marginTop: '75%', fontFamily: 'arial' }}>
+              <h1 className='display-5 fw-bolder text-white section-title' >
                 Sabah Al Salim
               </h1>
               <h3 className='text-white'>
@@ -266,7 +266,7 @@ const Page = () => {
                 with a balcony
               </h3>
             </Col>
-            <Col md={4} style={{ position: 'absolute', bottom: '50px', left: '42%' }}>
+            <Col md={4} className='learn-more-button' >
               <Button
                 variant="success"
                 className="text-white mb-3"
@@ -283,8 +283,8 @@ const Page = () => {
             </Col>
           </Row>
 
-          <Row className='what-new-bg m-auto rounded-lg pb-4' style={{ position: 'relative' }}>
-            <Col md={4} className='border border-warning text-center' style={{ height: '92%', marginTop: '3%', marginLeft: '3%', borderWidth: '15px !important', position: 'relative' }}>
+          <Row className='what-new-bg-2 m-auto rounded-lg pb-4' style={{ position: 'relative' }}>
+            <Col md={4} className='border border-warning text-center section-border' >
 
               <h2 className='display-5 fw-bolder text-white' style={{ marginTop: '15%', marginBottom: '15%' }}>
                 Rent a Vila
@@ -293,7 +293,7 @@ const Page = () => {
                 In Abdullah Al Salim
               </h3>
             </Col>
-            <Col md={4} style={{ position: 'absolute', bottom: '50px', left: '42%' }}>
+            <Col md={4} className='learn-more-button'>
               <Button
                 variant="success"
                 className="text-white font-bold mb-3"
@@ -313,10 +313,10 @@ const Page = () => {
 
           <Row className='promote-section-bg m-auto rounded-lg text-center mt-5'>
             <h1 className='display-1 fw-bolder text-white font-bold' style={{ marginTop: '15%', paddingBottom: 100 }}>
-              <span style={{ fontSize: '110px' }}>Promote</span> <br />
-              <span style={{ fontSize: 65 }}>Your estate today!</span>
+              <span className='Promote'>Promote</span> <br />
+              <span className='Promote-Subtitle'>Your estate today!</span>
             </h1>
-            <Button variant="warning" className='mt-4 w-25 m-auto fw-bold font-bold mb-5' style={{ marginBottom: '72%', fontSize: '40px', marginLeft: 25, marginRight: 25 }} onClick={handleShow}>Promote Here</Button>
+            <Button variant="warning" className='mt-4 m-auto fw-bold font-bold mb-5 Promote-button' onClick={handleShow}>Promote Here</Button>
           </Row>
         </Container>
       </section>

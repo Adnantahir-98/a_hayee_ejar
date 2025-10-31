@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className='bg-warning'>
       <Container>
-        <Row className='py-5' style={{height: '200px'}}>
+        <Row className='py-5' >
           <Col md={3}>
             Contact Details
           </Col>
