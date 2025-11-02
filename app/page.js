@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-
+import Link from "next/link";
 import { Container, Row, Col, Button, } from 'react-bootstrap'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
@@ -26,6 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Fade, Slide } from "react-awesome-reveal";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { useRouter } from 'next/navigation';
 
 
 const products = [
@@ -39,7 +40,7 @@ const products = [
 
 
 const Page = () => {
-
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const [advanceshow, setAdvanceShow] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -161,6 +162,7 @@ const Page = () => {
                   ].map(({ img, text }, i) => (
                     <div className="property-item" key={i}>
                       <Button
+                        onClick={() => router.push('/pages/browser-page')}
                         variant="secondary"
                         style={{ fontWeight: "700" }}
                         className="d-flex align-items-center gap-2 w-100"
@@ -185,57 +187,60 @@ const Page = () => {
           <Container>
             <Row className="align-items-stretch">
               <Col md={12} lg={6} className="my-5 py-5">
-                <Row className="align-items-stretch mobileViewOff">
-                  <Col md={6}>
+                <Row className="align-items-stretch ">
+                  <Col md={12} className='d-block d-lg-none'>
+                    <h1 className="display-4 fw-bolder mb-4 text-black">Browse. Rent. Settle In!</h1>
+                  </Col>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/apartments-black.svg" alt="browser-apartment for rent broswer-img" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Apartments</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Full Floors</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Offices</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Villas</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Stores</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} className='mobileViewOff'>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
                       <h2 className="text-dark mt-0 pt-0">Storages</h2>
-                      <Button variant="success" className="px-5 font-bold my-4 myButton">
+                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                         Explore
                       </Button>
                     </div>

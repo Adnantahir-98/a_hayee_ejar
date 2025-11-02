@@ -1,6 +1,6 @@
 
 'use client';
-
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import Image from 'next'
@@ -8,7 +8,7 @@ import Image from 'next'
 
 export default function MainNavbar() {
   const [scrolled, setScrolled] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -25,7 +25,7 @@ export default function MainNavbar() {
     >
       <Container>
         {/* Logo */}
-        <Navbar.Brand href="/">
+        <Navbar.Brand onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
           <img
             src="/logo-white.png"
             alt="Main Logo"
