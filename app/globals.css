@@ -40,6 +40,7 @@ body {
   background-color: transparent;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   padding: 0.6rem 0;
+  width: 100vw !important;
 }
 
 .custom-navbar.scrolled {
@@ -201,7 +202,7 @@ body {
 .hr-line-browse {
   border: 1px solid black;
   position: absolute;
-  top: 15%;
+  top: 10%;
   left: 53%;
   transform: rotate(180deg);
   background-color: #000 !important;
@@ -334,6 +335,9 @@ body {
   .hr-line-browse {
     display: none !important;
   }
+  .custom-navbar{
+    background-color: rgba(55, 55, 55, 0.85);
+  }
 
   .browse-text-col {
     justify-content: center;
@@ -441,6 +445,9 @@ body {
 }
 
 @media (max-width: 768px) {
+  .mobileViewOff{
+    display: none !important;
+  }
   .property-type-scroll {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -519,6 +526,9 @@ body {
 
 /* Large screens (desktop ≥1200px) */
 @media (min-width: 1200px) {
+  .mobileSlider{
+    display: none !important;
+  }
   .display-1 {
     font-size: 7rem;
   }

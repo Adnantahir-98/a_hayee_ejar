@@ -24,6 +24,18 @@ import Fab from '@mui/material/Fab';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { Fade, Slide } from "react-awesome-reveal";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+
+
+const products = [
+  { image: '/icons/apartments-black.svg', label: 'Apartment' },
+  { image: '/icons/villa.svg', label: 'Full Floors' },
+  { image: '/icons/artboard-6.svg', label: 'Offices' },
+  { image: '/icons/villa.svg', label: 'Villas' },
+  { image: '/icons/stores.svg', label: 'Stores' },
+  { image: '/icons/storage.svg', label: 'Storage' },
+];
 
 
 const Page = () => {
@@ -161,7 +173,6 @@ const Page = () => {
                 </div>
               </Slide>
 
-
             </Row>
           </span>
 
@@ -173,8 +184,8 @@ const Page = () => {
         <div className="overlay">
           <Container>
             <Row className="align-items-stretch">
-              <Col md={12} lg={6} className="my-5 py-5" >
-                <Row className="align-items-stretch">
+              <Col md={12} lg={6} className="my-5 py-5">
+                <Row className="align-items-stretch mobileViewOff">
                   <Col md={6}>
                     <div className="brdrd-imges text-center my-3">
                       <img src="/icons/apartments-black.svg" alt="browser-apartment for rent broswer-img" className='broswer-img' />
@@ -231,6 +242,34 @@ const Page = () => {
                   </Col>
                 </Row>
               </Col>
+
+              <Row className="align-items-stretch mobileSlider mx-auto">
+                <Swiper
+                  spaceBetween={20}
+                  slidesPerView={1}
+                  loop={true}
+                  autoplay={{ delay: 3000 }}
+                  breakpoints={{
+                    640: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                  }}
+                >
+                  {products.map((item, index) => (
+                    <SwiperSlide key={index}>
+                      <Col sm={12} md={12}>
+                        <div className="brdrd-imges text-center my-3">
+                          <img src={item.image} alt="browser-apartment for rent broswer-img" className='broswer-img' />
+                          <h2 className="text-dark mt-0 pt-0">{item.label}</h2>
+                          <Button variant="success" className="px-5 font-bold my-4 myButton">
+                            Explore
+                          </Button>
+                        </div>
+                      </Col>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </Row>
 
               <Col
                 md={6}
