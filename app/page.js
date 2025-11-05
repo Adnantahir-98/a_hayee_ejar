@@ -266,7 +266,7 @@ const Page = () => {
                         <div className="brdrd-imges text-center my-3">
                           <img src={item.image} alt="browser-apartment for rent broswer-img" className='broswer-img' />
                           <h2 className="text-dark mt-0 pt-0">{item.label}</h2>
-                          <Button variant="success" className="px-5 font-bold my-4 myButton">
+                          <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                             Explore
                           </Button>
                         </div>
@@ -278,8 +278,8 @@ const Page = () => {
 
               <Col
                 md={6}
-                className="d-flex d-none d-lg-flex flex-column text-black justify-content-between align-items-center text-center browse-text-col my-5 py-5 px-5"
-                style={{ paddingTop: '180px !important', paddingBottom: '180px !important' }}
+                className="d-flex d-none d-lg-flex flex-column text-black justify-content-between  text-left browse-text-col my-5 py-5 px-5"
+                style={{ paddingTop: '180px !important', paddingBottom: '180px !important', textAlign:'left !important' }}
               >
                 <h1 className="display-1 fw-bolder">Browse.</h1>
                 <h1 className="display-1 fw-bolder">Rent.</h1>
