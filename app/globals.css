@@ -86,7 +86,7 @@ body {
 ======================================= */
 
 .hero-homg-bg-img {
-  background: url('/home/slider-min.png');
+  background: url('/home/slider-min-1.png');
   height: 704px;
   background-position: center;
   background-repeat: no-repeat;
@@ -169,7 +169,7 @@ body {
 }
 
 .promote-section-bg {
-  background: url('/images/promote-section-min.png');
+  background: url('/images/promote-section-min-1.png');
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -181,7 +181,7 @@ body {
 }
 
 .browse-rentsec {
-  background: url('/images/browse-section-min.png') center / cover no-repeat;
+  background: url('/images/browse-section-min-1.png') center / cover no-repeat;
   position: relative;
 }
 

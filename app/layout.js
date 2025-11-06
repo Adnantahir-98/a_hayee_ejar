@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         <title>Ejar Property Consultant</title>
         <meta name="description" content="Welcome to No.1 Gulf Property Consultant"></meta>
       </head>
-      <body className={changa.variable}>
+      <body className={changa.variable} style={{backgroundColor: '#383838ff'}}>
         <Navbar />
         {children}
         <Footer />

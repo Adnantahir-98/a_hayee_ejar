@@ -5,7 +5,7 @@ import React from "react";
 import { Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const BrowserDataPage = React.lazy(() => import("./browser-page/page"));
+// const BrowserDataPage = React.lazy(() => import("./data/[viewID]"));
 
 export default function Page() {
   return (
@@ -22,11 +22,11 @@ export default function Page() {
           }}
         >
           <Spinner animation="border" variant="primary" />
-          <p className="mt-3 fw-semibold text-muted">Loading Villas...</p>
+          <p className="mt-3 fw-semibold text-muted">Loading Selected page result...</p>
         </div>
       }
     >
-      <BrowserDataPage />
+      {/* <BrowserDataPage /> */}
     </React.Suspense>
   );
 }

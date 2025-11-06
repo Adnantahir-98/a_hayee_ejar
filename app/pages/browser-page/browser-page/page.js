@@ -1,15 +1,15 @@
 import React from "react";
 import { Card, Button, Carousel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import SearchIconPage from "../../searchIcon/page";
 export default function BrowserDataPage() {
   const desktopHeight = 346; // fixed desktop card height
 
   return (
     <>
       <div className="mt-30 mb-10 my-5 p-3">
-        <h1 className="font-bold text-3xl mb-4 text-center pt-10 w-75 mx-auto" style={{ borderBottom: '2px solid yellow' }}>
-          Villa
+        <h1 className="font-bold text-3xl mb-4 text-center text-white pt-10 w-75 mx-auto" style={{ borderBottom: '2px solid yellow' }}>
+          Villas
         </h1>
         {/* <div>
           
@@ -179,9 +179,9 @@ export default function BrowserDataPage() {
               }}
             ></div>
             <div className="card-img-overlay d-flex flex-column justify-content-end p-3" style={{ zIndex: 2 }}>
-              <h4 className="fw-bold mb-1">1200 KWD</h4>
-              <h6 className="fw-semibold mb-1">2 Floor Sabah Al Salem</h6>
-              <p className="small mb-2">
+              <h4 className="fw-bold mb-1 text-white text-center">1200 KWD</h4>
+              <h6 className="fw-semibold mb-1 text-white text-center">2 Floor Sabah Al Salem</h6>
+              <p className="small mb-2 text-white text-center">
                 Villa in Sabah Al Salim with a pool, 2 floors, and a garden.
               </p>
               <div className="d-flex justify-content-between align-items-center">
@@ -198,6 +198,7 @@ export default function BrowserDataPage() {
 
       
       </div>
+      <SearchIconPage/>
     </>
   );
 }
