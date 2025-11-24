@@ -1,11 +1,9 @@
 // app/pages/page.js
-"use client";
-
 import React from "react";
 import { Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-const BrowserDataPage = React.lazy(() => import("./browser-page/page"));
+const BrowserDataPage = React.lazy(() => import("./inner/page"));
+//const BrowserDataPage = React.lazy(() => import("./propertyTypes/[viewID]"));
 
 export default function Page() {
   return (

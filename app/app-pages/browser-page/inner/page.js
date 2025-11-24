@@ -4,14 +4,21 @@ import { Card, Button, Carousel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SearchIconPage from "../../searchIcon/page";
 import { useRouter } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+
 export default function BrowserDataPage() {
+  const searchParams = useSearchParams();     // query params
+  const id = searchParams.get("Id");  
+  const TypeName = searchParams.get("Name");
   const desktopHeight = 346; // fixed desktop card height
   const router = useRouter();
   return (
     <>
       <div className="mt-30 mb-10 my-5 p-3">
         <h1 className="font-bold text-3xl mb-4 text-center text-white pt-10 w-75 mx-auto" style={{ borderBottom: '2px solid yellow' }}>
-          Villas
+          {TypeName}
         </h1>
         {/* <div>
           
@@ -102,20 +109,20 @@ export default function BrowserDataPage() {
             {/* Carousel Section (Top) */}
             <div style={{ width: "100%", height: "500px" }}>
               {/* <Carousel fade indicators={false} controls={true} interval={3000} style={{ height: "100%" }}> */}
-                <div >
-                  <img
-                    src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800"
-                    alt="Villa"
-                    className="d-block w-100"
-                    style={{
-                      height: "500px",
-                      objectFit: "cover",
-                      borderTopLeftRadius: "16px",
-                      borderTopRightRadius: "16px",
-                    }}
-                  />
-                </div>
-                {/* <div className="d-none">
+              <div >
+                <img
+                  src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800"
+                  alt="Villa"
+                  className="d-block w-100"
+                  style={{
+                    height: "500px",
+                    objectFit: "cover",
+                    borderTopLeftRadius: "16px",
+                    borderTopRightRadius: "16px",
+                  }}
+                />
+              </div>
+              {/* <div className="d-none">
                   <img
                     src="https://images.unsplash.com/photo-1526779259212-939e64788e3c?auto=format&fit=crop&q=80&w=874"
                     alt="Villa 2"
@@ -143,7 +150,7 @@ export default function BrowserDataPage() {
               }}
             >
               <div>
-                <p style={{ fontSize: "14px",fontWeight:'600', color: "#FF5A5F",fontFamily:'arial' }}>📍 Street Name, City</p>
+                <p style={{ fontSize: "14px", fontWeight: '600', color: "#FF5A5F", fontFamily: 'arial' }}>📍 Street Name, City</p>
                 <h2 className="fw-semibold" style={{ color: "#111111ff" }}>
                   2 Floor Sabah Al Salem
                 </h2>
@@ -198,9 +205,9 @@ export default function BrowserDataPage() {
           </div>
         </div>
 
-      
+
       </div>
-      <SearchIconPage/>
+      <SearchIconPage />
     </>
   );
 }

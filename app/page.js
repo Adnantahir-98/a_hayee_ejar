@@ -27,7 +27,7 @@ import { Fade, Slide } from "react-awesome-reveal";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useRouter } from 'next/navigation';
-import SearchIconPage from './pages/searchIcon/page';
+import SearchIconPage from './app-pages/searchIcon/page';
 import { useDispatch } from 'react-redux';
 import { GetPropertyTypes } from './store/app/propertyTypes/page.js';
 import { GetAreas } from './store/app/areas/page.js';
@@ -50,11 +50,54 @@ const areaOptions = [
   { value: "action5", label: "Action 5" }
 ];
 
+const initialState = {
+  id: 0,
+  userId: 0,
+  title: "",
+  areaId: 0,
+  blockId: 0,
+  propertyTypeId: 0,
+  listingStatus: "",
+  masterRoom: 0,
+  standardRoom: 0,
+  maidRoom: 0,
+  areaSize: 0,
+  bathroom: 0,
+  price: 0,
+  contactName: "",
+  email: "",
+  whatsapp: "",
+  isConcent: true,
+  description: "",
+  createdAt: new Date().toISOString(),
+  createdBy: 0,
+  modifiedAt: new Date().toISOString(),
+  modifiedBy: 0,
+  videoUrl: "",
+  tblListingFeatures: [
+    { featureId: 0 }
+  ],
+  tblListingDisplayOptions: [
+    { displayOptionId: 0 }
+  ]
+};
+
+
+
 const Page = () => {
   const router = useRouter();
   const dispatch = useDispatch()
   const [areas, setAreas] = useState([])
   const [propertyTypes, setPropertyTypes] = useState([])
+  const [formData, setFormData] = useState(initialState);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
   useEffect(() => {
     const GetPropertyTypesList = async () => {
       const res = await dispatch(GetPropertyTypes())
@@ -72,8 +115,8 @@ const Page = () => {
     }
     GetAreasList()
     GetPropertyTypesList()
-  }, [])
-  const [show, setShow] = useState(false);
+  }, [dispatch])
+
   const [advanceshow, setAdvanceShow] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -81,6 +124,11 @@ const Page = () => {
   const handleCloseSearch = () => setShowSearch(false);
   const handleShowSearch = () => setShowSearch(true);
 
+  const [showSinleAd, setShowSingleAd] = useState(false);
+  const handleCloseSingleAd = () => setShowSingleAd(false);
+  const handleShowSingleAd = () => setShowSingleAd(true);
+
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -162,8 +210,8 @@ const Page = () => {
                     <Fade direction="right" fraction={0.5} cascade delay={80}>
                       <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
                         <option>Areas</option>
-                        {areas?.map((type) => (
-                          <option value={type?.id}>{type?.name_en}</option>
+                        {areas?.map((type,index) => (
+                          <option key={index} value={type?.id}>{type?.name_en}</option>
                         ))}
                       </Form.Select>
                       {/* <Select
@@ -179,8 +227,8 @@ const Page = () => {
                     <Fade direction="right" fraction={0.5} cascade delay={130}>
                       <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
                         <option>Select Property Type</option>
-                        {propertyTypes?.map((type) => (
-                          <option value={type?.id}>{type?.name_En}</option>
+                        {propertyTypes?.map((type, index) => (
+                          <option key={index} value={type?.id}>{type?.name_En}</option>
                         ))}
                       </Form.Select>
                       {/* <Dropdown>
@@ -220,15 +268,16 @@ const Page = () => {
                   ] */}
                   {propertyTypes?.map((item, i) => (
                     <div className="property-item" key={i}>
-                      <Button
-                        onClick={() => router.push('/pages/browser-page')}
-                        variant="secondary"
-                        style={{ fontWeight: "700" }}
-                        className="d-flex align-items-center gap-2 w-100"
-                      >
-                        <img src={baseURL+item?.icon} style={{ width: "40px" }} alt={item?.name_En} />
-                        <span>{item?.name_En}</span>
-                      </Button>
+                      <Link href={`/pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`} className="text-decoration-none">
+                        <Button
+                          variant="secondary"
+                          style={{ fontWeight: "700" }}
+                          className="d-flex align-items-center gap-2 w-100"
+                        >
+                          <img src={baseURL + item?.icon} style={{ width: "40px" }} alt={item?.name_En} />
+                          <span>{item?.name_En}</span>
+                        </Button>
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -250,14 +299,18 @@ const Page = () => {
                   <Col md={12} className='d-block d-lg-none'>
                     <h1 className="display-4 fw-bolder mb-4 text-black">Browse. Rent. Settle In!</h1>
                   </Col>
-                  {propertyTypes?.map((type) => (
-                    <Col md={6} className='mobileViewOff'>
+                  {propertyTypes?.map((type,index) => (
+                    <Col md={6} key={index} className='mobileViewOff'>
                       <div className="brdrd-imges text-center my-3">
-                        <img src={baseURL+type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
+                        <img src={baseURL + type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
                         <h2 className="text-dark mt-0 pt-0">{type?.name_En}</h2>
-                        <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                          Explore
-                        </Button>
+                        <Link href={`/pages/browser-page?Name=${type?.name_En}&Id=${type?.id}`}>
+                          <Button
+                            variant="success"
+                            className="px-5 font-bold my-4 myButton">
+                            Explore
+                          </Button>
+                        </Link>
                       </div>
                     </Col>
                   ))}
@@ -280,11 +333,13 @@ const Page = () => {
                     <SwiperSlide key={index}>
                       <Col sm={12} md={12}>
                         <div className="brdrd-imges text-center my-3">
-                          <img src={baseURL+item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
+                          <img src={baseURL + item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
                           <h2 className="text-dark mt-0 pt-0">{item.name_En}</h2>
-                          <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                            Explore
-                          </Button>
+                          <Link href={`/pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}>
+                            <Button variant="success" className="px-5 font-bold my-4 myButton">
+                              Explore
+                            </Button>
+                          </Link>
                         </div>
                       </Col>
                     </SwiperSlide>
@@ -421,8 +476,77 @@ const Page = () => {
                   <li>30-day ad listing</li>
                   <li>Competitive ad value</li>
                 </ul>
-                <Button variant="warning" className='mt-4 fw-bold px-5'>Select</Button>
+                <Button
+                  variant="warning"
+                  onClick={() => {
+                    handleClose();
+                    handleShowSingleAd();
+                  }}
+                  className='mt-4 fw-bold px-5'
+                >Select</Button>
               </div>
+            </Col>
+          </Row>
+        </Modal.Body>
+      </Modal>
+
+
+      <Modal show={showSinleAd}
+        onHide={handleCloseSingleAd}
+        //style={{ marginTop: '10%' }}
+        dialogClassName="Single Ad-modal"
+      >
+        <Modal.Header closeButton>
+        </Modal.Header>
+
+        <Modal.Body className='py-5 bg-dark text-white'>
+          <Row className="g-3">
+            <Col md={12} className='text-center'>
+              <div style={{ display: 'flex', borderBottom: '1px solid yellow', flexDirection: 'column', paddingBottom: 10 }}>
+                <BsFillPersonPlusFill className='text-warning display-2 m-auto' size={34} />
+                <h5 className='text-center fw-bold'>Individual Promotion Application</h5>
+              </div>
+            </Col>
+            <Col md={12} >
+              <h4 className='fw-bold'>Contact Information</h4>
+            </Col>
+            <Col md={12} >
+              <label className='fw-semibold mb-2'>whatsapp Number</label>
+              <input type="text" className='form-control rounded-2' value={formData?.whatsapp} name='whatsapp' placeholder='Enter whatsapp Number' />
+            </Col>
+            <Col md={12} >
+              <label className='fw-semibold mb-2'>Email (optional)</label>
+              <input type="text" className='form-control rounded-2' placeholder='Enter Email Address' />
+            </Col>
+            <Col md={12} >
+              <h4 className='fw-bold'>Property and Pricing</h4>
+            </Col>
+            <Col md={12} >
+              <select className='form-select rounded-2'>
+                <option>Select Area</option>
+                {areas?.map((item,index) => (
+                  <option key={index} value={item?.id}>{item?.name_en}</option>
+                ))}
+              </select>
+            </Col>
+            <Col md={12} >
+              <select className='form-select rounded-2'>
+                <option>Select Block</option>
+                {/* {areas?.map((item) => (
+                  <option value={item?.id}>{item?.name_en}</option>
+                ))} */}
+              </select>
+            </Col>
+            <Col md={12} >
+              <select className='form-select rounded-2'>
+                <option>Property Type</option>
+                {propertyTypes?.map((type,index) => (
+                  <option key={index} value={type?.id}>{type?.name_En}</option>
+                ))}
+              </select>
+            </Col>
+            <Col md={12} >
+              <input type="text" className='form-control rounded-2' placeholder='Price (kwd)' />
             </Col>
           </Row>
         </Modal.Body>
