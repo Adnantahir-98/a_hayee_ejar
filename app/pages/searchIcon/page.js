@@ -24,9 +24,34 @@ import Fab from '@mui/material/Fab';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { Fade } from "react-awesome-reveal";
+import { GetPropertyTypes } from '../../store/app/propertyTypes/page.js';
+import { GetAreas } from '../../store/app/areas/page.js';
 import 'swiper/css';
+import { useDispatch } from 'react-redux';
 
 const SearchIconPage = () => {
+    const dispatch = useDispatch()
+    const [areas, setAreas] = useState([])
+    const [propertyTypes, setPropertyTypes] = useState([])
+    useEffect(() => {
+        const GetPropertyTypesList = async () => {
+            const res = await dispatch(GetPropertyTypes())
+            console.log("res", res?.payload)
+            if (res?.payload) {
+                const areaOptions = res?.payload
+                setPropertyTypes(areaOptions)
+            }
+        }
+        const GetAreasList = async () => {
+            const response = await dispatch(GetAreas())
+            if (response?.payload) {
+                const areaOptions = response?.payload
+                setAreas(areaOptions)
+            }
+        }
+        GetAreasList()
+        GetPropertyTypesList()
+    }, [])
     const [show, setShow] = useState(false);
     const [advanceshow, setAdvanceShow] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -51,7 +76,7 @@ const SearchIconPage = () => {
     }, []);
     return (
         <>
-            
+
 
 
             {/* Advance Button Modal  */}
@@ -102,7 +127,14 @@ const SearchIconPage = () => {
                         </Col>
                     </Row>
 
-                    <Dropdown>
+                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>Areas</option>
+                        {areas?.map((type) => (
+                            <option value={type?.id}>{type?.name_en}</option>
+                        ))}
+                    </Form.Select>
+                    {/* <Dropdown>
+
                         <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                             Select Area
                         </Dropdown.Toggle>
@@ -112,7 +144,7 @@ const SearchIconPage = () => {
                             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                             <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                         </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
 
                     <Dropdown className='mb-3'>
                         <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
@@ -223,26 +255,38 @@ const SearchIconPage = () => {
                         <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto mt-3' >
                             <Col md={3} className='m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={80}>
-                                    <Dropdown>
+                                    {/* <Dropdown>
                                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark w-100">
                                             Areas
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem href="#/action-1">Action</DropdownItem>
                                         </DropdownMenu>
-                                    </Dropdown>
+                                    </Dropdown> */}
+                                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                        <option>Areas</option>
+                                        {areas?.map((type) => (
+                                            <option value={type?.id}>{type?.name_en}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Fade>
                             </Col>
                             <Col md={5} className='m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={130}>
-                                    <Dropdown>
+                                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                        <option>Property Type</option>
+                                        {propertyTypes?.map((item,index) => (
+                                            <option key={index} value={item?.id}>{item?.name_En}</option>
+                                        ))}
+                                    </Form.Select>
+                                    {/* <Dropdown>
                                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 w-100 px-4 py-2 bg-light text-dark ">
                                             Select Property Type
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem href="#/action-1">Action</DropdownItem>
                                         </DropdownMenu>
-                                    </Dropdown>
+                                    </Dropdown> */}
                                 </Fade>
                             </Col>
                             <Col md={2} className='text-end m-auto'>

@@ -5,7 +5,7 @@ import React from "react";
 import { Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// const BrowserDataPage = React.lazy(() => import("./data/[viewID]"));
+const BrowserDataPage = React.lazy(() => import("./data/page"));
 
 export default function Page() {
   return (
@@ -26,7 +26,7 @@ export default function Page() {
         </div>
       }
     >
-      {/* <BrowserDataPage /> */}
+      <BrowserDataPage />
     </React.Suspense>
   );
 }

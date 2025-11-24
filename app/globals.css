@@ -55,6 +55,12 @@ body {
   gap: clamp(1.8rem, 7vw, 10rem);
 }
 
+
+.custom-dropdown-menu {
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
 .navbar-nav .nav-link {
   color: white !important;
   font-weight: 500;

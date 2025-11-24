@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from "next/link";
-import { Container, Row, Col, Button, } from 'react-bootstrap'
+import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import DropdownMenu from 'react-bootstrap/DropdownMenu';
 import DropdownItem from 'react-bootstrap/DropdownItem';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
+// import Select from "react-select";
 
 import { BsBriefcase, BsFillPersonPlusFill } from "react-icons/bs";
 import { MdOutlineVilla } from "react-icons/md";
@@ -28,6 +28,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useRouter } from 'next/navigation';
 import SearchIconPage from './pages/searchIcon/page';
+import { useDispatch } from 'react-redux';
+import { GetPropertyTypes } from './store/app/propertyTypes/page.js';
+import { GetAreas } from './store/app/areas/page.js';
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 const products = [
   { image: '/icons/apartments-black.svg', label: 'Apartment' },
@@ -38,9 +42,37 @@ const products = [
   { image: '/icons/storage.svg', label: 'Storage' },
 ];
 
+const areaOptions = [
+  { value: "action1", label: "Action 1" },
+  { value: "action2", label: "Action 2" },
+  { value: "action3", label: "Action 3" },
+  { value: "action4", label: "Action 4" },
+  { value: "action5", label: "Action 5" }
+];
 
 const Page = () => {
   const router = useRouter();
+  const dispatch = useDispatch()
+  const [areas, setAreas] = useState([])
+  const [propertyTypes, setPropertyTypes] = useState([])
+  useEffect(() => {
+    const GetPropertyTypesList = async () => {
+      const res = await dispatch(GetPropertyTypes())
+      if (res?.payload) {
+        const areaOptions = res?.payload
+        setPropertyTypes(areaOptions)
+      }
+    }
+    const GetAreasList = async () => {
+      const response = await dispatch(GetAreas())
+      if (response?.payload) {
+        const areaOptions = response?.payload
+        setAreas(areaOptions)
+      }
+    }
+    GetAreasList()
+    GetPropertyTypesList()
+  }, [])
   const [show, setShow] = useState(false);
   const [advanceshow, setAdvanceShow] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -112,27 +144,53 @@ const Page = () => {
               <Fade direction="left">
                 <Row className='rounded px-5 py-4 text-dark w-60 text-center m-auto mt-5' style={{ background: 'rgba(255,255,255, 0.85)' }}>
                   <Col md={3} className='m-auto'>
-                    <Fade direction="right" fraction={0.5} cascade delay={80}>
+                    {/* <Fade direction="right" fraction={0.5} cascade delay={80}>
                       <Dropdown>
-                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark ">
+                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
                           Areas
                         </DropdownToggle>
-                        <DropdownMenu>
+                        <DropdownMenu className="custom-dropdown-menu">
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
+                          <DropdownItem href="#/action-1">Action</DropdownItem>
                           <DropdownItem href="#/action-1">Action</DropdownItem>
                         </DropdownMenu>
                       </Dropdown>
+                    </Fade> */}
+                    <Fade direction="right" fraction={0.5} cascade delay={80}>
+                      <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
+                        <option>Areas</option>
+                        {areas?.map((type) => (
+                          <option value={type?.id}>{type?.name_en}</option>
+                        ))}
+                      </Form.Select>
+                      {/* <Select
+                        options={propertyTypes}
+                        placeholder="Areas"
+                        isSearchable={true}
+                        // className="w-100"
+                        className="w-100 border-0 rounded-2 bg-light text-dark custom-dropdown-menu"
+                      /> */}
                     </Fade>
                   </Col>
                   <Col md={4} className='m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={130}>
-                      <Dropdown>
+                      <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
+                        <option>Select Property Type</option>
+                        {propertyTypes?.map((type) => (
+                          <option value={type?.id}>{type?.name_En}</option>
+                        ))}
+                      </Form.Select>
+                      {/* <Dropdown>
                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark ">
                           Select Property Type
                         </DropdownToggle>
                         <DropdownMenu>
                           <DropdownItem href="#/action-1">Action</DropdownItem>
                         </DropdownMenu>
-                      </Dropdown>
+                      </Dropdown> */}
                     </Fade>
                   </Col>
                   <Col md={3} className='text-end m-auto'>
@@ -152,14 +210,15 @@ const Page = () => {
 
               <Slide direction="down" fraction={0.5} cascade delay={130}>
                 <div className="property-type-scroll m-auto py-4">
-                  {[
+                  {/* {[
                     { img: "/icons/apartments.svg", text: "Apartments" },
                     { img: "/icons/apartments-black.svg", text: "Whole Floor" },
                     { img: "/icons/villa.svg", text: "Vilas" },
                     { img: "/icons/artboard-6.svg", text: "Offices" },
                     { img: "/icons/stores.svg", text: "Stores" },
                     { img: "/icons/storage.svg", text: "Storages" },
-                  ].map(({ img, text }, i) => (
+                  ] */}
+                  {propertyTypes?.map((item, i) => (
                     <div className="property-item" key={i}>
                       <Button
                         onClick={() => router.push('/pages/browser-page')}
@@ -167,8 +226,8 @@ const Page = () => {
                         style={{ fontWeight: "700" }}
                         className="d-flex align-items-center gap-2 w-100"
                       >
-                        <img src={img} style={{ width: "40px" }} alt={text} />
-                        <span>{text}</span>
+                        <img src={baseURL+item?.icon} style={{ width: "40px" }} alt={item?.name_En} />
+                        <span>{item?.name_En}</span>
                       </Button>
                     </div>
                   ))}
@@ -191,60 +250,17 @@ const Page = () => {
                   <Col md={12} className='d-block d-lg-none'>
                     <h1 className="display-4 fw-bolder mb-4 text-black">Browse. Rent. Settle In!</h1>
                   </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/apartments-black.svg" alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Apartments</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Full Floors</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/artboard-6.svg" alt="browser-apartment for rent" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Offices</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/villa.svg" alt="browser-apartment for rent" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Villas</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Stores</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
-                  <Col md={6} className='mobileViewOff'>
-                    <div className="brdrd-imges text-center my-3">
-                      <img src="/icons/storage.svg" alt="browser-apartment for rent" className='broswer-img' />
-                      <h2 className="text-dark mt-0 pt-0">Storages</h2>
-                      <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
-                        Explore
-                      </Button>
-                    </div>
-                  </Col>
+                  {propertyTypes?.map((type) => (
+                    <Col md={6} className='mobileViewOff'>
+                      <div className="brdrd-imges text-center my-3">
+                        <img src={baseURL+type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
+                        <h2 className="text-dark mt-0 pt-0">{type?.name_En}</h2>
+                        <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
+                          Explore
+                        </Button>
+                      </div>
+                    </Col>
+                  ))}
                 </Row>
               </Col>
 
@@ -260,12 +276,12 @@ const Page = () => {
                     1024: { slidesPerView: 4 },
                   }}
                 >
-                  {products.map((item, index) => (
+                  {propertyTypes?.map((item, index) => (
                     <SwiperSlide key={index}>
                       <Col sm={12} md={12}>
                         <div className="brdrd-imges text-center my-3">
-                          <img src={item.image} alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                          <h2 className="text-dark mt-0 pt-0">{item.label}</h2>
+                          <img src={baseURL+item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
+                          <h2 className="text-dark mt-0 pt-0">{item.name_En}</h2>
                           <Button variant="success" onClick={() => router.push('/pages/browser-page')} className="px-5 font-bold my-4 myButton">
                             Explore
                           </Button>
@@ -366,7 +382,11 @@ const Page = () => {
       </section>
 
       <SearchIconPage />
-      <Modal show={show} onHide={handleClose} style={{ marginTop: '10%' }} dialogClassName="Promote-modal">
+      <Modal show={show}
+        onHide={handleClose}
+        //style={{ marginTop: '10%' }} 
+        dialogClassName="Promote-modal"
+      >
         <Modal.Header closeButton>
         </Modal.Header>
 

@@ -4,7 +4,7 @@ import './globals.css';
 
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-
+import ReduxProvider from "./redux/provider";
 
 const metadata = {
   title: "Ejar Property Consultant",
@@ -29,17 +29,19 @@ const changa = localFont({
 export default function RootLayout({ children }) {
 
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
-        <title>Ejar Property Consultant</title>
-        <meta name="description" content="Welcome to No.1 Gulf Property Consultant"></meta>
-      </head>
-      <body className={changa.variable} style={{backgroundColor: '#383838ff'}}>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+      <html lang="en">
+        <head>
+          <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
+          <title>Ejar Property Consultant</title>
+          <meta name="description" content="Welcome to No.1 Gulf Property Consultant"></meta>
+        </head>
+        <body className={changa.variable} style={{ backgroundColor: '#383838ff' }}>
+          <ReduxProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </ReduxProvider>
+        </body>
+      </html>
   );
 }

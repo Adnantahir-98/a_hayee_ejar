@@ -1,10 +1,12 @@
+"use client";
 import React from "react";
 import { Card, Button, Carousel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SearchIconPage from "../../searchIcon/page";
+import { useRouter } from "next/navigation";
 export default function BrowserDataPage() {
   const desktopHeight = 346; // fixed desktop card height
-
+  const router = useRouter();
   return (
     <>
       <div className="mt-30 mb-10 my-5 p-3">
@@ -154,7 +156,7 @@ export default function BrowserDataPage() {
                 <h4 className="fw-bold" style={{ color: "#111" }}>
                   1200 KWD
                 </h4>
-                <Button variant="success">More here →</Button>
+                <Button variant="success" onClick={() => router.push('/pages/selected-result-page')}>More here →</Button>
               </div>
             </div>
           </div>
@@ -188,7 +190,7 @@ export default function BrowserDataPage() {
                 <div className="text-center">
                   <span style={{ fontSize: "10px", color: "white" }}>● ● ● ●</span>
                 </div>
-                <Button variant="link" className="text-warning text-decoration-none p-0">
+                <Button variant="link" onClick={() => router.push('/pages/selected-result-page')} className="text-warning text-decoration-none p-0">
                   More here →
                 </Button>
               </div>
