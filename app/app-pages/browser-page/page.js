@@ -1,13 +1,14 @@
-// app/pages/page.js
-import React from "react";
+"use client";
+
+import React, { Suspense } from "react";
 import { Spinner } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-const BrowserDataPage = React.lazy(() => import("./inner/page"));
-//const BrowserDataPage = React.lazy(() => import("./propertyTypes/[viewID]"));
+import dynamic from "next/dynamic";
+
+const BrowserDataPage = dynamic(() => import("./main"), { ssr: false });
 
 export default function Page() {
   return (
-    <React.Suspense
+    <Suspense
       fallback={
         <div
           style={{
@@ -15,16 +16,15 @@ export default function Page() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#f8f9fa",
             flexDirection: "column",
+            backgroundColor: "#f8f9fa",
           }}
         >
           <Spinner animation="border" variant="primary" />
-          <p className="mt-3 fw-semibold text-muted">Loading Villas...</p>
         </div>
       }
     >
       <BrowserDataPage />
-    </React.Suspense>
+    </Suspense>
   );
 }

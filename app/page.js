@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from 'react';
 import Link from "next/link";
@@ -31,72 +31,139 @@ import SearchIconPage from './app-pages/searchIcon/page';
 import { useDispatch } from 'react-redux';
 import { GetPropertyTypes } from './store/app/propertyTypes/page.js';
 import { GetAreas } from './store/app/areas/page.js';
+import { GetFeatures } from './store/app/features/page.js';
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
-const products = [
-  { image: '/icons/apartments-black.svg', label: 'Apartment' },
-  { image: '/icons/villa.svg', label: 'Full Floors' },
-  { image: '/icons/artboard-6.svg', label: 'Offices' },
-  { image: '/icons/villa.svg', label: 'Villas' },
-  { image: '/icons/stores.svg', label: 'Stores' },
-  { image: '/icons/storage.svg', label: 'Storage' },
-];
-
-const areaOptions = [
-  { value: "action1", label: "Action 1" },
-  { value: "action2", label: "Action 2" },
-  { value: "action3", label: "Action 3" },
-  { value: "action4", label: "Action 4" },
-  { value: "action5", label: "Action 5" }
-];
-
-const initialState = {
-  id: 0,
-  userId: 0,
-  title: "",
-  areaId: 0,
-  blockId: 0,
-  propertyTypeId: 0,
-  listingStatus: "",
-  masterRoom: 0,
-  standardRoom: 0,
-  maidRoom: 0,
-  areaSize: 0,
-  bathroom: 0,
-  price: 0,
-  contactName: "",
-  email: "",
-  whatsapp: "",
-  isConcent: true,
-  description: "",
-  createdAt: new Date().toISOString(),
-  createdBy: 0,
-  modifiedAt: new Date().toISOString(),
-  modifiedBy: 0,
-  videoUrl: "",
-  tblListingFeatures: [
-    { featureId: 0 }
-  ],
-  tblListingDisplayOptions: [
-    { displayOptionId: 0 }
-  ]
-};
-
-
-
 const Page = () => {
+  const initialState = {
+    id: 0,
+    userId: 0,
+    title: "",
+    areaId: 0,
+    blockId: 0,
+    propertyTypeId: 0,
+    listingStatus: "",
+    masterRoom: 0,
+    standardRoom: 0,
+    maidRoom: 0,
+    areaSize: 0,
+    bathroom: 0,
+    price: 0,
+    contactName: "",
+    email: "",
+    whatsapp: "",
+    isConcent: true,
+    description: "",
+    createdAt: new Date().toISOString(),
+    createdBy: 0,
+    modifiedAt: new Date().toISOString(),
+    modifiedBy: 0,
+    videoUrl: "",
+    tblListingFeatures: [],
+    tblListingDisplayOptions: []
+  };
   const router = useRouter();
   const dispatch = useDispatch()
   const [areas, setAreas] = useState([])
+  const [features, setFeatures] = useState([])
+
   const [propertyTypes, setPropertyTypes] = useState([])
+  const [tblListingFeatures, setTblListingFeatures] = useState([])
+  const [blocks, setBlocksArray] = useState([])
   const [formData, setFormData] = useState(initialState);
+  console.log('formData:', formData)
+  console.log("tblListingFeatures:", tblListingFeatures);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleFeatureSelect = (e) => {
+    // 1️⃣ Get selected options and filter out empty values
+    const selectedData = Array.from(e.target.selectedOptions)
+      .map((opt) => ({
+        featureId: Number(opt.value),
+        featureName: opt.text,
+      }))
+      .filter((item) => item.featureId); // remove 0, null, undefined
+
+    if (selectedData.length === 0) return; // exit if nothing valid
+
+    // -----------------------------
+    // 2️⃣ Update UI list (ID + Name)
+    // -----------------------------
+    setTblListingFeatures((prev) => {
+      const merged = [...prev];
+
+      selectedData.forEach((item) => {
+        if (!merged.some((x) => x.featureId === item.featureId)) {
+          merged.push(item);
+        }
+      });
+
+      return merged;
+    });
+
+    // -----------------------------
+    // 3️⃣ Update formData (only IDs)
+    // -----------------------------
+    const selectedIds = selectedData.map((x) => ({ featureId: x.featureId }));
+    console.log('selectedIds:', selectedIds)
+    setFormData((prev) => {
+      const oldList = prev.tblListingFeatures || [];
+      const merged = [...oldList];
+
+      selectedIds.forEach((item) => {
+        if (!merged.some((x) => x.featureId === item.featureId)) {
+          merged.push(item);
+        }
+      });
+
+      return {
+        ...prev,
+        tblListingFeatures: merged,
+      };
+    });
+  };
+  // Remove a feature by ID
+  const handleRemoveFeature = (featureId) => {
+    // 1️⃣ Remove from UI list (ID + Name)
+    setTblListingFeatures((prev) => prev.filter((x) => x.featureId !== featureId));
+
+    // 2️⃣ Remove from formData (only IDs)
+    setFormData((prev) => {
+      const oldList = prev.tblListingFeatures || [];
+      const filtered = oldList.filter((x) => x.featureId !== featureId);
+
+      return {
+        ...prev,
+        tblListingFeatures: filtered,
+      };
+    });
+  };
+
+
+  const handleAreaChange = async (e) => {
+    const value = Number(e.target.value); // convert string to number
+    console.log('Selected Area ID:', value);
+    setFormData((prev) => ({
+      ...prev,
+      areaId: value,
+    }));
+    setFormData((prev) => ({
+      ...prev,
+      blockId: 0,
+    }));
+    const selectedArea = areas?.find((item) => item.id === value);
+    if (selectedArea && selectedArea.blocks) {
+      const blocks = selectedArea.blocks.split("_").map((b) => Number(b.trim()));
+      setBlocksArray(blocks);
+    } else {
+      setBlocksArray([]);
+    }
   };
   useEffect(() => {
     const GetPropertyTypesList = async () => {
@@ -106,6 +173,13 @@ const Page = () => {
         setPropertyTypes(areaOptions)
       }
     }
+    const GetFeaturesList = async () => {
+      const response = await dispatch(GetFeatures())
+      if (response?.payload) {
+        setFeatures(response?.payload)
+      }
+    }
+    GetFeaturesList()
     const GetAreasList = async () => {
       const response = await dispatch(GetAreas())
       if (response?.payload) {
@@ -210,7 +284,7 @@ const Page = () => {
                     <Fade direction="right" fraction={0.5} cascade delay={80}>
                       <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
                         <option>Areas</option>
-                        {areas?.map((type,index) => (
+                        {areas?.map((type, index) => (
                           <option key={index} value={type?.id}>{type?.name_en}</option>
                         ))}
                       </Form.Select>
@@ -268,7 +342,7 @@ const Page = () => {
                   ] */}
                   {propertyTypes?.map((item, i) => (
                     <div className="property-item" key={i}>
-                      <Link href={`/pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`} className="text-decoration-none">
+                      <Link href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`} className="text-decoration-none">
                         <Button
                           variant="secondary"
                           style={{ fontWeight: "700" }}
@@ -299,12 +373,12 @@ const Page = () => {
                   <Col md={12} className='d-block d-lg-none'>
                     <h1 className="display-4 fw-bolder mb-4 text-black">Browse. Rent. Settle In!</h1>
                   </Col>
-                  {propertyTypes?.map((type,index) => (
+                  {propertyTypes?.map((type, index) => (
                     <Col md={6} key={index} className='mobileViewOff'>
                       <div className="brdrd-imges text-center my-3">
                         <img src={baseURL + type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
                         <h2 className="text-dark mt-0 pt-0">{type?.name_En}</h2>
-                        <Link href={`/pages/browser-page?Name=${type?.name_En}&Id=${type?.id}`}>
+                        <Link href={`/app-pages/browser-page?Name=${type?.name_En}&Id=${type?.id}`}>
                           <Button
                             variant="success"
                             className="px-5 font-bold my-4 myButton">
@@ -335,7 +409,7 @@ const Page = () => {
                         <div className="brdrd-imges text-center my-3">
                           <img src={baseURL + item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
                           <h2 className="text-dark mt-0 pt-0">{item.name_En}</h2>
-                          <Link href={`/pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}>
+                          <Link href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}>
                             <Button variant="success" className="px-5 font-bold my-4 myButton">
                               Explore
                             </Button>
@@ -510,44 +584,152 @@ const Page = () => {
             <Col md={12} >
               <h4 className='fw-bold'>Contact Information</h4>
             </Col>
-            <Col md={12} >
+            <Col md={6} >
               <label className='fw-semibold mb-2'>whatsapp Number</label>
-              <input type="text" className='form-control rounded-2' value={formData?.whatsapp} name='whatsapp' placeholder='Enter whatsapp Number' />
+              <input type="text" className='form-control rounded-2' value={formData?.whatsapp} name='whatsapp' onChange={(e) => handleChange(e)} placeholder='Enter whatsapp Number' />
             </Col>
-            <Col md={12} >
+            <Col md={6} >
               <label className='fw-semibold mb-2'>Email (optional)</label>
-              <input type="text" className='form-control rounded-2' placeholder='Enter Email Address' />
+              <input type="text" className='form-control rounded-2' value={formData?.email} name='email' onChange={(e) => handleChange(e)} placeholder='Enter Email Address' />
             </Col>
             <Col md={12} >
               <h4 className='fw-bold'>Property and Pricing</h4>
             </Col>
             <Col md={12} >
-              <select className='form-select rounded-2'>
-                <option>Select Area</option>
-                {areas?.map((item,index) => (
+              <select className='form-select rounded-2' name='areaId' onChange={(e) => handleAreaChange(e)}>
+                <option value={''}>Select Area</option>
+                {areas?.map((item, index) => (
                   <option key={index} value={item?.id}>{item?.name_en}</option>
                 ))}
               </select>
             </Col>
             <Col md={12} >
-              <select className='form-select rounded-2'>
-                <option>Select Block</option>
-                {/* {areas?.map((item) => (
-                  <option value={item?.id}>{item?.name_en}</option>
-                ))} */}
+              <select className='form-select rounded-2' defaultValue={formData?.blockId} name='blockId' onChange={(e) => handleChange(e)}>
+                <option value={0}>Select Block</option>
+                {blocks?.map((item) => (
+                  <option key={item} value={item?.id}>{item}</option>
+                ))}
               </select>
             </Col>
             <Col md={12} >
-              <select className='form-select rounded-2'>
+              <select className='form-select rounded-2' name='propertyTypeId' onChange={(e) => handleChange(e)}>
                 <option>Property Type</option>
-                {propertyTypes?.map((type,index) => (
+                {propertyTypes?.map((type, index) => (
                   <option key={index} value={type?.id}>{type?.name_En}</option>
                 ))}
               </select>
             </Col>
             <Col md={12} >
-              <input type="text" className='form-control rounded-2' placeholder='Price (kwd)' />
+              <input type="text" className='form-control rounded-2' name='price' onChange={(e) => handleAreaChange(e)} placeholder='Price (kwd)' />
             </Col>
+            <Col md={6} >
+              <label className='fw-semibold'>Open to Offer</label>
+              <input type="checkbox" style={{ marginLeft: 10 }} />
+            </Col>
+            <Col md={6} >
+              <label className='fw-semibold'>Fix Price</label>
+              <input type="checkbox" style={{ marginLeft: 10 }} />
+            </Col>
+
+            {formData?.propertyTypeId === '7' || formData?.propertyTypeId === '6' || formData?.propertyTypeId === '4' ? (
+              <>
+                <Col md={12} >
+                  <h4 className='fw-bold'>Number Rooms</h4>
+                </Col>
+                <Col md={12} >
+                  <select className='form-select rounded-2' name='propertyTypeId' onChange={(e) => handleChange(e)}>
+                    <option>m per square</option>
+                  </select>
+                </Col>
+                <Col md={12} >
+                  <select className='form-select rounded-2' name='masterRoom' onChange={(e) => handleChange(e)}>
+                    <option>Master Bedrooms</option>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                  </select>
+                </Col>
+              </>
+            ) : null}
+
+            <Col md={12} >
+              <h4><span className='fw-bold'>Facilities & Extras</span> <small style={{ fontSize: 12 }}>* your select may multiple</small></h4>
+            </Col>
+            <Col md={12} >
+              <select
+                className="form-select rounded-2"
+                onChange={handleFeatureSelect}
+              >
+                <option value={''}>Facilities</option>
+                {features?.map((type, index) => (
+                  <option key={index} value={type?.id} >{type?.name}</option>
+                ))}
+              </select>
+            </Col>
+            <Col md={12} >
+              {tblListingFeatures?.length > 0 && tblListingFeatures?.map((feature, index) => (
+                <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
+                  {/* Remove button */}
+                  <button
+                    onClick={() => handleRemoveFeature(feature?.featureId)}
+                    style={{
+                      position: "absolute",
+                      top: "-6px",
+                      left: "-6px",
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "18px",
+                      height: "18px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      lineHeight: "18px",
+                      padding: 0,
+                    }}
+                  >
+                    X
+                  </button>
+
+                  {/* Tag/Label */}
+                  <div
+                    className="fw-semibold"
+                    style={{
+                      backgroundColor: "#4DB6AC",
+                      padding: "5px 10px",
+                      borderRadius: 6,
+                      textAlign: "center",
+                      fontSize: 9,
+                      minWidth: 60,
+                      width: 'fit-content'
+                    }}
+                  >
+                    {feature?.featureName}
+                  </div>
+                </div>
+              ))}
+
+            </Col>
+
+            <Col md={12} >
+              <select className='form-select rounded-2'>
+                <option>Conditions</option>
+                {propertyTypes?.map((type, index) => (
+                  <option key={index} value={type?.id}>{type?.name_En}</option>
+                ))}
+              </select>
+            </Col>
+            <Col md={12} >
+              <label className='fw-semibold mb-2'>Additional Comments</label>
+              <textarea className='form-control rounded-2' value={formData?.description} name='description' onChange={(e) => handleChange(e)} rows={4} placeholder='Additional Comments'></textarea>
+            </Col>
+            <Button
+              variant="warning"
+              style={{ alignContent: 'center' }}
+              className='mt-4 fw-bold px-5 w-50'
+            >Send</Button>
           </Row>
         </Modal.Body>
       </Modal>

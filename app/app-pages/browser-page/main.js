@@ -1,12 +1,12 @@
-"use client";
+"use client"; // ← important
+
 import React from "react";
 import { Card, Button, Carousel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import SearchIconPage from "../../searchIcon/page";
+import SearchIconPage from "../searchIcon/page";
 import { useRouter } from "next/navigation";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-export const dynamic = "force-dynamic";
 
 export default function BrowserDataPage() {
   const searchParams = useSearchParams();     // query params

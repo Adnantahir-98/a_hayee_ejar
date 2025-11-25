@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState, useEffect } from 'react';
 import Link from "next/link";
@@ -129,8 +129,8 @@ const SearchIconPage = () => {
 
                     <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                         <option>Areas</option>
-                        {areas?.map((type,index) => (
-                            <option key={index} value={type?.id}>{type?.name_en}</option>
+                        {areas?.map((type) => (
+                            <option key={type?.id} value={type?.id}>{type?.name_en}</option>
                         ))}
                     </Form.Select>
                     {/* <Dropdown>
@@ -265,8 +265,8 @@ const SearchIconPage = () => {
                                     </Dropdown> */}
                                     <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                                         <option>Areas</option>
-                                        {areas?.map((type, index) => (
-                                            <option key={index} value={type?.id}>{type?.name_en}</option>
+                                        {areas?.map((type) => (
+                                            <option key={type?.id} value={type?.id}>{type?.name_en}</option>
                                         ))}
                                     </Form.Select>
                                 </Fade>
