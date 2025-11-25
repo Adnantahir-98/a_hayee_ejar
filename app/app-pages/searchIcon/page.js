@@ -24,8 +24,8 @@ import Fab from '@mui/material/Fab';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { Fade } from "react-awesome-reveal";
-import { GetPropertyTypes } from '../../store/app/propertyTypes/page.js';
-import { GetAreas } from '../../store/app/areas/page.js';
+import { GetPropertyTypes } from '../../store/app/propertyTypes/slice';
+import { GetAreas } from '../../store/app/areas/slice';
 import 'swiper/css';
 import { useDispatch } from 'react-redux';
 
