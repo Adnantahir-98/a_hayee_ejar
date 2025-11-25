@@ -8,11 +8,11 @@ export default function SelectedResultPage() {
   const [show, setShow] = useState(false);
 
   const images = [
-    "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800",
+    "https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80",
     "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800",
   ];
   const imageslist = [
-    { image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" },
+    { image: "https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80" },
     { image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" },
   ]
 

@@ -3,6 +3,7 @@
 import React, { Suspense } from "react";
 import { Spinner } from "react-bootstrap";
 import dynamic from "next/dynamic";
+import { Spin } from "antd";
 
 const BrowserDataPage = dynamic(() => import("./main"), { ssr: false });
 
@@ -10,18 +11,13 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <div
-          style={{
-            height: "100vh",
+        <div style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column",
-            backgroundColor: "#f8f9fa",
-          }}
-        >
-          <Spinner animation="border" variant="primary" />
-        </div>
+            height: "100vh",
+            width: "100%",
+          }}><Spin size="large" /></div>
       }
     >
       <BrowserDataPage />

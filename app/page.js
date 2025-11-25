@@ -33,8 +33,19 @@ import { GetPropertyTypes } from './store/app/propertyTypes/slice';
 import { GetAreas } from './store/app/areas/slice';
 import { GetFeatures } from './store/app/features/slice';
 import { AddPropertyListing } from './store/app/propertyListing/slice';
+import { GetConditions } from './store/app/conditions/slice';
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
+
+const propertyTypeOptions = [
+  { id: 1, name: "Villa", icon: MdOutlineVilla },
+  { id: 2, name: "Apartment", icon: BsBuilding },
+  { id: 3, name: "Whole Floor", icon: GoStack },
+  { id: 4, name: "Store", icon: FaStore },
+  { id: 5, name: "Storage", icon: LuWarehouse },
+  { id: 6, name: "Office", icon: FiBriefcase }
+];
 
 const Page = () => {
   const initialState = {
@@ -43,7 +54,7 @@ const Page = () => {
     areaId: 0,
     blockId: 0,
     propertyTypeId: 0,
-    listingStatus: "",
+    listingStatus: "Pending",
     masterRoom: 0,
     standardRoom: 0,
     maidRoom: 0,
@@ -67,17 +78,116 @@ const Page = () => {
   const dispatch = useDispatch()
   const [areas, setAreas] = useState([])
   const [features, setFeatures] = useState([])
+  const [conditions, setConditions] = useState([])
+  const [selectedType, setSelectedType] = useState(null);
+  useEffect(() => {
+    // if (selectedType) {
+    //   setFilterBody(prev => ({
+    //     ...prev,
+    //     filter: {
+    //       ...prev.filter,
+    //       propertyTypes: [selectedType]
+    //     }
+    //   }));
+    // }
+  }, [selectedType]);
 
   const [propertyTypes, setPropertyTypes] = useState([])
   const [tblListingFeatures, setTblListingFeatures] = useState([])
+  const [tblListingDisplayOptions, setTblListingDisplayOptions] = useState([])
   const [blocks, setBlocksArray] = useState([])
   const [formData, setFormData] = useState(initialState);
+  // search start
+  const [propertyTypeId, setPropertyTypeId] = useState(null);
+  const [propertyTypeName, setPropertyTypeName] = useState("");
+  const [areaId, setAreaId] = useState(null);
+  const [areaName, setAreaName] = useState("");
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    let queryParams = [];
+    if (propertyTypeId) {
+      queryParams.push(`id=${propertyTypeId}`);
+      queryParams.push(`Name=${propertyTypeName}`);
+    }
+    if (areaId) {
+      queryParams.push(`CityId=${areaId}`);
+      queryParams.push(`CityName=${areaName}`);
+    }
+    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    router.push(`/app-pages/browser-page${queryString}`);
+  }
+  // search end
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleConditionsSelect = (e) => {
+    // 1️⃣ Get selected options and filter out empty values
+    const selectedData = Array.from(e.target.selectedOptions)
+      .map((opt) => ({
+        conditionId: Number(opt.value),
+        conditionName: opt.text,
+      }))
+      .filter((item) => item.conditionId); // remove 0, null, undefined
+
+    if (selectedData.length === 0) return; // exit if nothing valid
+
+    // -----------------------------
+    // 2️⃣ Update UI list (ID + Name)
+    // -----------------------------
+    setTblListingDisplayOptions((prev) => {
+      const merged = [...prev];
+
+      selectedData?.forEach((item) => {
+        if (!merged.some((x) => x.conditionId === item.conditionId)) {
+          merged.push(item);
+        }
+      });
+
+      return merged;
+    });
+
+    // -----------------------------
+    // 3️⃣ Update formData (only IDs)
+    // -----------------------------
+    const selectedIds = selectedData.map((x) => ({ conditionId: x.conditionId }));
+    setFormData((prev) => {
+      const oldList = prev.tblListingDisplayOptions || [];
+      const merged = [...oldList];
+
+      selectedIds?.forEach((item) => {
+        if (!merged.some((x) => x.conditionId === item.conditionId)) {
+          merged.push(item);
+        }
+      });
+
+      return {
+        ...prev,
+        tblListingDisplayOptions: merged,
+      };
+    });
+  };
+
+  // Remove a feature by ID
+  const handleRemoveCondition = (e, conditionId) => {
+    e.preventDefault()
+    // 1️⃣ Remove from UI list (ID + Name)
+    setTblListingDisplayOptions((prev) => prev.filter((x) => x.conditionId !== conditionId));
+
+    // 2️⃣ Remove from formData (only IDs)
+    setFormData((prev) => {
+      const oldList = prev.tblListingDisplayOptions || [];
+      const filtered = oldList.filter((x) => x.conditionId !== conditionId);
+
+      return {
+        ...prev,
+        tblListingDisplayOptions: filtered,
+      };
+    });
   };
 
   const handleFeatureSelect = (e) => {
@@ -128,7 +238,8 @@ const Page = () => {
     });
   };
   // Remove a feature by ID
-  const handleRemoveFeature = (featureId) => {
+  const handleRemoveFeature = (e, featureId) => {
+    e.preventDefault()
     // 1️⃣ Remove from UI list (ID + Name)
     setTblListingFeatures((prev) => prev.filter((x) => x.featureId !== featureId));
 
@@ -146,8 +257,7 @@ const Page = () => {
 
 
   const handleAreaChange = async (e) => {
-    const value = Number(e.target.value); // convert string to number
-    console.log('Selected Area ID:', value);
+    const value = Number(e.target.value);
     setFormData((prev) => ({
       ...prev,
       areaId: value,
@@ -172,6 +282,13 @@ const Page = () => {
         setPropertyTypes(areaOptions)
       }
     }
+    const GetConditionsList = async () => {
+      const response = await dispatch(GetConditions())
+      if (response?.payload) {
+        setConditions(response?.payload)
+      }
+    }
+    GetConditionsList()
     const GetFeaturesList = async () => {
       const response = await dispatch(GetFeatures())
       if (response?.payload) {
@@ -214,15 +331,15 @@ const Page = () => {
     setSaveLoading(true)
     try {
       await dispatch(AddPropertyListing(formData));
-     
+
     } catch (error) {
-      
+      console.log('Error adding property listing:', error);
     } finally {
       setSaveLoading(false)
       handleCloseSingleAd()
       setFormData(initialState);
     }
-    
+
   }
 
   useEffect(() => {
@@ -296,7 +413,15 @@ const Page = () => {
                       </Dropdown>
                     </Fade> */}
                     <Fade direction="right" fraction={0.5} cascade delay={80}>
-                      <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
+                      <Form.Select
+                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          const selectedName = e.target.options[e.target.selectedIndex].text;
+                          setAreaId(selectedId);
+                          setAreaName(selectedName);
+                        }}
+                      >
                         <option>Areas</option>
                         {areas?.map((type, index) => (
                           <option key={index} value={type?.id}>{type?.name_en}</option>
@@ -313,7 +438,15 @@ const Page = () => {
                   </Col>
                   <Col md={4} className='m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={130}>
-                      <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
+                      <Form.Select
+                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          const selectedName = e.target.options[e.target.selectedIndex].text;
+                          setPropertyTypeId(selectedId);
+                          setPropertyTypeName(selectedName);
+                        }}
+                      >
                         <option>Select Property Type</option>
                         {propertyTypes?.map((type, index) => (
                           <option key={index} value={type?.id}>{type?.name_En}</option>
@@ -331,7 +464,7 @@ const Page = () => {
                   </Col>
                   <Col md={3} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={140}>
-                      <Button variant="success">
+                      <Button variant="success" onClick={(e) => handleSearch(e)}>
                         Search
                       </Button>
                     </Fade>
@@ -405,7 +538,7 @@ const Page = () => {
                 </Row>
               </Col>
 
-              <Row className="align-items-stretch mobileSlider mx-auto">
+              <Row className="align-items-stretch d-block d-lg-none mx-auto">
                 <Swiper
                   spaceBetween={20}
                   slidesPerView={1}
@@ -579,6 +712,122 @@ const Page = () => {
       </Modal>
 
 
+      <Modal show={advanceshow} onHide={handleAdvanceClose} dialogClassName="custom-modal">
+        <Modal.Header className='fw-bolder' closeButton>
+          Advanced Search
+        </Modal.Header>
+
+        <Modal.Body className='p-4'>
+          <h3>Property Type</h3>
+          <Row>
+            {propertyTypeOptions.map((item) => {
+              const Icon = item.icon; // Component dynamic
+
+              return (
+                <Col
+                  key={item.id}
+                  md={4}
+                  className="text-center mb-3"
+                  onClick={() => setSelectedType(item.id)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div
+                    className="pt-2 pb-1 rounded-lg text-center"
+                    style={{
+                      background: selectedType === item.id
+                        ? "rgba(255, 255, 255, 0.25)"   // Active color
+                        : "rgba(255, 255, 255, 0.05)", // Default
+                      border: selectedType === item.id ? "2px solid #fff" : "2px solid transparent",
+                      transition: "0.2s"
+                    }}
+                  >
+                    <Icon className="display-5 m-auto pb-2" />
+                    <p>{item.name}</p>
+                  </div>
+                </Col>
+              );
+            })}
+          </Row>
+
+
+          <Form.Select onClick={(e) => handleAreaChange(e)} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+            <option>Areas</option>
+            {areas?.map((type, index) => (
+              <option key={index} value={type?.id}>{type?.name_en}</option>
+            ))}
+          </Form.Select>
+          {/* <Dropdown>
+      
+                              <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                  Select Area
+                              </Dropdown.Toggle>
+      
+                              <Dropdown.Menu>
+                                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                  <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                  <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                              </Dropdown.Menu>
+                          </Dropdown> */}
+
+
+
+          <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+            <option>Select Block</option>
+            {blocks?.map((block, index) => (
+              <option key={index} value={block}>{block}</option>
+            ))}
+          </Form.Select>
+
+
+          <Form className='text-white'>
+            <Row className="mb-3">
+              <small id="emailHelp" className="form-text text-secondary pb-1">Budget range (KWD per month)</small>
+              <Col>
+                <Form.Control type="text" size="sm" placeholder="250" className='place-clr' />
+              </Col> To
+              <Col>
+                <Form.Control type="text" size="sm" placeholder="260" className='place-clr' />
+              </Col>
+            </Row>
+          </Form>
+
+          <Row>
+            <h5>Condition</h5>
+            {conditions?.map((condition, index) => (
+              <Col md={3} key={index}>
+                <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                  <small>{condition?.name}</small>
+                </div>
+              </Col>
+            ))}
+          </Row>
+
+          <h5>Additional Filters</h5>
+          <Dropdown className='mb-2'>
+            <small className='text-secondary'>Number of Floors</small>
+            <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+              Select Floors
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item href="#/action-1">1</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">2</Dropdown.Item>
+              <Dropdown.Item href="#/action-3">3</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <Form className='text-white'>
+            <small id="radio" className="form-text text-secondary pb-1">Basement</small>
+            <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
+            <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
+          </Form>
+
+          <div className='text-center'>
+            <Button variant="warning" className='mt-4 fw-bold px-5' onClick={() => router.push('/app-pages/browser-page?id=1')}>Search</Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+
       <Modal show={showSinleAd}
         onHide={handleCloseSingleAd}
         //style={{ marginTop: '10%' }}
@@ -635,7 +884,7 @@ const Page = () => {
                 </select>
               </Col>
               <Col md={12} >
-                <input type="text" className='form-control rounded-2' name='price' onChange={(e) => handleAreaChange(e)} placeholder='Price (kwd)' />
+                <input type="text" className='form-control rounded-2' value={formData?.price} name='price' onChange={(e) => handleChange(e)} placeholder='Price (kwd)' />
               </Col>
               <Col md={6} >
                 <label className='fw-semibold'>Open to Offer</label>
@@ -688,7 +937,7 @@ const Page = () => {
                   <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
                     {/* Remove button */}
                     <button
-                      onClick={() => handleRemoveFeature(feature?.featureId)}
+                      onClick={(e) => handleRemoveFeature(e, feature?.featureId)}
                       style={{
                         position: "absolute",
                         top: "-6px",
@@ -729,13 +978,62 @@ const Page = () => {
               </Col>
 
               <Col md={12} >
-                <select className='form-select rounded-2'>
+                <select
+                  className='form-select rounded-2'
+                  onChange={handleConditionsSelect}
+                >
                   <option>Conditions</option>
-                  {propertyTypes?.map((type, index) => (
-                    <option key={index} value={type?.id}>{type?.name_En}</option>
+                  {conditions?.map((type, index) => (
+                    <option key={index} value={type?.id}>{type?.name}</option>
                   ))}
                 </select>
               </Col>
+
+              <Col md={12} >
+                {tblListingDisplayOptions?.length > 0 && tblListingDisplayOptions?.map((condition, index) => (
+                  <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => handleRemoveCondition(e, condition?.conditionId)}
+                      style={{
+                        position: "absolute",
+                        top: "-6px",
+                        left: "-6px",
+                        background: "red",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "18px",
+                        height: "18px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        lineHeight: "18px",
+                        padding: 0,
+                      }}
+                    >
+                      X
+                    </button>
+
+                    {/* Tag/Label */}
+                    <div
+                      className="fw-semibold"
+                      style={{
+                        backgroundColor: "#4DB6AC",
+                        padding: "5px 10px",
+                        borderRadius: 6,
+                        textAlign: "center",
+                        fontSize: 9,
+                        minWidth: 60,
+                        width: 'fit-content'
+                      }}
+                    >
+                      {condition?.conditionName}
+                    </div>
+                  </div>
+                ))}
+
+              </Col>
+
               <Col md={12} >
                 <label className='fw-semibold mb-2'>Additional Comments</label>
                 <textarea className='form-control rounded-2' value={formData?.description} name='description' onChange={(e) => handleChange(e)} rows={4} placeholder='Additional Comments'></textarea>
@@ -746,7 +1044,7 @@ const Page = () => {
                 disabled={saveLoading}
                 style={{ alignContent: 'center' }}
                 className='mt-4 fw-bold px-5 w-50'
-              >{saveLoading ? 'Loading...':'Send'}</Button>
+              >{saveLoading ? 'Loading...' : 'Send'}</Button>
             </Row>
           </form>
         </Modal.Body>
