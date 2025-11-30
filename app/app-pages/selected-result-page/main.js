@@ -1,20 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SearchIconPage from "../../searchIcon/page";
-import { Modal,Col,Carousel, Row } from "react-bootstrap";
+import SearchIconPage from "../searchIcon/page";
+import { useSearchParams } from "next/navigation";
+import { Modal, Col, Carousel, Row } from "react-bootstrap";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { GetPropertyListingById } from "../../store/app/propertyListing/slice";
 import 'swiper/css';
+import { useDispatch, useSelector } from "react-redux";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
 export default function SelectedResultPage() {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const productId = searchParams.get("product-id");
+  const { data, loading, status } = useSelector(state => state.propertyListing);
+  console.log("Selected Property Data:", data);
+  useEffect(() => {
+    if (productId) {
+      dispatch(GetPropertyListingById(productId));
+    }
+  }, [productId, dispatch]);
 
-  const images = [
-    "https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80",
-    "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800",
-  ];
-  const imageslist = [
-    { image: "https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80" },
-    { image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" },
-  ]
+
+  //GetPropertyListingById
+  const images = data?.tblListingImages
+    ?.map(item => ({
+      image: baseURL + item.imagePath
+    }))
+    .map(imgObj => imgObj.image);
+
+  const imageslist = data?.tblListingImages?.map(item => ({
+    image: baseURL + item.imagePath
+  }));
+  // const imageslist = [
+  //   { image: "https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80" },
+  //   { image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" },
+  // ]
 
   return (
     <div className="mt-30 my-5 p-3">
@@ -22,7 +44,7 @@ export default function SelectedResultPage() {
       </h1>
       <div className="mt-10">
         <Carousel>
-          {images.map((img, index) => (
+          {images?.map((img, index) => (
             <Carousel.Item key={index}>
               <img
                 src={img}
@@ -65,28 +87,15 @@ export default function SelectedResultPage() {
           </Swiper>
         </Row>
         <h2 className="text-black" style={{ fontWeight: '800', textAlign: 'center' }}>Property information</h2>
-        <p className="py-3" style={{ fontWeight: '600', textAlign: 'center', color: 'grey' }}>Name and location</p>
+        <p className="py-3" style={{ fontWeight: '600', textAlign: 'center', color: 'grey' }}>{data?.title} in {data?.tblArea?.name_en}</p>
         <div className="row">
           <div className="col-12 col-md-6 d-none d-lg-flex">
             <div className="row">
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
-              <div className="col-12 col-md-6 my-2">
-                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800" onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
-              </div>
+              {imageslist?.map((item, index) => (
+                <div key={index} className="col-12 col-md-6 my-2">
+                  <img src={item?.image} onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
+                </div>
+              ))}
             </div>
           </div>
           <div className="col-md-1"></div>
@@ -116,27 +125,27 @@ export default function SelectedResultPage() {
       </div>
       <div className="py-10">
         <div className="row">
-          <div className="col-12 col-md-6">
-            <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Facilities</h3>
-            <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
-              <li className="text-white my-4 px-3">Beach</li>
-              <li className="text-white my-4 px-3">Near Co-op</li>
-              <li className="text-white my-4 px-3">Restaurants</li>
-              <li className="text-white my-4 px-3">Swimming Pool</li>
+          {data?.tblListingFeatures?.length > 0 && (
+            <div className="col-12 col-md-6">
+              <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Facilities</h3>
+              <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
+                {data?.tblListingFeatures?.map((feature, index) => (
+                  <li className="text-white my-4 px-3" key={index}>{feature?.tblPropertyFeature?.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data?.tblListingConditions?.length > 0 && (
+            <div className="col-12 col-md-6" style={{ borderLeftWidth: 1, borderLeftColor: 'grey' }}>
+              <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Conditions</h3>
+              <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
+                {data?.tblListingConditions?.map((condition, index) => (
+                  <li className="text-white my-2 px-3" key={index}>{condition?.tblPropertyCondition?.name}</li>
+                ))}
+              </ul>
 
-            </ul>
-          </div>
-          <div className="col-12 col-md-6" style={{ borderLeftWidth: 1, borderLeftColor: 'grey' }}>
-            <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Conditions</h3>
-            <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
-              <li className="text-white my-2 px-3">Pets allowed</li>
-              <li className="text-white my-2 px-3">Family only</li>
-              <li className="text-white my-2 px-3">Parking for 3 cars max</li>
-              <li className="text-white my-2 px-3">Kuwaitis and ex-pats allowed</li>
-              <li className="text-white my-2 px-3">Salary certificate required</li>
-            </ul>
-
-          </div>
+            </div>
+          )}
         </div>
       </div>
 

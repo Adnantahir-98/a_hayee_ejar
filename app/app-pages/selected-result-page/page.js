@@ -5,7 +5,7 @@ import React from "react";
 import { Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const BrowserDataPage = React.lazy(() => import("./data/page"));
+const BrowserDataPage = React.lazy(() => import("./main"));
 
 export default function Page() {
   return (

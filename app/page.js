@@ -99,6 +99,7 @@ const Page = () => {
   const [formData, setFormData] = useState(initialState);
   // search start
   const [propertyTypeId, setPropertyTypeId] = useState(null);
+  console.log("propertyTypeId:", propertyTypeId);
   const [propertyTypeName, setPropertyTypeName] = useState("");
   const [areaId, setAreaId] = useState(null);
   const [areaName, setAreaName] = useState("");
@@ -106,12 +107,12 @@ const Page = () => {
     e.preventDefault();
     let queryParams = [];
     if (propertyTypeId) {
-      queryParams.push(`id=${propertyTypeId}`);
       queryParams.push(`Name=${propertyTypeName}`);
+      queryParams.push(`Id=${propertyTypeId}`);
     }
     if (areaId) {
-      queryParams.push(`CityId=${areaId}`);
       queryParams.push(`CityName=${areaName}`);
+      queryParams.push(`CityId=${areaId}`);
     }
     const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
     router.push(`/app-pages/browser-page${queryString}`);

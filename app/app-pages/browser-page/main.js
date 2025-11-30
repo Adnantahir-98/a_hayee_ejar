@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GetPropertyListing } from "../../store/app/propertyListing/slice";
 import { useDispatch, useSelector } from "react-redux";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function BrowserDataPage() {
   const searchParams = useSearchParams();     // query params
@@ -29,10 +30,12 @@ export default function BrowserDataPage() {
       specialFeatures: [],
       displayOptions: []
     },
-    listingStatus: "Pending",
+    listingStatus: "Published",
     pageNo: 1,
     pageSize: 20
   });
+
+  console.log("Filter Body:", filterBody);
   useEffect(() => {
     dispatch(GetPropertyListing(filterBody));
   }, [dispatch, filterBody]);
@@ -130,7 +133,8 @@ export default function BrowserDataPage() {
           height: "100vh",
           width: "100%",
         }}><Spin size="large" /></div>}
-        {data?.map((property, index) => (
+        {data?.length > 0 &&
+        data?.map((property, index) => (
           <div key={index} className="mt-10">
             {/* Desktop layout */}
             <div
@@ -148,7 +152,8 @@ export default function BrowserDataPage() {
                 {/* <Carousel fade indicators={false} controls={true} interval={3000} style={{ height: "100%" }}> */}
                 <div >
                   <img
-                    src="https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80"
+                    //src="https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80"
+                    src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL+'/'+property?.imageUrl}
                     alt={property?.customerName}
                     className="d-block w-100"
                     style={{
@@ -208,7 +213,7 @@ export default function BrowserDataPage() {
             {/* Mobile layout */}
             <div className="d-lg-none position-relative" style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
               <img
-                src="https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80"
+                src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL+'/'+property?.imageUrl}
                 alt={property?.title}
                 className="card-img"
                 style={{ height: "346px", objectFit: "cover", opacity: 0.85 }}
