@@ -81,15 +81,7 @@ const Page = () => {
   const [conditions, setConditions] = useState([])
   const [selectedType, setSelectedType] = useState(null);
   useEffect(() => {
-    // if (selectedType) {
-    //   setFilterBody(prev => ({
-    //     ...prev,
-    //     filter: {
-    //       ...prev.filter,
-    //       propertyTypes: [selectedType]
-    //     }
-    //   }));
-    // }
+
   }, [selectedType]);
 
   const [propertyTypes, setPropertyTypes] = useState([])
@@ -99,7 +91,6 @@ const Page = () => {
   const [formData, setFormData] = useState(initialState);
   // search start
   const [propertyTypeId, setPropertyTypeId] = useState(null);
-  console.log("propertyTypeId:", propertyTypeId);
   const [propertyTypeName, setPropertyTypeName] = useState("");
   const [areaId, setAreaId] = useState(null);
   const [areaName, setAreaName] = useState("");
@@ -221,7 +212,7 @@ const Page = () => {
     // 3️⃣ Update formData (only IDs)
     // -----------------------------
     const selectedIds = selectedData.map((x) => ({ featureId: x.featureId }));
-    console.log('selectedIds:', selectedIds)
+
     setFormData((prev) => {
       const oldList = prev.tblListingFeatures || [];
       const merged = [...oldList];

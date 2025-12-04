@@ -26,17 +26,89 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Fade } from "react-awesome-reveal";
 import { GetPropertyTypes } from '../../store/app/propertyTypes/slice';
 import { GetAreas } from '../../store/app/areas/slice';
+import { GetConditions } from '../../store/app/conditions/slice'
+import { GetFeatures } from '../../store/app/features/slice'
 import 'swiper/css';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+
+const propertyTypeOptions = [
+    { id: 1, name: "Villa", icon: MdOutlineVilla },
+    { id: 2, name: "Apartment", icon: BsBuilding },
+    { id: 3, name: "Whole Floor", icon: GoStack },
+    { id: 4, name: "Store", icon: FaStore },
+    { id: 5, name: "Storage", icon: LuWarehouse },
+    { id: 6, name: "Office", icon: FiBriefcase }
+];
 
 const SearchIconPage = () => {
     const dispatch = useDispatch()
+    const router = useRouter();
     const [areas, setAreas] = useState([])
     const [propertyTypes, setPropertyTypes] = useState([])
+    const [features, setFeatures] = useState([])
+    const [conditions, setConditions] = useState([])
+    const [propertyTypeId, setPropertyTypeId] = useState(null);
+    const [propertyTypeName, setPropertyTypeName] = useState("");
+    const [areaId, setAreaId] = useState(null);
+    const [areaName, setAreaName] = useState("");
+    const [selectedType, setSelectedType] = useState(null);
+    const [selectedCondition, setSelectedCondition] = useState(null);
+
+    const [formData, setFormData] = useState({
+        filter: {
+            areas: [],
+            blocks: [],
+            propertyTypes: [],
+            specialFeatures: [],
+            displayOptions: []
+        },
+        listingStatus: "Published",
+        pageNo: 1,
+        pageSize: 25
+    });
+    
+    const handleFilterChange = (e) => {
+        setFormData({
+            ...formData,
+            filter: {
+                ...formData.filter,
+                [e.target.name]: Number(e.target.value)
+            }
+        });
+    };
+    const handleArrayChange = (name, values) => {
+        setFormData({
+            ...formData,
+            filter: {
+                ...formData.filter,
+                [name]: values
+            }
+        });
+    };
+
+    const [blocks, setBlocksArray] = useState([])
+    const handleAreaChange = async (e) => {
+        const value = Number(e.target.value);
+        // setFormData((prev) => ({
+        //     ...prev,
+        //     areaId: value,
+        // }));
+        // setFormData((prev) => ({
+        //     ...prev,
+        //     blockId: 0,
+        // }));
+        const selectedArea = areas?.find((item) => item.id === value);
+        if (selectedArea && selectedArea.blocks) {
+            const blocks = selectedArea?.blocks.split("_").map((b) => Number(b.trim()));
+            setBlocksArray(blocks);
+        } else {
+            setBlocksArray([]);
+        }
+    };
     useEffect(() => {
         const GetPropertyTypesList = async () => {
             const res = await dispatch(GetPropertyTypes())
-            console.log("res", res?.payload)
             if (res?.payload) {
                 const areaOptions = res?.payload
                 setPropertyTypes(areaOptions)
@@ -49,9 +121,38 @@ const SearchIconPage = () => {
                 setAreas(areaOptions)
             }
         }
+        const GetConditionsList = async () => {
+            const response = await dispatch(GetConditions())
+            if (response?.payload) {
+                setConditions(response?.payload)
+            }
+        }
+        const GetFeaturesList = async () => {
+            const response = await dispatch(GetFeatures())
+            if (response?.payload) {
+                setFeatures(response?.payload)
+            }
+        }
+        GetFeaturesList()
+        GetConditionsList()
         GetAreasList()
         GetPropertyTypesList()
     }, [dispatch])
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        let queryParams = [];
+        if (propertyTypeId) {
+            queryParams.push(`Name=${propertyTypeName}`);
+            queryParams.push(`Id=${propertyTypeId}`);
+        }
+        if (areaId) {
+            queryParams.push(`CityName=${areaName}`);
+            queryParams.push(`CityId=${areaId}`);
+        }
+        const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+        router.push(`/app-pages/browser-page${queryString}`);
+    }
     const [show, setShow] = useState(false);
     const [advanceshow, setAdvanceShow] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -88,131 +189,91 @@ const SearchIconPage = () => {
                 <Modal.Body className='p-4'>
                     <h3>Property Type</h3>
                     <Row>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <MdOutlineVilla className='display-5 m-auto pb-2' />
-                                <p>Villa</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <BsBuilding className='display-5 m-auto pb-2' />
-                                <p>Appartment</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <GoStack className='display-5 m-auto pb-2' />
-                                <p>Whole Floor</p>
-                            </div>
-                        </Col>
+                        {propertyTypeOptions.map((item) => {
+                            const Icon = item.icon; // Component dynamic
 
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <FaStore className='display-5 m-auto pb-2' />
-                                <p>Store</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <LuWarehouse className='display-5 m-auto pb-2' />
-                                <p>Storage</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <FiBriefcase className='display-5 m-auto pb-2' />
-                                <p>Office</p>
-                            </div>
-                        </Col>
+                            return (
+                                <Col
+                                    key={item.id}
+                                    md={4}
+                                    className="text-center mb-3"
+                                    onClick={() => {
+                                        setSelectedType(item.id);
+                                        handleArrayChange("propertyTypes", [Number(item.id)]);
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div
+                                        className="pt-2 pb-1 rounded-lg text-center"
+                                        style={{
+                                            background: selectedType === item.id
+                                                ? "rgba(255, 255, 255, 0.25)"   // Active color
+                                                : "rgba(255, 255, 255, 0.05)", // Default
+                                            border: selectedType === item.id ? "2px solid #fff" : "2px solid transparent",
+                                            transition: "0.2s"
+                                        }}
+                                    >
+                                        <Icon className="display-5 m-auto pb-2" />
+                                        <p>{item.name}</p>
+                                    </div>
+                                </Col>
+                            );
+                        })}
                     </Row>
 
-                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                    <Form.Select
+                        onClick={(e) => {
+                            handleAreaChange(e);
+                            handleArrayChange("areas", [Number(e.target.value)]);
+                        }}
+                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                         <option>Areas</option>
-                        {areas?.map((type,index) => (
+                        {areas?.map((type, index) => (
                             <option key={index} value={type?.id}>{type?.name_en}</option>
                         ))}
                     </Form.Select>
-                    {/* <Dropdown>
 
-                        <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                            Select Area
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown> */}
-
-                    <Dropdown className='mb-3'>
-                        <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                            Select Block
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>Select Block</option>
+                        {blocks?.map((block, index) => (
+                            <option key={index} value={block}>{block}</option>
+                        ))}
+                    </Form.Select>
 
 
                     <Form className='text-white'>
                         <Row className="mb-3">
                             <small id="emailHelp" className="form-text text-secondary pb-1">Budget range (KWD per month)</small>
                             <Col>
-                                <Form.Control type="text" size="sm" placeholder="250" className='place-clr' />
+                                <Form.Control type="text" size="sm" placeholder="250" name="minPrice" onChange={handleFilterChange} className='place-clr' />
                             </Col> To
                             <Col>
-                                <Form.Control type="text" size="sm" placeholder="260" className='place-clr' />
+                                <Form.Control type="text" size="sm" placeholder="260" name="maxPrice" onChange={handleFilterChange} className='place-clr' />
                             </Col>
                         </Row>
                     </Form>
 
                     <Row>
                         <h5>Condition</h5>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Bechelors</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Families</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Females</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Males</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Office</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Storage</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Workshop</small>
-                            </div>
-                        </Col>
-                        <Col md={3}>
-                            <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <small>Clinic</small>
-                            </div>
-                        </Col>
+                        {conditions?.map((condition, index) => (
+                            <Col
+                                md={3} key={index}
+                                onClick={() => {
+                                    setSelectedCondition(condition?.id)
+                                    handleArrayChange("displayOptions", [Number(condition.id)]);
+                                }}
+                                style={{
+                                    background: selectedCondition === condition.id
+                                        ? "rgba(255, 255, 255, 0.25)"   // Active color
+                                        : "transparent", // Default
+                                    border: selectedCondition === condition.id ? "2px solid #fff" : "2px solid transparent",
+                                }}
+                            >
+                                <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                                    <small>{condition?.name}</small>
+                                </div>
+                            </Col>
+                        ))}
                     </Row>
 
                     <h5>Additional Filters</h5>
@@ -263,7 +324,16 @@ const SearchIconPage = () => {
                                             <DropdownItem href="#/action-1">Action</DropdownItem>
                                         </DropdownMenu>
                                     </Dropdown> */}
-                                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                    <Form.Select
+                                        onChange={(e) => {
+                                            const selectedId = e.target.value;
+                                            const selectedName = e.target.options[e.target.selectedIndex].text;
+                                            setAreaId(selectedId);
+                                            setAreaName(selectedName);
+                                        }}
+                                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
+                                    >
                                         <option>Areas</option>
                                         {areas?.map((type, index) => (
                                             <option key={index} value={type?.id}>{type?.name_en}</option>
@@ -273,9 +343,18 @@ const SearchIconPage = () => {
                             </Col>
                             <Col md={5} className='m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={130}>
-                                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                    <Form.Select
+                                        onChange={(e) => {
+                                            const selectedId = e.target.value;
+                                            const selectedName = e.target.options[e.target.selectedIndex].text;
+                                            setPropertyTypeId(selectedId);
+                                            setPropertyTypeName(selectedName);
+                                        }}
+                                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
+                                    >
                                         <option>Property Type</option>
-                                        {propertyTypes?.map((item,index) => (
+                                        {propertyTypes?.map((item, index) => (
                                             <option key={index} value={item?.id}>{item?.name_En}</option>
                                         ))}
                                     </Form.Select>
@@ -291,7 +370,7 @@ const SearchIconPage = () => {
                             </Col>
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={140}>
-                                    <Button variant="success">
+                                    <Button variant="success" onClick={(e) => handleSearch(e)}>
                                         Search
                                     </Button>
                                 </Fade>

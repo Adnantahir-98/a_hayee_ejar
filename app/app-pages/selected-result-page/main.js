@@ -4,7 +4,10 @@ import SearchIconPage from "../searchIcon/page";
 import { useSearchParams } from "next/navigation";
 import { Modal, Col, Carousel, Row } from "react-bootstrap";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { GetPropertyListingById } from "../../store/app/propertyListing/slice";
+import { GetPropertyListingById, GetPropertyTypes } from "../../store/app/propertyListing/slice";
+import { GetConditions } from '../../store/app/conditions'
+import { GetFeatures } from '../../store/app/features'
+import { GetAreas } from '../../store/app/areas'
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
@@ -15,11 +18,45 @@ export default function SelectedResultPage() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("product-id");
   const { data, loading, status } = useSelector(state => state.propertyListing);
-  console.log("Selected Property Data:", data);
+  const [propertyTypes, setPropertyTypes] = useState([])
+  const [areas, setAreas] = useState([])
+  
+  console.log('areas:',areas,',propertyTypes:',propertyTypes)
+
   useEffect(() => {
     if (productId) {
       dispatch(GetPropertyListingById(productId));
     }
+    const GetPropertyTypesList = async () => {
+      const res = await dispatch(GetPropertyTypes())
+      if (res?.payload) {
+        const areaOptions = res?.payload
+        setPropertyTypes(areaOptions)
+      }
+    }
+    const GetConditionsList = async () => {
+      const response = await dispatch(GetConditions())
+      if (response?.payload) {
+        setConditions(response?.payload)
+      }
+    }
+    GetConditionsList()
+    const GetFeaturesList = async () => {
+      const response = await dispatch(GetFeatures())
+      if (response?.payload) {
+        setFeatures(response?.payload)
+      }
+    }
+    GetFeaturesList()
+    const GetAreasList = async () => {
+      const response = await dispatch(GetAreas())
+      if (response?.payload) {
+        const areaOptions = response?.payload
+        setAreas(areaOptions)
+      }
+    }
+    GetAreasList()
+    GetPropertyTypesList()
   }, [productId, dispatch]);
 
 
