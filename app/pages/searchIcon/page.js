@@ -252,8 +252,8 @@ const SearchIconPage = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Fade direction="left">
-                        <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto mt-3' >
-                            <Col md={3} className='m-auto'>
+                        <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto' >
+                            <Col sm={12} md={3} className='m-auto' style={{marginBottom:10}}>
                                 <Fade direction="right" fraction={0.5} cascade delay={80}>
                                     {/* <Dropdown>
                                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark w-100">
@@ -271,7 +271,7 @@ const SearchIconPage = () => {
                                     </Form.Select>
                                 </Fade>
                             </Col>
-                            <Col md={5} className='m-auto'>
+                            <Col sm={12} md={5} className='m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={130}>
                                     <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                                         <option>Property Type</option>
