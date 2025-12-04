@@ -4,10 +4,9 @@ import SearchIconPage from "../searchIcon/page";
 import { useSearchParams } from "next/navigation";
 import { Modal, Col, Carousel, Row } from "react-bootstrap";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { GetPropertyListingById, GetPropertyTypes } from "../../store/app/propertyListing/slice";
-import { GetConditions } from '../../store/app/conditions'
-import { GetFeatures } from '../../store/app/features'
-import { GetAreas } from '../../store/app/areas'
+import { GetPropertyListingById } from "../../store/app/propertyListing/slice";
+import {GetPropertyTypes} from '../../store/app/propertyTypes/slice';
+import { GetAreas } from '../../store/app/areas/slice'
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
@@ -34,20 +33,8 @@ export default function SelectedResultPage() {
         setPropertyTypes(areaOptions)
       }
     }
-    const GetConditionsList = async () => {
-      const response = await dispatch(GetConditions())
-      if (response?.payload) {
-        setConditions(response?.payload)
-      }
-    }
-    GetConditionsList()
-    const GetFeaturesList = async () => {
-      const response = await dispatch(GetFeatures())
-      if (response?.payload) {
-        setFeatures(response?.payload)
-      }
-    }
-    GetFeaturesList()
+   
+    
     const GetAreasList = async () => {
       const response = await dispatch(GetAreas())
       if (response?.payload) {

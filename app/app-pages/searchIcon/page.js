@@ -33,7 +33,7 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 
 const propertyTypeOptions = [
-    { id: 1, name: "Villa", icon: MdOutlineVilla },
+    { id: 1, name: "Villas", icon: MdOutlineVilla },
     { id: 2, name: "Apartment", icon: BsBuilding },
     { id: 3, name: "Whole Floor", icon: GoStack },
     { id: 4, name: "Store", icon: FaStore },
@@ -67,7 +67,8 @@ const SearchIconPage = () => {
         pageNo: 1,
         pageSize: 25
     });
-    
+
+
     const handleFilterChange = (e) => {
         setFormData({
             ...formData,
@@ -77,6 +78,27 @@ const SearchIconPage = () => {
             }
         });
     };
+
+
+    const handleAdvanceSearch = () => {
+        if (!formData || !formData.filter) return;
+
+        const { filter, listingStatus, pageNo, pageSize } = formData;
+
+        // Build query string
+        const query = new URLSearchParams({
+            CityId: filter.areas?.join(",") || "",
+            blocks: filter.blocks?.join(",") || "",
+            Id: filter.propertyTypes?.join(",") || "",
+            specialFeatures: filter.specialFeatures?.join(",") || "",
+            displayOptions: filter.displayOptions?.join(",") || "",
+            listingStatus: listingStatus || "",
+            pageNo: pageNo?.toString() || "1",
+            pageSize: pageSize?.toString() || "25"
+        }).toString();
+        router.push(`/app-pages/browser-page?${query}`);
+    };
+
     const handleArrayChange = (name, values) => {
         setFormData({
             ...formData,
@@ -189,8 +211,9 @@ const SearchIconPage = () => {
                 <Modal.Body className='p-4'>
                     <h3>Property Type</h3>
                     <Row>
-                        {propertyTypeOptions.map((item) => {
-                            const Icon = item.icon; // Component dynamic
+                        {propertyTypes.map((item) => {
+                            const matched = propertyTypeOptions.find((x) => x.name.toLowerCase() === item.name_En.toLowerCase());
+                            const Icon = matched?.icon;
 
                             return (
                                 <Col
@@ -214,7 +237,7 @@ const SearchIconPage = () => {
                                         }}
                                     >
                                         <Icon className="display-5 m-auto pb-2" />
-                                        <p>{item.name}</p>
+                                        <p>{item.name_En}</p>
                                     </div>
                                 </Col>
                             );
@@ -262,14 +285,14 @@ const SearchIconPage = () => {
                                     setSelectedCondition(condition?.id)
                                     handleArrayChange("displayOptions", [Number(condition.id)]);
                                 }}
-                                style={{
+                                style={{ cursor: "pointer" }}
+                            >
+                                <div className='rounded-lg p-2 text-center mb-3' style={{
                                     background: selectedCondition === condition.id
                                         ? "rgba(255, 255, 255, 0.25)"   // Active color
-                                        : "transparent", // Default
+                                        : "rgba(255, 255, 255, 0.05)",
                                     border: selectedCondition === condition.id ? "2px solid #fff" : "2px solid transparent",
-                                }}
-                            >
-                                <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                                }}>
                                     <small>{condition?.name}</small>
                                 </div>
                             </Col>
@@ -277,27 +300,21 @@ const SearchIconPage = () => {
                     </Row>
 
                     <h5>Additional Filters</h5>
-                    <Dropdown className='mb-2'>
-                        <small className='text-secondary'>Number of Floors</small>
-                        <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                            Select Floors
-                        </Dropdown.Toggle>
+                    <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>Select feature</option>
+                        {features?.map((item, index) => (
+                            <option key={index} value={item?.id}>{item?.name}</option>
+                        ))}
+                    </Form.Select>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">1</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">2</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">3</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Form className='text-white'>
+                    {/* <Form className='text-white'>
                         <small id="radio" className="form-text text-secondary pb-1">Basement</small>
                         <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
                         <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
-                    </Form>
+                    </Form> */}
 
                     <div className='text-center'>
-                        <Button variant="warning" className='mt-4 fw-bold px-5'>Search</Button>
+                        <Button variant="warning" onClick={handleAdvanceSearch} className='mt-4 fw-bold px-5'>Search</Button>
                     </div>
                 </Modal.Body>
             </Modal>

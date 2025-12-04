@@ -39,7 +39,7 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 
 const propertyTypeOptions = [
-  { id: 1, name: "Villa", icon: MdOutlineVilla },
+  { id: 1, name: "Villas", icon: MdOutlineVilla },
   { id: 2, name: "Apartment", icon: BsBuilding },
   { id: 3, name: "Whole Floor", icon: GoStack },
   { id: 4, name: "Store", icon: FaStore },
@@ -83,7 +83,55 @@ const Page = () => {
   useEffect(() => {
 
   }, [selectedType]);
+  const [filterData, setFilterData] = useState({
+    filter: {
+      areas: [],
+      blocks: [],
+      propertyTypes: [],
+      specialFeatures: [],
+      displayOptions: []
+    },
+    listingStatus: "Published",
+    pageNo: 1,
+    pageSize: 25
+  });
+  const [selectedCondition, setSelectedCondition] = useState(null);
+  const handleFilterChange = (e) => {
+    setFilterData({
+      ...filterData,
+      filter: {
+        ...filterData.filter,
+        [e.target.name]: Number(e.target.value)
+      }
+    });
+  };
+  const handleArrayChange = (name, values) => {
+    setFilterData({
+      ...filterData,
+      filter: {
+        ...filterData.filter,
+        [name]: values
+      }
+    });
+  };
+  const handleAdvanceSearch = () => {
+    if (!filterData || !filterData.filter) return;
 
+    const { filter, listingStatus, pageNo, pageSize } = filterData;
+
+    // Build query string
+    const query = new URLSearchParams({
+      CityId: filter.areas?.join(",") || "",
+      blocks: filter.blocks?.join(",") || "",
+      Id: filter.propertyTypes?.join(",") || "",
+      specialFeatures: filter.specialFeatures?.join(",") || "",
+      displayOptions: filter.displayOptions?.join(",") || "",
+      listingStatus: listingStatus || "",
+      pageNo: pageNo?.toString() || "1",
+      pageSize: pageSize?.toString() || "25"
+    }).toString();
+    router.push(`/app-pages/browser-page?${query}`);
+  };
   const [propertyTypes, setPropertyTypes] = useState([])
   const [tblListingFeatures, setTblListingFeatures] = useState([])
   const [tblListingDisplayOptions, setTblListingDisplayOptions] = useState([])
@@ -712,15 +760,19 @@ const Page = () => {
         <Modal.Body className='p-4'>
           <h3>Property Type</h3>
           <Row>
-            {propertyTypeOptions.map((item) => {
-              const Icon = item.icon; // Component dynamic
+            {propertyTypes.map((item) => {
+              const matched = propertyTypeOptions.find((x) => x.name.toLowerCase() === item.name_En.toLowerCase());
+              const Icon = matched?.icon;
 
               return (
                 <Col
                   key={item.id}
                   md={4}
                   className="text-center mb-3"
-                  onClick={() => setSelectedType(item.id)}
+                  onClick={() => {
+                    setSelectedType(item.id);
+                    handleArrayChange("propertyTypes", [Number(item.id)]);
+                  }}
                   style={{ cursor: "pointer" }}
                 >
                   <div
@@ -734,36 +786,26 @@ const Page = () => {
                     }}
                   >
                     <Icon className="display-5 m-auto pb-2" />
-                    <p>{item.name}</p>
+                    <p>{item.name_En}</p>
                   </div>
                 </Col>
               );
             })}
           </Row>
 
-
-          <Form.Select onClick={(e) => handleAreaChange(e)} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select
+            onClick={(e) => {
+              handleAreaChange(e);
+              handleArrayChange("areas", [Number(e.target.value)]);
+            }}
+            className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>Areas</option>
             {areas?.map((type, index) => (
               <option key={index} value={type?.id}>{type?.name_en}</option>
             ))}
           </Form.Select>
-          {/* <Dropdown>
-      
-                              <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                                  Select Area
-                              </Dropdown.Toggle>
-      
-                              <Dropdown.Menu>
-                                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                  <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                  <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                              </Dropdown.Menu>
-                          </Dropdown> */}
 
-
-
-          <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>Select Block</option>
             {blocks?.map((block, index) => (
               <option key={index} value={block}>{block}</option>
@@ -775,10 +817,10 @@ const Page = () => {
             <Row className="mb-3">
               <small id="emailHelp" className="form-text text-secondary pb-1">Budget range (KWD per month)</small>
               <Col>
-                <Form.Control type="text" size="sm" placeholder="250" className='place-clr' />
+                <Form.Control type="text" size="sm" placeholder="250" name="minPrice" onChange={handleFilterChange} className='place-clr' />
               </Col> To
               <Col>
-                <Form.Control type="text" size="sm" placeholder="260" className='place-clr' />
+                <Form.Control type="text" size="sm" placeholder="260" name="maxPrice" onChange={handleFilterChange} className='place-clr' />
               </Col>
             </Row>
           </Form>
@@ -786,8 +828,20 @@ const Page = () => {
           <Row>
             <h5>Condition</h5>
             {conditions?.map((condition, index) => (
-              <Col md={3} key={index}>
-                <div className='rounded-lg p-2 text-center mb-3' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+              <Col
+                md={3} key={index}
+                onClick={() => {
+                  setSelectedCondition(condition?.id)
+                  handleArrayChange("displayOptions", [Number(condition.id)]);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <div className='rounded-lg p-2 text-center mb-3' style={{
+                  background: selectedCondition === condition.id
+                    ? "rgba(255, 255, 255, 0.25)"   // Active color
+                    : "rgba(255, 255, 255, 0.05)",
+                  border: selectedCondition === condition.id ? "2px solid #fff" : "2px solid transparent",
+                }}>
                   <small>{condition?.name}</small>
                 </div>
               </Col>
@@ -795,27 +849,21 @@ const Page = () => {
           </Row>
 
           <h5>Additional Filters</h5>
-          <Dropdown className='mb-2'>
-            <small className='text-secondary'>Number of Floors</small>
-            <Dropdown.Toggle id="dropdown-basic" className="w-100 d-flex justify-content-between align-items-center" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-              Select Floors
-            </Dropdown.Toggle>
+          <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+            <option>Select feature</option>
+            {features?.map((item, index) => (
+              <option key={index} value={item?.id}>{item?.name}</option>
+            ))}
+          </Form.Select>
 
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">1</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">2</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">3</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-
-          <Form className='text-white'>
-            <small id="radio" className="form-text text-secondary pb-1">Basement</small>
-            <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
-            <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
-          </Form>
+          {/* <Form className='text-white'>
+                        <small id="radio" className="form-text text-secondary pb-1">Basement</small>
+                        <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
+                        <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
+                    </Form> */}
 
           <div className='text-center'>
-            <Button variant="warning" className='mt-4 fw-bold px-5' onClick={() => router.push('/app-pages/browser-page?id=1')}>Search</Button>
+            <Button variant="warning" onClick={handleAdvanceSearch} className='mt-4 fw-bold px-5'>Search</Button>
           </div>
         </Modal.Body>
       </Modal>
