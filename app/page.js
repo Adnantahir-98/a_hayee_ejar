@@ -34,6 +34,7 @@ import { GetAreas } from './store/app/areas/slice';
 import { GetFeatures } from './store/app/features/slice';
 import { AddPropertyListing } from './store/app/propertyListing/slice';
 import { GetConditions } from './store/app/conditions/slice';
+import { useTranslation } from './context/TranslationContext';
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -48,6 +49,7 @@ const propertyTypeOptions = [
 ];
 
 const Page = () => {
+  const { translate, direction } = useTranslation();
   const initialState = {
     userId: 1,
     title: "",
@@ -398,9 +400,9 @@ const Page = () => {
           <Row className='pt-20' style={{ marginBottom: 40 }}>
             <Col md={8}>
               <h1 className='font-bold wellcome-section' style={{ color: 'white' }} >
-                Welcome to <br />
-                <strong className='display-1 font-normal ejar-fontstyle'>Ejar</strong> <br />
-                <span className='font-normal'>Your rent is a click away</span>
+                {translate('welcome')} <br />
+                <strong className='display-1 font-normal ejar-fontstyle'>{translate('ejar')}</strong> <br />
+                <span className='font-normal'>{translate('slogun')}</span>
               </h1>
             </Col>
             <Col
@@ -411,14 +413,14 @@ const Page = () => {
               <h4
                 className=" font-normal text-white promote-font"
               >
-                Promote your <br className='d-none d-lg-block' /> estate <br />
+                {translate('promot')} <br className='d-none d-lg-block' /> {translate('estate')} <br />
                 <Button
                   variant="success"
                   className="px-5 font-bold mt-3"
                   style={{ fontSize: 25 }}
                   onClick={handleShow}
                 >
-                  Here
+                  {translate('here')}
                 </Button>
               </h4>
             </Col>
@@ -462,9 +464,9 @@ const Page = () => {
                           setAreaName(selectedName);
                         }}
                       >
-                        <option>Areas</option>
+                        <option>{translate('areas')}</option>
                         {areas?.map((type, index) => (
-                          <option key={index} value={type?.id}>{type?.name_en}</option>
+                          <option key={index} value={type?.id}>{direction === 'rtl' ? type?.name_ar : type?.name_en}</option>
                         ))}
                       </Form.Select>
                       {/* <Select
@@ -487,9 +489,9 @@ const Page = () => {
                           setPropertyTypeName(selectedName);
                         }}
                       >
-                        <option>Select Property Type</option>
+                        <option>{translate('selectProprty')}</option>
                         {propertyTypes?.map((type, index) => (
-                          <option key={index} value={type?.id}>{type?.name_En}</option>
+                          <option key={index} value={type?.id}>{direction === 'rtl' ? type?.name_Ar : type?.name_En}</option>
                         ))}
                       </Form.Select>
                       {/* <Dropdown>
@@ -505,13 +507,13 @@ const Page = () => {
                   <Col md={3} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={140}>
                       <Button variant="success" onClick={(e) => handleSearch(e)}>
-                        Search
+                        {translate('search')}
                       </Button>
                     </Fade>
                   </Col>
                   <Col md={2} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={150}>
-                      <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
+                      <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>{translate('advance')}</Button>
                     </Fade>
                   </Col>
                 </Row>
@@ -535,8 +537,8 @@ const Page = () => {
                           style={{ fontWeight: "700" }}
                           className="d-flex align-items-center gap-2 w-100"
                         >
-                          <img src={baseURL + '/' + item?.icon} style={{ width: "40px" }} alt={item?.name_En} />
-                          <span>{item?.name_En}</span>
+                          <img src={baseURL + '/' + item?.icon} style={{ width: "40px" }} alt={direction === 'rtl' ? item?.name_Ar : item?.name_En} />
+                          <span>{direction === 'rtl' ? item?.name_Ar : item?.name_En}</span>
                         </Button>
                       </Link>
                     </div>
@@ -558,18 +560,18 @@ const Page = () => {
               <Col md={12} lg={6} className="my-5 py-5">
                 <Row className="align-items-stretch ">
                   <Col md={12} className='d-block d-lg-none'>
-                    <h1 className="display-4 fw-bolder mb-4 text-black">Browse. Rent. Settle In!</h1>
+                    <h1 className="display-4 fw-bolder mb-4 text-black">{translate('browse')}. {translate('rent')}. {translate('settle')}!</h1>
                   </Col>
                   {propertyTypes?.map((type, index) => (
                     <Col md={6} key={index} className='mobileViewOff'>
                       <div className="brdrd-imges text-center my-3">
                         <img src={baseURL + '/' + type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                        <h2 className="text-dark mt-0 pt-0">{type?.name_En}</h2>
+                        <h2 className="text-dark mt-0 pt-0">{direction === 'rtl' ? type?.name_Ar : type?.name_En}</h2>
                         <Link href={`/app-pages/browser-page?Name=${type?.name_En}&Id=${type?.id}`}>
                           <Button
                             variant="success"
                             className="px-5 font-bold my-4 myButton">
-                            Explore
+                            {translate('expolre')}
                           </Button>
                         </Link>
                       </div>
@@ -595,10 +597,10 @@ const Page = () => {
                       <Col sm={12} md={12}>
                         <div className="brdrd-imges text-center my-3">
                           <img src={baseURL + '/' + item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                          <h2 className="text-dark mt-0 pt-0">{item.name_En}</h2>
+                          <h2 className="text-dark mt-0 pt-0">{direction === 'rtl' ? item?.name_Ar : item?.name_En}</h2>
                           <Link href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}>
                             <Button variant="success" className="px-5 font-bold my-4 myButton">
-                              Explore
+                              {translate('expolre')}
                             </Button>
                           </Link>
                         </div>
@@ -613,9 +615,9 @@ const Page = () => {
                 className="d-flex d-none d-lg-flex flex-column text-black justify-content-between  text-left browse-text-col my-5 py-5 px-5"
                 style={{ paddingTop: '180px !important', paddingBottom: '180px !important', textAlign: 'left !important' }}
               >
-                <h1 className="display-1 fw-bolder">Browse.</h1>
-                <h1 className="display-1 fw-bolder">Rent.</h1>
-                <h1 className="display-1 fw-bolder">Settle In!</h1>
+                <h1 className="display-1 fw-bolder">{translate('browse')}.</h1>
+                <h1 className="display-1 fw-bolder">{translate('rent')}.</h1>
+                <h1 className="display-1 fw-bolder">{translate('settle')}!</h1>
               </Col>
             </Row>
           </Container>
@@ -628,8 +630,8 @@ const Page = () => {
 
       <section style={{ backgroundColor: '#383838ff', paddingBottom: 30 }}>
         <Container>
-          <h1 className='display-1 fw-bolder pt-5 font-bold text-white'>Here&apos;s what&apos;s new</h1>
-          <h3 className='text-white' style={{ fontFamily: 'arial' }}>more here &gt; </h3>
+          <h1 className='display-1 fw-bolder pt-5 font-bold text-white'>{translate('whatsnew')}</h1>
+          <h3 className='text-white' style={{ fontFamily: 'arial' }}>{translate('morehere')} &gt; </h3>
 
           <Row className='what-new-bg m-auto rounded-lg my-5 pb-4' style={{ position: 'relative' }}>
             <Col md={4} className='border border-warning text-center section-border'>
@@ -654,7 +656,7 @@ const Page = () => {
                   fontFamily: 'arial'
                 }}
               >
-                Learn More
+                {translate('learnMore')}
               </Button>
             </Col>
           </Row>
@@ -681,7 +683,7 @@ const Page = () => {
                   fontFamily: 'arial'
                 }}
               >
-                Learn More
+                {translate('learnMore')}
               </Button>
             </Col>
           </Row>
@@ -689,10 +691,10 @@ const Page = () => {
 
           <Row className='promote-section-bg m-auto rounded-lg text-center mt-5'>
             <h1 className='display-1 fw-bolder text-white font-bold' style={{ marginTop: '15%', paddingBottom: 100 }}>
-              <span className='Promote'>Promote</span> <br />
-              <span className='Promote-Subtitle'>Your estate today!</span>
+              <span className='Promote'>{translate('PromoteTitle')}</span> <br />
+              <span className='Promote-Subtitle'>{translate('estateToday')}!</span>
             </h1>
-            <Button variant="warning" className='mt-4 m-auto fw-bold font-bold mb-5 Promote-button' onClick={handleShow}>Promote Here</Button>
+            <Button variant="warning" className='mt-4 m-auto fw-bold font-bold mb-5 Promote-button' onClick={handleShow}>{translate('promoteHere')}</Button>
           </Row>
         </Container>
       </section>

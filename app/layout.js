@@ -2,6 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import localFont from 'next/font/local'
 import './globals.css';
 
+import { TranslationProvider } from './context/TranslationContext';
+
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ReduxProvider from "./redux/provider";
@@ -30,28 +32,30 @@ const changa = localFont({
 export default function RootLayout({ children }) {
 
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
         <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
         <title>Ejar Property Consultant</title>
         <meta name="description" content="Welcome to No.1 Gulf Property Consultant"></meta>
       </head>
       <body className={changa.variable} style={{ backgroundColor: '#383838ff' }}>
-        <ReduxProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </ReduxProvider>
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            duration: 3000,
-            style: {
-              fontSize: '14px',
-            },
-          }}
-        />
+        <TranslationProvider>
+          <ReduxProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </ReduxProvider>
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 3000,
+              style: {
+                fontSize: '14px',
+              },
+            }}
+          />
+        </TranslationProvider>
       </body>
     </html>
   );

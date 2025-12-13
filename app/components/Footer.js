@@ -1,7 +1,10 @@
-import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+'use client';
+import React from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { useTranslation } from '../context/TranslationContext';
 
 const Footer = () => {
+  const { translate, direction } = useTranslation();
   return (
     <div className='bg-warning'>
       <Container>
@@ -27,7 +30,7 @@ const Footer = () => {
             Menu <br />
             Menu <br />
           </Col>
-          <p className='text-center mt-4'>&copy; 2025 Ejar, Allrights reserved. </p>
+          <p className='text-center mt-4'>&copy; 2025 {translate('ejar')}, {translate('allrights')}. </p>
         </Row>
       </Container>
     </div>

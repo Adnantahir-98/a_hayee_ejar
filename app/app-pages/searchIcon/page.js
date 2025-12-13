@@ -333,14 +333,7 @@ const SearchIconPage = () => {
                         <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto mt-3' >
                             <Col md={3} className='m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={80}>
-                                    {/* <Dropdown>
-                                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark w-100">
-                                            Areas
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem href="#/action-1">Action</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown> */}
+
                                     <Form.Select
                                         onChange={(e) => {
                                             const selectedId = e.target.value;
@@ -349,7 +342,7 @@ const SearchIconPage = () => {
                                             setAreaName(selectedName);
                                         }}
                                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
-                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
+                                        style={{ background: 'rgba(255, 255, 255, 0.07)', marginBottom:10 }}
                                     >
                                         <option>Areas</option>
                                         {areas?.map((type, index) => (
@@ -387,14 +380,14 @@ const SearchIconPage = () => {
                             </Col>
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={140}>
-                                    <Button variant="success" onClick={(e) => handleSearch(e)}>
+                                    <Button variant="success" className='mobilebutton' onClick={(e) => handleSearch(e)}>
                                         Search
                                     </Button>
                                 </Fade>
                             </Col>
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={150}>
-                                    <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
+                                    <Button variant="danger" className='mobilebutton px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
                                 </Fade>
                             </Col>
                         </Row>

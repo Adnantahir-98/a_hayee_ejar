@@ -23,6 +23,10 @@
   }
 }
 
+body, html, #root {
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -150,6 +154,7 @@ body {
 
 .bg-grey-modal {
   background-color: #d3d3d3 !important;
+  justify-self: center;
   width: 80% !important;
 }
 
@@ -336,6 +341,10 @@ body {
   font-family: arial
 }
 
+.mobilebutton {
+  margin-top: 0%;
+}
+
 /* =======================================
    📱 Responsive Design (Media Queries)
 ======================================= */
@@ -345,7 +354,8 @@ body {
   .hr-line-browse {
     display: none !important;
   }
-  .custom-navbar{
+
+  .custom-navbar {
     background-color: rgba(55, 55, 55, 0.85);
   }
 
@@ -382,9 +392,11 @@ body {
   .hero-homg-bg-img {
     height: 447px;
   }
+
   .section-title {
     margin-top: 158%;
   }
+
   .Promote-button {
     width: 52%;
   }
@@ -392,6 +404,15 @@ body {
 
 /* Small screens (phones) */
 @media (max-width: 600px) {
+  .bg-grey-modal {
+    width: 95% !important;
+  }
+
+  .mobilebutton {
+    margin-top: 20px;
+    width: 100%;
+  }
+
   .myButton {
     font-size: 15px;
   }
@@ -455,9 +476,12 @@ body {
 }
 
 @media (max-width: 768px) {
-  .mobileViewOff{
+
+  .mobileViewOff {
     display: none !important;
   }
+
+
   .property-type-scroll {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -528,6 +552,7 @@ body {
     border-width: 15px !important;
     position: relative
   }
+
   .Promote-button {
     width: 52%;
     font-size: 20px;
@@ -536,9 +561,10 @@ body {
 
 /* Large screens (desktop ≥1200px) */
 @media (min-width: 1200px) {
-  .mobileSlider{
+  .mobileSlider {
     display: none !important;
   }
+
   .display-1 {
     font-size: 7rem;
   }
