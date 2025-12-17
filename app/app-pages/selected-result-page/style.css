@@ -1,0 +1,27 @@
+/* Modal wrapper */
+.custom-modal .modal-content {
+  background-color: #FFB15C;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+}
+
+/* Header background */
+.custom-modal .modal-header {
+  background-color: #FFB15C;   /* darker header */
+  color: #ffffff;
+  border-radius: 25px;
+}
+
+/* Body background */
+.custom-modal .modal-body {
+  background-color: #FFB15C; /* lighter body */
+  color: #ffffff;
+  padding: 100;
+}
+
+/* Optional footer */
+.custom-modal .modal-footer {
+  background-color: #FFB15C;
+  border-radius: 25px;
+}

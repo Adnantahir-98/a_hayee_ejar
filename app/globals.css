@@ -144,6 +144,18 @@ body {
   border-bottom: none;
 }
 
+.call-content {
+  background-color: #FFC107;
+  color: white;
+}
+.call-modal .call-content,
+.call-modal .call-header,
+.call-modal .call-body {
+  background-color: #034edae8;
+  color: white;
+  border-bottom: none;
+}
+
 /* Search Modal */
 .Searchmodal {
   max-width: 900px;

@@ -5,22 +5,26 @@ import { useSearchParams } from "next/navigation";
 import { Modal, Col, Carousel, Row } from "react-bootstrap";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GetPropertyListingById } from "../../store/app/propertyListing/slice";
-import {GetPropertyTypes} from '../../store/app/propertyTypes/slice';
+import { GetPropertyTypes } from '../../store/app/propertyTypes/slice';
 import { GetAreas } from '../../store/app/areas/slice'
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
+import './style.css'
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function SelectedResultPage() {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
+  const [advanceshow, setAdvanceShow] = useState(false);
+  const handleAdvanceClose = () => setAdvanceShow(false);
+  const handleAdvanceShow = () => setAdvanceShow(true);
   const searchParams = useSearchParams();
   const productId = searchParams.get("product-id");
   const { data, loading, status } = useSelector(state => state.propertyListing);
   const [propertyTypes, setPropertyTypes] = useState([])
   const [areas, setAreas] = useState([])
-  
-  console.log('areas:',areas,',propertyTypes:',propertyTypes)
+
+  console.log('areas:', areas, ',propertyTypes:', propertyTypes)
 
   useEffect(() => {
     if (productId) {
@@ -33,8 +37,8 @@ export default function SelectedResultPage() {
         setPropertyTypes(areaOptions)
       }
     }
-   
-    
+
+
     const GetAreasList = async () => {
       const response = await dispatch(GetAreas())
       if (response?.payload) {
@@ -135,6 +139,22 @@ export default function SelectedResultPage() {
               referrerPolicy="no-referrer-when-downgrade"
               title="Google Map"
             ></iframe>
+            <div className="row">
+              {/* <div className="col-12 col-md-12">
+                hellow
+              </div> */}
+              <div className="col-12 col-md-12 text-center">
+                <h1>365 KWD</h1>
+              </div>
+              <div className="col-12 col-md-12 text-center d-flex justify-content-center gap-3">
+                <button className="btn" onClick={handleAdvanceShow} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10 }}>
+                  Call Estate Owner
+                </button>
+                <button className="btn" style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10 }}>
+                  Call Estate Owner
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -201,13 +221,45 @@ export default function SelectedResultPage() {
         </Modal.Body>
       </Modal>
 
+      <Modal show={advanceshow} onHide={handleAdvanceClose} dialogClassName="custom-modal">
+        <Modal.Header closeButton>
+
+        </Modal.Header>
+
+        <Modal.Body >
+          <div style={{ padding: 25, backgroundColor: '#000', borderRadius: 25 }}>
+
+            <div style={{padding:20}}>
+              <img
+                src="/logo-white.png"
+                alt="Main Logo"
+                width={120}
+                height={40}
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <div style={{ backgroundColor: '#fff', padding: 30, borderRadius: 25 }}>
+              <h3 style={{ color: '#000', textAlign: 'center' }}>Call Ali Al Khamis</h3>
+              <p style={{ color: '#000', textAlign: 'center' }}>Owner of Estate</p>
+              <div style={{ backgroundColor: '#FFB15C', padding:5,borderRadius: 25 }}>
+                <h3 style={{ color: '#000', textAlign: 'center' }}>0321456987</h3>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </Modal.Body>
+      </Modal>
+
       {/* Optional global CSS for smooth appearance */}
       <style jsx global>{`
         .image-modal .modal-dialog {
           max-width: 900px;
         }
         .image-modal .modal-content {
-          background: transparent;
+          background: #FFC107;
           border: none;
         }
       `}</style>

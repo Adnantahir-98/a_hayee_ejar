@@ -99,15 +99,32 @@ const SearchIconPage = () => {
         router.push(`/app-pages/browser-page?${query}`);
     };
 
-    const handleArrayChange = (name, values) => {
-        setFormData({
-            ...formData,
-            filter: {
-                ...formData.filter,
-                [name]: values
-            }
+    // const handleArrayChange = (name, values) => {
+    //     setFormData({
+    //         ...formData,
+    //         filter: {
+    //             ...formData.filter,
+    //             [name]: values
+    //         }
+    //     });
+    // };
+
+    const handleArrayChange = (name, value) => {
+        setFormData(prev => {
+            const currentValues = prev.filter[name] || [];
+            const exists = currentValues.includes(value);
+            return {
+                ...prev,
+                filter: {
+                    ...prev.filter,
+                    [name]: exists
+                        ? currentValues.filter(v => v !== value) // remove
+                        : [...currentValues, value]               // add
+                }
+            };
         });
     };
+
 
     const [blocks, setBlocksArray] = useState([])
     const handleAreaChange = async (e) => {
@@ -278,26 +295,38 @@ const SearchIconPage = () => {
 
                     <Row>
                         <h5>Condition</h5>
-                        {conditions?.map((condition, index) => (
-                            <Col
-                                md={3} key={index}
-                                onClick={() => {
-                                    setSelectedCondition(condition?.id)
-                                    handleArrayChange("displayOptions", [Number(condition.id)]);
-                                }}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className='rounded-lg p-2 text-center mb-3' style={{
-                                    background: selectedCondition === condition.id
-                                        ? "rgba(255, 255, 255, 0.25)"   // Active color
-                                        : "rgba(255, 255, 255, 0.05)",
-                                    border: selectedCondition === condition.id ? "2px solid #fff" : "2px solid transparent",
-                                }}>
-                                    <small>{condition?.name}</small>
-                                </div>
-                            </Col>
-                        ))}
+
+                        {conditions?.map((condition, index) => {
+                            const isSelected =
+                                formData.filter.displayOptions.includes(condition.id);
+
+                            return (
+                                <Col
+                                    md={3}
+                                    key={index}
+                                    onClick={() =>
+                                        handleArrayChange("displayOptions", Number(condition.id))
+                                    }
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div
+                                        className="rounded-lg p-2 text-center mb-3"
+                                        style={{
+                                            background: isSelected
+                                                ? "rgba(250, 32, 32, 0.76)"
+                                                : "rgba(255, 255, 255, 0.05)",
+                                            border: isSelected
+                                                ? "2px solid #f12b2bff"
+                                                : "2px solid transparent",
+                                        }}
+                                    >
+                                        <small>{condition?.name}</small>
+                                    </div>
+                                </Col>
+                            );
+                        })}
                     </Row>
+
 
                     <h5>Additional Filters</h5>
                     <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
@@ -342,7 +371,7 @@ const SearchIconPage = () => {
                                             setAreaName(selectedName);
                                         }}
                                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
-                                        style={{ background: 'rgba(255, 255, 255, 0.07)', marginBottom:10 }}
+                                        style={{ background: 'rgba(255, 255, 255, 0.07)', marginBottom: 10 }}
                                     >
                                         <option>Areas</option>
                                         {areas?.map((type, index) => (
