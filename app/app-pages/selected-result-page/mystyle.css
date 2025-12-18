@@ -1,6 +1,6 @@
 /* Modal wrapper */
 .custom-modal .modal-content {
-  background-color: #FFB15C;
+  background-color: #FFB15C !important;
   color: #ffffff;
   border: none;
   border-radius: 25px;

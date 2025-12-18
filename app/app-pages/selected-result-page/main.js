@@ -9,7 +9,7 @@ import { GetPropertyTypes } from '../../store/app/propertyTypes/slice';
 import { GetAreas } from '../../store/app/areas/slice'
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
-import './style.css'
+import './mystyle.css'
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function SelectedResultPage() {
@@ -23,8 +23,6 @@ export default function SelectedResultPage() {
   const { data, loading, status } = useSelector(state => state.propertyListing);
   const [propertyTypes, setPropertyTypes] = useState([])
   const [areas, setAreas] = useState([])
-
-  console.log('areas:', areas, ',propertyTypes:', propertyTypes)
 
   useEffect(() => {
     if (productId) {
@@ -223,7 +221,6 @@ export default function SelectedResultPage() {
 
       <Modal show={advanceshow} onHide={handleAdvanceClose} dialogClassName="custom-modal">
         <Modal.Header closeButton>
-
         </Modal.Header>
 
         <Modal.Body >
