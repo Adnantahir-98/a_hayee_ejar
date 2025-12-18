@@ -108,25 +108,27 @@ const Page = () => {
     });
   };
   const handleArrayChange = (name, values) => {
-      setFormData({
-          ...formData,
-          filter: {
-              ...formData.filter,
-              [name]: values
-          }
-      });
+    setFormData({
+      ...formData,
+      filter: {
+        ...formData.filter,
+        [name]: values
+      }
+    });
   };
   const handleConditionArrayChange = (name, value) => {
     setFormData(prev => {
-      const currentValues = prev.filter[name] || [];
+      // Ensure filter exists
+      const currentValues = (prev.filter?.[name]) || [];
       const exists = currentValues.includes(value);
+
       return {
         ...prev,
         filter: {
-          ...prev.filter,
+          ...(prev.filter || {}), // ensure filter is an object
           [name]: exists
             ? currentValues.filter(v => v !== value) // remove
-            : [...currentValues, value]               // add
+            : [...currentValues, value]             // add
         }
       };
     });

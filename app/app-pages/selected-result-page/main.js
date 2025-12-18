@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { GetPropertyListingById } from "../../store/app/propertyListing/slice";
 import { GetPropertyTypes } from '../../store/app/propertyTypes/slice';
 import { GetAreas } from '../../store/app/areas/slice'
+import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
 import './mystyle.css'
@@ -16,14 +17,18 @@ export default function SelectedResultPage() {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [advanceshow, setAdvanceShow] = useState(false);
+  const [whatsappshow, setWhatsappshow] = useState(false)
   const handleAdvanceClose = () => setAdvanceShow(false);
   const handleAdvanceShow = () => setAdvanceShow(true);
+  const handleWhatsappClose = () => setWhatsappshow(false);
+  const handleWhatsappShow = () => setWhatsappshow(true);
   const searchParams = useSearchParams();
   const productId = searchParams.get("product-id");
   const { data, loading, status } = useSelector(state => state.propertyListing);
+  console.log('data:', data)
   const [propertyTypes, setPropertyTypes] = useState([])
   const [areas, setAreas] = useState([])
-
+  const phone = data?.whatsapp?.replace(/\D/g, '');
   useEffect(() => {
     if (productId) {
       dispatch(GetPropertyListingById(productId));
@@ -142,13 +147,13 @@ export default function SelectedResultPage() {
                 hellow
               </div> */}
               <div className="col-12 col-md-12 text-center">
-                <h1>365 KWD</h1>
+                <h1>{data?.price} KWD</h1>
               </div>
               <div className="col-12 col-md-12 text-center d-flex justify-content-center gap-3">
                 <button className="btn" onClick={handleAdvanceShow} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10 }}>
                   Call Estate Owner
                 </button>
-                <button className="btn" style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10 }}>
+                <button className="btn" onClick={handleWhatsappShow} style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10 }}>
                   Call Estate Owner
                 </button>
               </div>
@@ -159,10 +164,7 @@ export default function SelectedResultPage() {
       <div className="pb-15" style={{ backgroundColor: '#F7BC08' }}>
         <h4 className="text-black py-3 px-3" style={{ fontWeight: '600' }}>More info</h4>
         <h5 className="px-3 pb-3 text-black">
-          Villa in Abu Al hasaniya, with a garden, 6 rooms, 4 bathrooms one of which is a master bathroom. 2 floors, with 2 kitchens. A yard with a swimming pool.
-        </h5>
-        <h5 className="px-3 pb-3 text-black" >
-          A beach is within waling distance from the house, as well as a restaurant complex in the same block.
+          {data?.description}
         </h5>
       </div>
       <div className="py-10">
@@ -224,9 +226,9 @@ export default function SelectedResultPage() {
         </Modal.Header>
 
         <Modal.Body >
-          <div style={{ padding: 25, backgroundColor: '#000', borderRadius: 25 }}>
+          <div style={{ padding: 40, backgroundColor: '#000', borderRadius: 30 }}>
 
-            <div style={{padding:20}}>
+            <div style={{ padding: 20 }}>
               <img
                 src="/logo-white.png"
                 alt="Main Logo"
@@ -235,13 +237,108 @@ export default function SelectedResultPage() {
                 style={{ objectFit: 'contain' }}
               />
             </div>
-            <div style={{ backgroundColor: '#fff', padding: 30, borderRadius: 25 }}>
-              <h3 style={{ color: '#000', textAlign: 'center' }}>Call Ali Al Khamis</h3>
-              <p style={{ color: '#000', textAlign: 'center' }}>Owner of Estate</p>
-              <div style={{ backgroundColor: '#FFB15C', padding:5,borderRadius: 25 }}>
-                <h3 style={{ color: '#000', textAlign: 'center' }}>0321456987</h3>
+
+
+            <div
+              style={{
+                display: 'flex',           // make parent flex
+                justifyContent: 'center',  // center horizontally
+                alignItems: 'center',      // center vertically
+                width: '100%',             // full width
+                marginBottom: -15,
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: '#fff',
+                  borderRadius: '50%',
+                  width: 60,
+                  height: 60,
+                  display: 'flex',           // center icon inside circle
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <FaPhone color="#000" size={24} />
               </div>
             </div>
+
+            <div style={{ backgroundColor: '#fff', padding: 30, borderRadius: 30 }}>
+              <h3 style={{ color: '#000', textAlign: 'center' }}>Call {data?.contactName}</h3>
+              <p style={{ color: '#000', textAlign: 'center' }}>Owner of Estate</p>
+              <div style={{ backgroundColor: '#FFB15C', padding: 5, borderRadius: 25, paddingTop: 17 }}>
+                <h3 style={{ color: '#000', textAlign: 'center', fontSize: 18 }}>{data?.whatsapp}</h3>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={whatsappshow} onHide={handleWhatsappClose} dialogClassName="custom-modal">
+        <Modal.Header closeButton>
+        </Modal.Header>
+
+        <Modal.Body >
+          <div style={{ padding: 40, backgroundColor: '#000', borderRadius: 30 }}>
+
+
+
+            <div
+              style={{
+                display: 'flex',           // make parent flex
+                justifyContent: 'center',  // center horizontally
+                alignItems: 'center',      // center vertically
+                width: '100%',             // full width
+                marginBottom: -25,
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: '#fff',
+                  borderRadius: '50%',
+                  width: 60,
+                  height: 60,
+                  display: 'flex',           // center icon inside circle
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <FaWhatsapp color="#309608ff" size={32} />
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#fff', padding: 30, borderRadius: 30 }}>
+              <p style={{ color: '#000', textAlign: 'center', marginBottom: 0 }}>{data?.contactName}</p>
+              <p style={{ color: '#646363ff', fontSize: 12, textAlign: 'center' }}>Whatsapp Buisness Account</p>
+              <div
+                style={{
+                  margin: 20,
+                  width: 120,
+                  height: 120,
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  justifySelf: 'center',
+                  boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+                }}
+              >
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+                    `https://wa.me/${phone}?text=Hello,%20I%20want%20to%20chat!`
+                  )}&size=150x150`}
+                  alt="WhatsApp QR Code"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+            </div>
+            <p style={{ marginTop: 20, fontSize: 12, textAlign: 'center' }}>
+              Sacn this code to start a WhatsApp chat
+              <br />
+              with {data?.contactName}
+            </p>
           </div>
 
 
