@@ -74,7 +74,7 @@ const Page = () => {
     modifiedBy: 1,
     videoUrl: "",
     tblListingFeatures: [],
-    tblListingDisplayOptions: []
+    tblListingConditions: []
   };
   const router = useRouter();
   const dispatch = useDispatch()
@@ -107,13 +107,32 @@ const Page = () => {
       }
     });
   };
-  const handleArrayChange = (name, values) => {
-    setFormData({
-      ...formData,
-      filter: {
-        ...formData.filter,
-        [name]: values
+  const handleArrayChange = (name, value) => {
+    setFormData(prev => {
+      // 🔴 If propertyTypes → allow ONLY ONE value
+      if (name === "propertyTypes") {
+        return {
+          ...prev,
+          filter: {
+            ...prev.filter,
+            [name]: value, // overwrite instead of push
+          },
+        };
       }
+
+      // 🔵 Default multi-select behavior
+      const currentValues = prev?.filter?.[name] || [];
+      const exists = currentValues.includes(value);
+
+      return {
+        ...prev,
+        filter: {
+          ...prev.filter,
+          [name]: exists
+            ? currentValues.filter(v => v !== value)
+            : [...currentValues, value],
+        },
+      };
     });
   };
   const handleConditionArrayChange = (name, value) => {
@@ -156,6 +175,7 @@ const Page = () => {
   const [tblListingDisplayOptions, setTblListingDisplayOptions] = useState([])
   const [blocks, setBlocksArray] = useState([])
   const [formData, setFormData] = useState(initialState);
+  console.log('formData:', formData)
   // search start
   const [propertyTypeId, setPropertyTypeId] = useState(null);
   const [propertyTypeName, setPropertyTypeName] = useState("");
@@ -215,7 +235,7 @@ const Page = () => {
     // -----------------------------
     const selectedIds = selectedData.map((x) => ({ conditionId: x.conditionId }));
     setFormData((prev) => {
-      const oldList = prev.tblListingDisplayOptions || [];
+      const oldList = prev.tblListingConditions || [];
       const merged = [...oldList];
 
       selectedIds?.forEach((item) => {
@@ -226,7 +246,7 @@ const Page = () => {
 
       return {
         ...prev,
-        tblListingDisplayOptions: merged,
+        tblListingConditions: merged,
       };
     });
   };
@@ -239,12 +259,12 @@ const Page = () => {
 
     // 2️⃣ Remove from formData (only IDs)
     setFormData((prev) => {
-      const oldList = prev.tblListingDisplayOptions || [];
+      const oldList = prev.tblListingConditions || [];
       const filtered = oldList.filter((x) => x.conditionId !== conditionId);
 
       return {
         ...prev,
-        tblListingDisplayOptions: filtered,
+        tblListingConditions: filtered,
       };
     });
   };
@@ -443,18 +463,9 @@ const Page = () => {
             </Col>
           </Row>
           <span className='d-none d-lg-flex'>
-            <Row className='rounded-lg mt-auto '
-              style={{
-                background: 'rgb(255 255 255 / 34%);',
-                position: 'absolute',
-                bottom: '0',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'rgba(255,255,255,0.25)',
-                width: '80%',
-              }}>
+            <Row className='rounded-lg mt-auto bottom-row'>
               <Fade direction="left">
-                <Row className='rounded px-5 py-4 text-dark w-60 text-center m-auto mt-5' style={{ background: 'rgba(255,255,255, 0.85)' }}>
+                <Row className='rounded px-5 py-4 text-dark text-center m-auto mt-5 responsive-row' style={{ background: 'rgba(255,255,255, 0.85)' }}>
                   <Col md={3} className='m-auto'>
                     {/* <Fade direction="right" fraction={0.5} cascade delay={80}>
                       <Dropdown>
@@ -495,7 +506,7 @@ const Page = () => {
                       /> */}
                     </Fade>
                   </Col>
-                  <Col md={5} className='m-auto'>
+                  <Col md={4} lg={4} className='m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={130}>
                       <Form.Select
                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
@@ -521,16 +532,16 @@ const Page = () => {
                       </Dropdown> */}
                     </Fade>
                   </Col>
-                  <Col md={2} className='text-end m-auto'>
+                  <Col lg={3} md={3} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={140}>
-                      <Button variant="success" onClick={(e) => handleSearch(e)}>
+                      <Button variant="success" className='w-100' onClick={(e) => handleSearch(e)}>
                         {translate('search')}
                       </Button>
                     </Fade>
                   </Col>
-                  <Col md={2} className='text-end m-auto'>
+                  <Col md={2} lg={2} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={150}>
-                      <Button variant="danger" className='px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>{translate('advance')}</Button>
+                      <Button variant="danger" className='px-3 w-100 btn btn-link text-danger' onClick={handleAdvanceShow}>{translate('advance')}</Button>
                     </Fade>
                   </Col>
                 </Row>
@@ -817,14 +828,14 @@ const Page = () => {
               handleAreaChange(e);
               handleArrayChange("areas", [Number(e.target.value)]);
             }}
-            className="border-0 rounded-2 px-4 py-2 bg-light transparent-select mb-3" >
+            className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('Areas')}</option>
             {areas?.map((type, index) => (
               <option key={index} value={type?.id}>{direction === 'rtl' ? type?.name_ar : type?.name_en}</option>
             ))}
           </Form.Select>
 
-          <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('SelectBlock')}</option>
             {blocks?.map((block, index) => (
               <option key={index} value={block}>{block}</option>
@@ -871,7 +882,7 @@ const Page = () => {
                         : "2px solid transparent",
                     }}
                   >
-                    <small> {direction === 'rtl' ? condition?.name_ar : condition?.name}</small>
+                    <small>{direction === 'rtl' ? condition?.name_ar : condition?.name}</small>
                   </div>
                 </Col>
               );
@@ -879,18 +890,42 @@ const Page = () => {
           </Row>
 
           <h5>{translate('AdditionalFilters')}</h5>
-          <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-            <option>{translate('Selectfeature')}</option>
+          <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+            <option value={''}>{translate('Selectfeature')}</option>
             {features?.map((item, index) => (
-              <option key={index} value={item?.id}> {direction === 'rtl' ? item?.name_ar : item?.name}</option>
+              <option key={index} value={item?.id}>{direction === 'rtl' ? item?.name_ar : item?.name}</option>
             ))}
           </Form.Select>
 
-          {/* <Form className='text-white'>
-                        <small id="radio" className="form-text text-secondary pb-1">Basement</small>
-                        <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
-                        <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
-                    </Form> */}
+          {(formData?.filter?.propertyTypes?.map(Number).includes(1) || formData?.filter?.propertyTypes?.map(Number).includes(3) || formData?.filter?.propertyTypes?.map(Number).includes(4)) && (
+            <>
+
+              <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoOfRooms')}</small>
+              <Form.Select name="rooms" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                <option value={0}>{translate('SelectRooms')}</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </Form.Select>
+              <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoFloors')}</small>
+              <Form.Select name="floors" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                <option value={0}>{translate('SelectFloors')}</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </Form.Select>
+            </>
+          )}
+          {(formData?.filter?.propertyTypes?.map(Number).includes(5) || formData?.filter?.propertyTypes?.map(Number).includes(6) || formData?.filter?.propertyTypes?.map(Number).includes(2)) && (
+            <>
+              <small id="emailHelp" className="form-text text-secondary pb-1">{translate('SizeMeter')}</small>
+              <Form.Control type="text" size="sm" placeholder={translate('SizeMeter')} name="size" onChange={handleFilterChange} className='place-clr' />
+            </>
+          )}
 
           <div className='text-center'>
             <Button variant="warning" onClick={handleAdvanceSearch} className='mt-4 fw-bold px-5'>{translate('Search')}</Button>
@@ -965,14 +1000,19 @@ const Page = () => {
                 <input type="checkbox" style={{ marginLeft: 10 }} />
               </Col>
 
-              {formData?.propertyTypeId === '7' || formData?.propertyTypeId === '6' || formData?.propertyTypeId === '4' ? (
+              {(formData?.propertyTypeId === '1' || formData?.propertyTypeId === '3' || formData?.propertyTypeId === '4') && (
                 <>
                   <Col md={12} >
-                    <h4 className='fw-bold'>Number Rooms</h4>
+                    <h4 className='fw-bold'>Rooms & Floors</h4>
                   </Col>
                   <Col md={12} >
-                    <select className='form-select rounded-2' name='propertyTypeId' onChange={(e) => handleChange(e)}>
-                      <option>m per square</option>
+                    <select className='form-select rounded-2' name='floors' onChange={(e) => handleChange(e)}>
+                      <option>Floors</option>
+                      <option value={1}>1</option>
+                      <option value={2}>2</option>
+                      <option value={3}>3</option>
+                      <option value={4}>4</option>
+                      <option value={5}>5</option>
                     </select>
                   </Col>
                   <Col md={12} >
@@ -985,8 +1025,38 @@ const Page = () => {
                       <option value={5}>5</option>
                     </select>
                   </Col>
+                  <Col md={12} >
+                    <select className='form-select rounded-2' name='standardRoom' onChange={(e) => handleChange(e)}>
+                      <option>Standard Bedrooms</option>
+                      <option value={1}>1</option>
+                      <option value={2}>2</option>
+                      <option value={3}>3</option>
+                      <option value={4}>4</option>
+                      <option value={5}>5</option>
+                    </select>
+                  </Col>
+                  <Col md={12} >
+                    <select className='form-select rounded-2' name='maidRoom' onChange={(e) => handleChange(e)}>
+                      <option>Maid Room</option>
+                      <option value={1}>1</option>
+                      <option value={2}>2</option>
+                      <option value={3}>3</option>
+                      <option value={4}>4</option>
+                      <option value={5}>5</option>
+                    </select>
+                  </Col>
                 </>
-              ) : null}
+              )}
+              {(formData?.propertyTypeId === '5' || formData?.propertyTypeId === '6' || formData?.propertyTypeId === '2') && (
+                <>
+                  <Col md={12} >
+                    <h4 className='fw-bold'>Size <small style={{ fontSize: 12 }}>* in meters per square</small></h4>
+                  </Col>
+                  <Col md={12} >
+                    <input type="text" className='form-control rounded-2' value={formData?.areaSize} name='areaSize' onChange={(e) => handleChange(e)} placeholder='Area Size' />
+                  </Col>
+                </>
+              )}
 
               <Col md={12} >
                 <h4><span className='fw-bold'>Facilities & Extras</span> <small style={{ fontSize: 12 }}>* your select may multiple</small></h4>

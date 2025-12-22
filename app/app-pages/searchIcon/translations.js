@@ -10,7 +10,12 @@ export const translations = {
     AdditionalFilters:'Additional Filters',
     Selectfeature:'Select feature',
     Advance:'Advance',
-    Search:'Search'
+    Search:'Search',
+    NoOfRooms:'No of Rooms',
+    SelectRooms:'Select Rooms',
+    NoFloors:'No of Floors',
+    SelectFloors:'Select Floors',
+    SizeMeter:'Size in meter'
   },
   ar: {
     AdvancedSearch:'بحث متقدم',
@@ -23,6 +28,11 @@ export const translations = {
     AdditionalFilters:'مرشحات إضافية',
     Selectfeature:'اختر الميزة',
     Advance:'متقدم',
-    Search:'بحث'
+    Search:'بحث',
+    NoOfRooms:'عدد الغرف',
+    SelectRooms:'اختر عدد الغرف',
+    NoFloors:'عدد الطوابق',
+    SelectFloors:'اختر عدد الطوابق',
+    SizeMeter:'المساحة بالمتر'
   },
 };

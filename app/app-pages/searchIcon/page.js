@@ -80,8 +80,6 @@ const SearchIconPage = () => {
             }
         });
     };
-
-
     const handleAdvanceSearch = () => {
         if (!formData || !formData.filter) return;
 
@@ -113,19 +111,33 @@ const SearchIconPage = () => {
 
     const handleArrayChange = (name, value) => {
         setFormData(prev => {
+            // 🔴 If propertyTypes → allow ONLY ONE value
+            if (name === "propertyTypes") {
+                return {
+                    ...prev,
+                    filter: {
+                        ...prev.filter,
+                        [name]: value, // overwrite instead of push
+                    },
+                };
+            }
+
+            // 🔵 Default multi-select behavior
             const currentValues = prev.filter[name] || [];
             const exists = currentValues.includes(value);
+
             return {
                 ...prev,
                 filter: {
                     ...prev.filter,
                     [name]: exists
-                        ? currentValues.filter(v => v !== value) // remove
-                        : [...currentValues, value]               // add
-                }
+                        ? currentValues.filter(v => v !== value)
+                        : [...currentValues, value],
+                },
             };
         });
     };
+
 
 
     const [blocks, setBlocksArray] = useState([])
@@ -216,6 +228,9 @@ const SearchIconPage = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    console.log("formData.filter.propertyTypes", formData);
+    console.log("formData.filter.propertyTypes.includes(1)", formData.filter.propertyTypes.map(Number).includes(1));
     return (
         <>
 
@@ -345,6 +360,37 @@ const SearchIconPage = () => {
                             </option>
                         ))}
                     </Form.Select>
+
+                    {(formData.filter.propertyTypes.map(Number).includes(1) || formData.filter.propertyTypes.map(Number).includes(3) || formData.filter.propertyTypes.map(Number).includes(4) ) && (
+                        <>
+
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoOfRooms')}</small>
+                            <Form.Select name="rooms" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                <option value={0}>{translate('SelectRooms')}</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                            </Form.Select>
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoFloors')}</small>
+                            <Form.Select name="floors" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                <option value={0}>{translate('SelectFloors')}</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                            </Form.Select>
+                        </>
+                    )}
+                    {(formData.filter.propertyTypes.map(Number).includes(5) || formData.filter.propertyTypes.map(Number).includes(6) || formData.filter.propertyTypes.map(Number).includes(2)) && (
+                        <>
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('SizeMeter')}</small>
+                            <Form.Control type="text" size="sm" placeholder={translate('SizeMeter')} name="size" onChange={handleFilterChange} className='place-clr' />
+                        </>
+                    )}
+
 
                     {/* <Form className='text-white'>
                         <small id="radio" className="form-text text-secondary pb-1">Basement</small>
