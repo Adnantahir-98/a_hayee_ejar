@@ -11,10 +11,26 @@ import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import 'swiper/css';
 import { useDispatch, useSelector } from "react-redux";
 import './mystyle.css'
+import { MdDirectionsCar, MdBathtub, MdStore, MdLiving } from "react-icons/md";
+import { FaCouch } from "react-icons/fa";
+import { FaTree, FaParking, FaConciergeBell } from "react-icons/fa";
+import { MdPark, MdBeachAccess } from "react-icons/md";
+import { BsDot } from "react-icons/bs";
+import { FaBed } from "react-icons/fa";
+
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
+const featureIcons = {
+  "Garden": <FaTree />,
+  "Park": <MdPark />,
+  "Beach View": <MdBeachAccess />,
+  "Services": <FaConciergeBell />,
+  "Extra Parking": <FaParking />,
+};
 
 export default function SelectedResultPage() {
   const [show, setShow] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
   const [advanceshow, setAdvanceShow] = useState(false);
   const [whatsappshow, setWhatsappshow] = useState(false)
@@ -25,7 +41,7 @@ export default function SelectedResultPage() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("product-id");
   const { data, loading, status } = useSelector(state => state.propertyListing);
-  console.log('data:', data)
+
   const [propertyTypes, setPropertyTypes] = useState([])
   const [areas, setAreas] = useState([])
   const phone = data?.whatsapp?.replace(/\D/g, '');
@@ -124,7 +140,15 @@ export default function SelectedResultPage() {
             <div className="row">
               {imageslist?.map((item, index) => (
                 <div key={index} className="col-12 col-md-6 my-2">
-                  <img src={item?.image} onClick={() => setShow(true)} alt="Property" className="img-fluid rounded-lg" />
+                  <img
+                    src={item?.image}
+                    onClick={() => {
+                      setSelectedImage(item?.image);
+                      setShow(true);
+                    }}
+                    alt="Property"
+                    className="img-fluid rounded-lg"
+                  />
                 </div>
               ))}
             </div>
@@ -143,18 +167,24 @@ export default function SelectedResultPage() {
               title="Google Map"
             ></iframe>
             <div className="row">
-              {/* <div className="col-12 col-md-12">
-                hellow
-              </div> */}
+              <div className="col-12 col-md-12" style={{ justifyContent: 'center', justifyItems: 'center', padding: 14 }}>
+                <div className="d-flex gap-3" style={{ color: '#7a7a7aff' }}>
+                  <div className="d-flex"><FaCouch size={24} /> 3</div> |
+                  <div className="d-flex"><FaBed size={24} /> 1</div> |
+                  <div className="d-flex"><MdBathtub size={24} /> 2</div> |
+                  <div className="d-flex"><MdStore size={24} /> 1</div>
+                </div>
+              </div>
+
               <div className="col-12 col-md-12 text-center">
-                <h1>{data?.price} KWD</h1>
+                <h1 style={{ color: '#000' }}>{data?.price} KWD</h1>
               </div>
               <div className="col-12 col-md-12 text-center d-flex justify-content-center gap-3">
-                <button className="btn" onClick={handleAdvanceShow} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10 }}>
+                <button className="btn" onClick={handleAdvanceShow} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
                   Call Estate Owner
                 </button>
-                <button className="btn" onClick={handleWhatsappShow} style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10 }}>
-                  Call Estate Owner
+                <button className="btn" onClick={handleWhatsappShow} style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
+                  Whatsapp
                 </button>
               </div>
             </div>
@@ -174,7 +204,12 @@ export default function SelectedResultPage() {
               <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Facilities</h3>
               <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
                 {data?.tblListingFeatures?.map((feature, index) => (
-                  <li className="text-white my-4 px-3" key={index}>{feature?.tblPropertyFeature?.name}</li>
+                  <li className="text-white my-4 px-3 d-flex align-items-center" key={index}>
+                    <span className="me-3" style={{ fontSize: 24 }}>
+                      {featureIcons[feature?.tblPropertyFeature?.name] || <BsDot />}
+                    </span>
+                    {feature?.tblPropertyFeature?.name}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -182,9 +217,9 @@ export default function SelectedResultPage() {
           {data?.tblListingConditions?.length > 0 && (
             <div className="col-12 col-md-6" style={{ borderLeftWidth: 1, borderLeftColor: 'grey' }}>
               <h3 className="text-white px-3" style={{ fontWeight: '600' }}>Conditions</h3>
-              <ul className="list-unstyled " style={{ marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
+              <ul className="list-disc ps-4" style={{ listStyleType: "disc", paddingLeft: "20px", marginLeft: 20, fontSize: 21, fontFamily: 'arial', marginTop: 30 }}>
                 {data?.tblListingConditions?.map((condition, index) => (
-                  <li className="text-white my-2 px-3" key={index}>{condition?.tblPropertyCondition?.name}</li>
+                  <li className="text-white my-2 px-3" key={index}> {condition?.tblPropertyCondition?.name}</li>
                 ))}
               </ul>
 
@@ -208,7 +243,7 @@ export default function SelectedResultPage() {
           }}
         >
           <img
-            src={'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800'}
+            src={selectedImage}
             alt={'alt'}
             onClick={() => setShow(false)}
             style={{

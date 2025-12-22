@@ -1,4 +1,5 @@
 import { translations as componentsTranslations } from '../components/translations';
+import { translations as searchIconTranslations } from '../app-pages/searchIcon/translations';
 // import {translations as advanceFilterTranslations} from '@/app/components/filtermodel/translations'
 // import {translations as authenticationTranslations} from '@/app/pages/authentication/translations';
 // import { translations as dashboardTranslations } from '@/app/components/user-profile/side-bar/translations';
@@ -59,6 +60,7 @@ const common = {
 export const combinedTranslations = {
   en: {
      ...componentsTranslations.en,
+      ...searchIconTranslations.en,
     // ...advanceFilterTranslations.en,
     // ...authenticationTranslations.en,
     // ...userProfileTranslations.en,
@@ -71,6 +73,7 @@ export const combinedTranslations = {
   },
   ar: {
      ...componentsTranslations.ar,
+      ...searchIconTranslations.ar,
     // ...advanceFilterTranslations.ar,
     // ...authenticationTranslations.ar,
     // ...userProfileTranslations.ar,

@@ -31,6 +31,7 @@ import { GetFeatures } from '../../store/app/features/slice'
 import 'swiper/css';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from '../../context/TranslationContext';
 
 const propertyTypeOptions = [
     { id: 1, name: "Villas", icon: MdOutlineVilla },
@@ -42,6 +43,7 @@ const propertyTypeOptions = [
 ];
 
 const SearchIconPage = () => {
+    const { translate, direction } = useTranslation();
     const dispatch = useDispatch()
     const router = useRouter();
     const [areas, setAreas] = useState([])
@@ -222,11 +224,11 @@ const SearchIconPage = () => {
             {/* Advance Button Modal  */}
             <Modal show={advanceshow} onHide={handleAdvanceClose} dialogClassName="custom-modal">
                 <Modal.Header className='fw-bolder' closeButton>
-                    Advanced Search
+                    {translate('AdvancedSearch')}
                 </Modal.Header>
 
                 <Modal.Body className='p-4'>
-                    <h3>Property Type</h3>
+                    <h3>{translate('PropertyType')}</h3>
                     <Row>
                         {propertyTypes.map((item) => {
                             const matched = propertyTypeOptions.find((x) => x.name.toLowerCase() === item.name_En.toLowerCase());
@@ -254,7 +256,7 @@ const SearchIconPage = () => {
                                         }}
                                     >
                                         <Icon className="display-5 m-auto pb-2" />
-                                        <p>{item.name_En}</p>
+                                        <p>{direction === 'rtl' ? item.name_Ar : item.name_En}</p>
                                     </div>
                                 </Col>
                             );
@@ -262,19 +264,23 @@ const SearchIconPage = () => {
                     </Row>
 
                     <Form.Select
-                        onClick={(e) => {
+                        onChange={(e) => {
                             handleAreaChange(e);
                             handleArrayChange("areas", [Number(e.target.value)]);
                         }}
-                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                        <option>Areas</option>
+                        className="border-0 rounded-2 px-4 py-2 mb-3 transparent-select text-dark"
+                    >
+                        <option value="">{translate('Areas')}</option>
                         {areas?.map((type, index) => (
-                            <option key={index} value={type?.id}>{type?.name_en}</option>
+                            <option key={index} value={type?.id}>
+                                {direction === 'rtl' ? type?.name_ar : type?.name_en}
+                            </option>
                         ))}
                     </Form.Select>
 
-                    <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                        <option>Select Block</option>
+
+                    <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>{translate('SelectBlock')}</option>
                         {blocks?.map((block, index) => (
                             <option key={index} value={block}>{block}</option>
                         ))}
@@ -283,10 +289,10 @@ const SearchIconPage = () => {
 
                     <Form className='text-white'>
                         <Row className="mb-3">
-                            <small id="emailHelp" className="form-text text-secondary pb-1">Budget range (KWD per month)</small>
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('BudgetRange')}</small>
                             <Col>
                                 <Form.Control type="text" size="sm" placeholder="250" name="minPrice" onChange={handleFilterChange} className='place-clr' />
-                            </Col> To
+                            </Col> {translate('To')}
                             <Col>
                                 <Form.Control type="text" size="sm" placeholder="260" name="maxPrice" onChange={handleFilterChange} className='place-clr' />
                             </Col>
@@ -294,7 +300,7 @@ const SearchIconPage = () => {
                     </Form>
 
                     <Row>
-                        <h5>Condition</h5>
+                        <h5>{translate('Condition')}</h5>
 
                         {conditions?.map((condition, index) => {
                             const isSelected =
@@ -320,7 +326,9 @@ const SearchIconPage = () => {
                                                 : "2px solid transparent",
                                         }}
                                     >
-                                        <small>{condition?.name}</small>
+                                        <small>
+                                            {direction === 'rtl' ? condition?.name_ar : condition?.name}
+                                        </small>
                                     </div>
                                 </Col>
                             );
@@ -328,11 +336,13 @@ const SearchIconPage = () => {
                     </Row>
 
 
-                    <h5>Additional Filters</h5>
-                    <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                        <option>Select feature</option>
+                    <h5>{translate('AdditionalFilters')}</h5>
+                    <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>{translate('Selectfeature')}</option>
                         {features?.map((item, index) => (
-                            <option key={index} value={item?.id}>{item?.name}</option>
+                            <option key={index} value={item?.id}>
+                                {direction === 'rtl' ? item?.name_ar : item?.name}
+                            </option>
                         ))}
                     </Form.Select>
 
@@ -343,7 +353,7 @@ const SearchIconPage = () => {
                     </Form> */}
 
                     <div className='text-center'>
-                        <Button variant="warning" onClick={handleAdvanceSearch} className='mt-4 fw-bold px-5'>Search</Button>
+                        <Button variant="warning" onClick={handleAdvanceSearch} className='mt-4 fw-bold px-5'>{translate('Search')}</Button>
                     </div>
                 </Modal.Body>
             </Modal>
@@ -373,9 +383,11 @@ const SearchIconPage = () => {
                                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
                                         style={{ background: 'rgba(255, 255, 255, 0.07)', marginBottom: 10 }}
                                     >
-                                        <option>Areas</option>
+                                        <option>{translate('Areas')}</option>
                                         {areas?.map((type, index) => (
-                                            <option key={index} value={type?.id}>{type?.name_en}</option>
+                                            <option key={index} value={type?.id}>
+                                                {direction === 'rtl' ? type?.name_ar : type?.name_en}
+                                            </option>
                                         ))}
                                     </Form.Select>
                                 </Fade>
@@ -392,9 +404,11 @@ const SearchIconPage = () => {
                                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
                                         style={{ background: 'rgba(255, 255, 255, 0.07)' }}
                                     >
-                                        <option>Property Type</option>
+                                        <option>{translate('PropertyType')}</option>
                                         {propertyTypes?.map((item, index) => (
-                                            <option key={index} value={item?.id}>{item?.name_En}</option>
+                                            <option key={index} value={item?.id}>
+                                                {direction === 'rtl' ? item?.name_Ar : item?.name_En}
+                                            </option>
                                         ))}
                                     </Form.Select>
                                     {/* <Dropdown>
@@ -410,13 +424,13 @@ const SearchIconPage = () => {
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={140}>
                                     <Button variant="success" className='mobilebutton' onClick={(e) => handleSearch(e)}>
-                                        Search
+                                        {translate('Search')}
                                     </Button>
                                 </Fade>
                             </Col>
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={150}>
-                                    <Button variant="danger" className='mobilebutton px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>Advance</Button>
+                                    <Button variant="danger" className='mobilebutton px-3 btn btn-link text-danger' onClick={handleAdvanceShow}>{translate('Advance')}</Button>
                                 </Fade>
                             </Col>
                         </Row>
