@@ -168,7 +168,7 @@ const Page = () => {
       pageNo: pageNo?.toString() || "1",
       pageSize: pageSize?.toString() || "25"
     }).toString();
-    router.push(`/app-pages/browser-page?${query}`);
+    router.push(`/app-pages/search-result-page?${query}`);
   };
   const [propertyTypes, setPropertyTypes] = useState([])
   const [tblListingFeatures, setTblListingFeatures] = useState([])
@@ -193,7 +193,7 @@ const Page = () => {
       queryParams.push(`CityId=${areaId}`);
     }
     const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-    router.push(`/app-pages/browser-page${queryString}`);
+    router.push(`/app-pages/search-result-page${queryString}`);
   }
   // search end
   const handleChange = (e) => {

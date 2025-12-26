@@ -96,7 +96,7 @@ const SearchIconPage = () => {
             pageNo: pageNo?.toString() || "1",
             pageSize: pageSize?.toString() || "25"
         }).toString();
-        router.push(`/app-pages/browser-page?${query}`);
+        router.push(`/app-pages/search-result-page?${query}`);
     };
 
     // const handleArrayChange = (name, values) => {
@@ -204,7 +204,7 @@ const SearchIconPage = () => {
             queryParams.push(`CityId=${areaId}`);
         }
         const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-        router.push(`/app-pages/browser-page${queryString}`);
+        router.push(`/app-pages/search-result-page${queryString}`);
     }
     const [show, setShow] = useState(false);
     const [advanceshow, setAdvanceShow] = useState(false);
