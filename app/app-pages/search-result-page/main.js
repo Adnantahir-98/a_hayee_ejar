@@ -23,6 +23,7 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function SearchResultPage() {
   const searchParams = useSearchParams();     // query params
+  console.log('searchParams:',searchParams)
   const dispatch = useDispatch();
   const { data, loading, status } = useSelector(state => state.propertyListing);
   const id = searchParams.get("Id");
@@ -52,7 +53,7 @@ export default function SearchResultPage() {
     pageSize: 20
   });
   const [singlePropertyData, setSinglePropertyData] = useState(null);
-  console.log('propertyList:', propertyList)
+
   const GetSingleProperty = async () => {
     const response = await dispatch(GetPropertyListingById(selectedId));
     if (response && response.payload) {
@@ -60,7 +61,6 @@ export default function SearchResultPage() {
       setSinglePropertyData(property);
     }
   }
-  console.log("Filter Body:", filterBody);
   useEffect(() => {
     const GetProperties = async () => {
       const res = await dispatch(GetPropertyListing(filterBody));
@@ -75,7 +75,6 @@ export default function SearchResultPage() {
     }
   }, [dispatch, filterBody, selectedId]);
 
-  console.log("Search Results Data:", data);
 
   const desktopHeight = 346; // fixed desktop card height
   const router = useRouter();
@@ -119,10 +118,10 @@ export default function SearchResultPage() {
                     {singlePropertyData?.title}
                   </h2>
                   <div className="d-flex gap-3 mt-2 mb-2" style={{ color: '#7a7a7aff' }}>
-                    <div className="d-flex"><FaCouch size={24} /> 3</div> |
-                    <div className="d-flex"><FaBed size={24} /> 1</div> |
-                    <div className="d-flex"><MdBathtub size={24} /> 2</div> |
-                    <div className="d-flex"><MdStore size={24} /> 1</div>
+                    <div className="d-flex"><FaCouch size={24} /> {singlePropertyData?.standardRoom}</div> |
+                    <div className="d-flex"><FaBed size={24} /> {singlePropertyData?.masterRoom}</div> |
+                    <div className="d-flex"><MdBathtub size={24} /> {singlePropertyData?.bathroom}</div> |
+                    <div className="d-flex"><MdStore size={24} /> {singlePropertyData?.maidRoom}</div>
                   </div>
 
                   <div className="col-12 col-md-12 mb-2 text-center d-flex justify-content-center gap-3">
@@ -164,17 +163,17 @@ export default function SearchResultPage() {
                       <div className="row g-0" >
                         <div className="col-md-8">
                           <div className="card-body">
-                            <h5 className="card-title">2 rooms + 1 master</h5>
+                            <h5 className="card-title">{property?.standardRoom+property?.maidRoom} rooms + {property?.masterRoom} master</h5>
                             <h5 className="card-title">{property?.title}</h5>
                             <div className="d-flex gap-3" style={{ color: '#7a7a7aff' }}>
-                              <div className="d-flex"><MdLabel size={24} /> Street Name, City</div>
+                              <div className="d-flex"><MdLabel size={24} />{property?.areaName}</div>
                             </div>
 
                             <div className="d-flex gap-3" style={{ color: '#7a7a7aff' }}>
-                              <div className="d-flex"><FaCouch size={24} /> 3</div> |
-                              <div className="d-flex"><FaBed size={24} /> 1</div> |
-                              <div className="d-flex"><MdBathtub size={24} /> 2</div> |
-                              <div className="d-flex"><MdStore size={24} /> 1</div>
+                              <div className="d-flex"><FaCouch size={24} /> {property?.standardRoom}</div> |
+                              <div className="d-flex"><FaBed size={24} /> {property?.masterRoom}</div> |
+                              <div className="d-flex"><MdBathtub size={24} /> {property?.bathroom}</div> |
+                              <div className="d-flex"><MdStore size={24} /> {property?.maidRoom}</div>
                             </div>
                             <h4>{property?.price} KWD</h4>
                           </div>

@@ -29,6 +29,17 @@ import { GetAreas } from '../../store/app/areas/slice';
 import 'swiper/css';
 import { useDispatch } from 'react-redux';
 
+
+const propertyTypeOptions = [
+    { id: 1, name: "Villas", icon: MdOutlineVilla },
+    { id: 2, name: "Apartment", icon: BsBuilding },
+    { id: 3, name: "Whole Floor", icon: GoStack },
+    { id: 4, name: "Store", icon: FaStore },
+    { id: 5, name: "Storage", icon: LuWarehouse },
+    { id: 6, name: "Office", icon: FiBriefcase }
+];
+
+
 const SearchIconPage = () => {
     const dispatch = useDispatch()
     const [areas, setAreas] = useState([])
@@ -36,10 +47,9 @@ const SearchIconPage = () => {
     useEffect(() => {
         const GetPropertyTypesList = async () => {
             const res = await dispatch(GetPropertyTypes())
-            console.log("res", res?.payload)
             if (res?.payload) {
-                const areaOptions = res?.payload
-                setPropertyTypes(areaOptions)
+                const options = res?.payload
+                setPropertyTypes(options)
             }
         }
         const GetAreasList = async () => {
@@ -66,6 +76,63 @@ const SearchIconPage = () => {
     const handleAdvanceClose = () => setAdvanceShow(false);
     const handleAdvanceShow = () => setAdvanceShow(true);
 
+    const [filterData, setFilterData] = useState({
+        filter: {
+            areas: [],
+            blocks: [],
+            propertyTypes: [],
+            specialFeatures: [],
+            displayOptions: []
+        },
+        listingStatus: "Published",
+        pageNo: 1,
+        pageSize: 25
+    });
+
+    console.log('filter Icon:',filterData)
+    const handleToggleArrayChange = (key, value) => {
+        const numericValue = Number(value);
+
+        setFilterData((prevState) => {
+            // Check if the clicked value is already the selected one
+            const currentValues = Array.isArray(prevState.filter[key])
+                ? prevState.filter[key]
+                : [];
+
+            // Toggle logic: If clicking the same one, clear it. If clicking a new one, replace it.
+            const isAlreadySelected = currentValues.includes(numericValue);
+            const newValues = isAlreadySelected ? [] : [numericValue];
+
+            return {
+                ...prevState,
+                filter: {
+                    ...prevState.filter,
+                    [key]: newValues, // This ensures it is always [id] or []
+                },
+                pageNo: 1,
+            };
+        });
+    };
+
+    const handleAdvanceSearch = () => {
+        if (!filterData || !filterData.filter) return;
+
+        const { filter, listingStatus, pageNo, pageSize } = filterData;
+
+        // Build query string
+        const query = new URLSearchParams({
+            CityId: filter.areas?.join(",") || "",
+            blocks: filter.blocks?.join(",") || "",
+            Id: filter.propertyTypes?.join(",") || "",
+            specialFeatures: filter.specialFeatures?.join(",") || "",
+            displayOptions: filter.displayOptions?.join(",") || "",
+            listingStatus: listingStatus || "",
+            pageNo: pageNo?.toString() || "1",
+            pageSize: pageSize?.toString() || "25"
+        }).toString();
+        router.push(`/app-pages/search-result-page?${query}`);
+    };
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -88,46 +155,40 @@ const SearchIconPage = () => {
                 <Modal.Body className='p-4'>
                     <h3>Property Type</h3>
                     <Row>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <MdOutlineVilla className='display-5 m-auto pb-2' />
-                                <p>Villa</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <BsBuilding className='display-5 m-auto pb-2' />
-                                <p>Appartment</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <GoStack className='display-5 m-auto pb-2' />
-                                <p>Whole Floor</p>
-                            </div>
-                        </Col>
+                        {propertyTypes.map((item) => {
+                            const matched = propertyTypeOptions.find((x) => x.name.toLowerCase() === item.name_En.toLowerCase());
+                            const Icon = matched?.icon;
 
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <FaStore className='display-5 m-auto pb-2' />
-                                <p>Store</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <LuWarehouse className='display-5 m-auto pb-2' />
-                                <p>Storage</p>
-                            </div>
-                        </Col>
-                        <Col md={4} className='text-center mb-3'>
-                            <div className='pt-2 pb-1 rounded-lg text-center' style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
-                                <FiBriefcase className='display-5 m-auto pb-2' />
-                                <p>Office</p>
-                            </div>
-                        </Col>
+                            return (
+                                <Col
+                                    key={item.id}
+                                    md={4}
+                                    className="text-center mb-3"
+                                    onClick={() => {
+                                        setSelectedType(item.id);
+                                        handleToggleArrayChange("propertyTypes", [Number(item.id)]);
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div
+                                        className="pt-2 pb-1 rounded-lg text-center"
+                                        style={{
+                                            background: selectedType === item.id
+                                                ? "rgba(255, 255, 255, 0.25)"   // Active color
+                                                : "rgba(255, 255, 255, 0.05)", // Default
+                                            border: selectedType === item.id ? "2px solid #fff" : "2px solid transparent",
+                                            transition: "0.2s"
+                                        }}
+                                    >
+                                        <Icon className="display-5 m-auto pb-2" />
+                                        <p>{direction === 'rtl' ? item.name_Ar : item.name_En}</p>
+                                    </div>
+                                </Col>
+                            );
+                        })}
                     </Row>
 
-                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" onChange={handleToggleArrayChange("areas", e.target.value)} style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                         <option>Areas</option>
                         {areas?.map((type) => (
                             <option key={type?.id} value={type?.id}>{type?.name_en}</option>
@@ -253,7 +314,7 @@ const SearchIconPage = () => {
                 <Modal.Body>
                     <Fade direction="left">
                         <Row className='rounded px-5 pb-4 text-dark w-100 text-center m-auto' >
-                            <Col sm={12} md={3} className='m-auto' style={{marginBottom:10}}>
+                            <Col sm={12} md={3} className='m-auto' style={{ marginBottom: 10 }}>
                                 <Fade direction="right" fraction={0.5} cascade delay={80}>
                                     {/* <Dropdown>
                                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark w-100">
@@ -275,7 +336,7 @@ const SearchIconPage = () => {
                                 <Fade direction="right" fraction={0.5} cascade delay={130}>
                                     <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                                         <option>Property Type</option>
-                                        {propertyTypes?.map((item,index) => (
+                                        {propertyTypes?.map((item, index) => (
                                             <option key={index} value={item?.id}>{item?.name_En}</option>
                                         ))}
                                     </Form.Select>

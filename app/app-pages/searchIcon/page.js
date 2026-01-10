@@ -69,7 +69,7 @@ const SearchIconPage = () => {
         pageNo: 1,
         pageSize: 25
     });
-
+    console.log('formData:', formData)
 
     const handleFilterChange = (e) => {
         setFormData({
@@ -108,6 +108,30 @@ const SearchIconPage = () => {
     //         }
     //     });
     // };
+
+    const handleToggleArrayChange = (key, value) => {
+        const numericValue = Number(value);
+
+        setFormData((prevState) => {
+            // 1. Access the correct object: 'filter' instead of 'formData'
+            const currentValues = Array.isArray(prevState.filter[key])
+                ? prevState.filter[key]
+                : [];
+
+            // 2. Toggle logic
+            const isAlreadySelected = currentValues.includes(numericValue);
+            const newValues = isAlreadySelected ? [] : [numericValue];
+
+            return {
+                ...prevState,
+                filter: {
+                    ...prevState.filter,
+                    [key]: newValues, // Updates the specific filter key
+                },
+                pageNo: 1, // Resets pagination as intended
+            };
+        });
+    };
 
     const handleArrayChange = (name, value) => {
         setFormData(prev => {
@@ -229,8 +253,6 @@ const SearchIconPage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    console.log("formData.filter.propertyTypes", formData);
-    console.log("formData.filter.propertyTypes.includes(1)", formData.filter.propertyTypes.map(Number).includes(1));
     return (
         <>
 
@@ -256,7 +278,7 @@ const SearchIconPage = () => {
                                     className="text-center mb-3"
                                     onClick={() => {
                                         setSelectedType(item.id);
-                                        handleArrayChange("propertyTypes", [Number(item.id)]);
+                                        handleToggleArrayChange("propertyTypes", [Number(item.id)]);
                                     }}
                                     style={{ cursor: "pointer" }}
                                 >
@@ -281,7 +303,7 @@ const SearchIconPage = () => {
                     <Form.Select
                         onChange={(e) => {
                             handleAreaChange(e);
-                            handleArrayChange("areas", [Number(e.target.value)]);
+                            handleToggleArrayChange("areas", [Number(e.target.value)]);
                         }}
                         className="border-0 rounded-2 px-4 py-2 mb-3 transparent-select text-dark"
                     >
@@ -294,7 +316,7 @@ const SearchIconPage = () => {
                     </Form.Select>
 
 
-                    <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                    <Form.Select onChange={(e) => handleToggleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                         <option>{translate('SelectBlock')}</option>
                         {blocks?.map((block, index) => (
                             <option key={index} value={block}>{block}</option>
@@ -326,7 +348,7 @@ const SearchIconPage = () => {
                                     md={3}
                                     key={index}
                                     onClick={() =>
-                                        handleArrayChange("displayOptions", Number(condition.id))
+                                        handleToggleArrayChange("displayOptions", Number(condition.id))
                                     }
                                     style={{ cursor: "pointer" }}
                                 >
@@ -352,7 +374,7 @@ const SearchIconPage = () => {
 
 
                     <h5>{translate('AdditionalFilters')}</h5>
-                    <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                    <Form.Select onChange={(e) => handleToggleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
                         <option>{translate('Selectfeature')}</option>
                         {features?.map((item, index) => (
                             <option key={index} value={item?.id}>
@@ -361,7 +383,7 @@ const SearchIconPage = () => {
                         ))}
                     </Form.Select>
 
-                    {(formData.filter.propertyTypes.map(Number).includes(1) || formData.filter.propertyTypes.map(Number).includes(3) || formData.filter.propertyTypes.map(Number).includes(4) ) && (
+                    {(formData.filter.propertyTypes.map(Number).includes(1) || formData.filter.propertyTypes.map(Number).includes(3) || formData.filter.propertyTypes.map(Number).includes(4)) && (
                         <>
 
                             <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoOfRooms')}</small>

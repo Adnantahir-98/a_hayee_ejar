@@ -97,6 +97,30 @@ const Page = () => {
     pageNo: 1,
     pageSize: 25
   });
+  
+  const handleToggleArrayChange = (key, value) => {
+    const numericValue = Number(value);
+
+    setFilterData((prevState) => {
+      // Check if the clicked value is already the selected one
+      const currentValues = Array.isArray(prevState.filter[key])
+        ? prevState.filter[key]
+        : [];
+
+      // Toggle logic: If clicking the same one, clear it. If clicking a new one, replace it.
+      const isAlreadySelected = currentValues.includes(numericValue);
+      const newValues = isAlreadySelected ? [] : [numericValue];
+
+      return {
+        ...prevState,
+        filter: {
+          ...prevState.filter,
+          [key]: newValues, // This ensures it is always [id] or []
+        },
+        pageNo: 1,
+      };
+    });
+  };
   const [selectedCondition, setSelectedCondition] = useState(null);
   const handleFilterChange = (e) => {
     setFilterData({
@@ -170,12 +194,33 @@ const Page = () => {
     }).toString();
     router.push(`/app-pages/search-result-page?${query}`);
   };
+  const handleTogglePropertyType = (id) => {
+    const numericId = Number(id);
+
+    setFilterData((prevState) => {
+      const currentTypes = prevState.filter.propertyTypes;
+
+      // Check if ID exists to toggle it
+      const newTypes = currentTypes.includes(numericId)
+        ? currentTypes.filter((t) => t !== numericId) // Remove
+        : [...currentTypes, numericId];               // Add
+
+      return {
+        ...prevState,
+        filter: {
+          ...prevState.filter,
+          propertyTypes: newTypes // Result will be [1, 2]
+        },
+        pageNo: 1
+      };
+    });
+  };
   const [propertyTypes, setPropertyTypes] = useState([])
   const [tblListingFeatures, setTblListingFeatures] = useState([])
   const [tblListingDisplayOptions, setTblListingDisplayOptions] = useState([])
   const [blocks, setBlocksArray] = useState([])
   const [formData, setFormData] = useState(initialState);
-  console.log('formData:', formData)
+
   // search start
   const [propertyTypeId, setPropertyTypeId] = useState(null);
   const [propertyTypeName, setPropertyTypeName] = useState("");
@@ -279,9 +324,6 @@ const Page = () => {
       .filter((item) => item.featureId); // remove 0, null, undefined
 
     if (selectedData.length === 0) return; // exit if nothing valid
-
-    // -----------------------------
-    // 2️⃣ Update UI list (ID + Name)
     // -----------------------------
     setTblListingFeatures((prev) => {
       const merged = [...prev];
@@ -319,7 +361,7 @@ const Page = () => {
   // Remove a feature by ID
   const handleRemoveFeature = (e, featureId) => {
     e.preventDefault()
-    // 1️⃣ Remove from UI list (ID + Name)
+
     setTblListingFeatures((prev) => prev.filter((x) => x.featureId !== featureId));
 
     // 2️⃣ Remove from formData (only IDs)
@@ -410,7 +452,6 @@ const Page = () => {
     setSaveLoading(true)
     try {
       await dispatch(AddPropertyListing(formData));
-
     } catch (error) {
       console.log('Error adding property listing:', error);
     } finally {
@@ -801,7 +842,7 @@ const Page = () => {
                   className="text-center mb-3"
                   onClick={() => {
                     setSelectedType(item.id);
-                    handleArrayChange("propertyTypes", [Number(item.id)]);
+                    handleToggleArrayChange('propertyTypes', [Number(item.id)]);
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -826,7 +867,7 @@ const Page = () => {
           <Form.Select
             onClick={(e) => {
               handleAreaChange(e);
-              handleArrayChange("areas", [Number(e.target.value)]);
+              handleToggleArrayChange('areas', [Number(e.target.value)]);
             }}
             className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('Areas')}</option>
@@ -835,7 +876,7 @@ const Page = () => {
             ))}
           </Form.Select>
 
-          <Form.Select onChange={(e) => handleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleToggleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('SelectBlock')}</option>
             {blocks?.map((block, index) => (
               <option key={index} value={block}>{block}</option>
@@ -890,7 +931,7 @@ const Page = () => {
           </Row>
 
           <h5>{translate('AdditionalFilters')}</h5>
-          <Form.Select onChange={(e) => handleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleToggleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option value={''}>{translate('Selectfeature')}</option>
             {features?.map((item, index) => (
               <option key={index} value={item?.id}>{direction === 'rtl' ? item?.name_ar : item?.name}</option>

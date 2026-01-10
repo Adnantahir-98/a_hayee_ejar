@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function BrowserDataPage() {
+  const MAX_LENGTH = 100;
   const searchParams = useSearchParams();     // query params
   const dispatch = useDispatch();
   const { data, loading, status } = useSelector(state => state.propertyListing);
@@ -35,7 +36,6 @@ export default function BrowserDataPage() {
     pageSize: 20
   });
 
-  console.log("Filter Body:", filterBody);
   useEffect(() => {
     dispatch(GetPropertyListing(filterBody));
   }, [dispatch, filterBody]);
@@ -134,37 +134,37 @@ export default function BrowserDataPage() {
           width: "100%",
         }}><Spin size="large" /></div>}
         {data?.length > 0 &&
-        data?.map((property, index) => (
-          <div key={index} className="mt-10">
-            {/* Desktop layout */}
-            <div
-              className="d-none d-lg-flex flex-column border-0"
-              style={{
-                borderRadius: "16px",
-                overflow: "hidden",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
-                maxWidth: "90%",
-                margin: "auto",
-              }}
-            >
-              {/* Carousel Section (Top) */}
-              <div style={{ width: "100%", height: "500px" }}>
-                {/* <Carousel fade indicators={false} controls={true} interval={3000} style={{ height: "100%" }}> */}
-                <div >
-                  <img
-                    //src="https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80"
-                    src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL+'/'+property?.imageUrl}
-                    alt={property?.customerName}
-                    className="d-block w-100"
-                    style={{
-                      height: "500px",
-                      objectFit: "cover",
-                      borderTopLeftRadius: "16px",
-                      borderTopRightRadius: "16px",
-                    }}
-                  />
-                </div>
-                {/* <div className="d-none">
+          data?.map((property, index) => (
+            <div key={index} className="mt-10">
+              {/* Desktop layout */}
+              <div
+                className="d-none d-lg-flex flex-column border-0"
+                style={{
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                  maxWidth: "90%",
+                  margin: "auto",
+                }}
+              >
+                {/* Carousel Section (Top) */}
+                <div style={{ width: "100%", height: "500px" }}>
+                  {/* <Carousel fade indicators={false} controls={true} interval={3000} style={{ height: "100%" }}> */}
+                  <div >
+                    <img
+                      //src="https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80"
+                      src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL + '/' + property?.imageUrl}
+                      alt={property?.customerName}
+                      className="d-block w-100"
+                      style={{
+                        height: "500px",
+                        objectFit: "cover",
+                        borderTopLeftRadius: "16px",
+                        borderTopRightRadius: "16px",
+                      }}
+                    />
+                  </div>
+                  {/* <div className="d-none">
                   <img
                     src="https://images.unsplash.com/photo-1526779259212-939e64788e3c?auto=format&fit=crop&q=80&w=874"
                     alt="Villa 2"
@@ -178,73 +178,75 @@ export default function BrowserDataPage() {
                   />
                 </div>
               </Carousel> */}
+                </div>
+
+                {/* Info Section (Bottom) */}
+                <div
+                  style={{
+                    display: "flex",
+                    direction: "row",
+                    backgroundColor: "#fcfcfcff",
+                    padding: "24px",
+                    justifyContent: "space-between",
+                    height: "auto",
+                  }}
+                >
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: '600', color: "#FF5A5F", fontFamily: 'arial' }}>📍 {property?.areaName}, City</p>
+                    <h2 className="fw-semibold" style={{ color: "#111111ff" }}>
+                      {property?.title}
+                    </h2>
+                    <p className="large" style={{ color: "#8f8f8fff" }}>
+                      {property?.description?.length > MAX_LENGTH
+                        ? property.description.substring(0, MAX_LENGTH) + "..."
+                        : property.description}
+                    </p>
+                  </div>
+
+                  <div className="justify-content-between align-items-center mt-7">
+                    <h4 className="fw-bold" style={{ color: "#111" }}>
+                      {property?.price} KWD
+                    </h4>
+                    <Button variant="success" onClick={() => router.push(`/app-pages/selected-result-page?product-id=${property?.id}`)}>More here →</Button>
+                  </div>
+                </div>
               </div>
 
-              {/* Info Section (Bottom) */}
-              <div
-                style={{
-                  display: "flex",
-                  direction: "row",
-                  backgroundColor: "#fcfcfcff",
-                  padding: "24px",
-                  justifyContent: "space-between",
-                  height: "auto",
-                }}
-              >
-                <div>
-                  <p style={{ fontSize: "14px", fontWeight: '600', color: "#FF5A5F", fontFamily: 'arial' }}>📍 {property?.areaName}, City</p>
-                  <h2 className="fw-semibold" style={{ color: "#111111ff" }}>
-                    {property?.title}
-                  </h2>
-                  <p className="large" style={{ color: "#8f8f8fff" }}>
+              {/* Mobile layout */}
+              <div className="d-lg-none position-relative" style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
+                <img
+                  src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL + '/' + property?.imageUrl}
+                  alt={property?.title}
+                  className="card-img"
+                  style={{ height: "346px", objectFit: "cover", opacity: 0.85 }}
+                />
+                <div
+                  className="position-absolute w-100 h-100"
+                  style={{
+                    top: 0,
+                    left: 0,
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0))",
+                  }}
+                ></div>
+                <div className="card-img-overlay d-flex flex-column justify-content-end p-3" style={{ zIndex: 2 }}>
+                  <h4 className="fw-bold mb-1 text-white text-center">{property?.price} KWD</h4>
+                  <h6 className="fw-semibold mb-1 text-white text-center">{property?.title}</h6>
+                  <p className="small mb-2 text-white text-center">
                     {property?.description}
                   </p>
-                </div>
-
-                <div className="justify-content-between align-items-center mt-7">
-                  <h4 className="fw-bold" style={{ color: "#111" }}>
-                    {property?.price} KWD
-                  </h4>
-                  <Button variant="success" onClick={() => router.push(`/app-pages/selected-result-page?product-id=${property?.id}`)}>More here →</Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile layout */}
-            <div className="d-lg-none position-relative" style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0,0,0,0.4)" }}>
-              <img
-                src={property?.imageUrl === null ? 'https://img.freepik.com/premium-vector/black-white-drawing-house-with-house-background_988535-1228.jpg?semt=ais_hybrid&w=740&q=80' : baseURL+'/'+property?.imageUrl}
-                alt={property?.title}
-                className="card-img"
-                style={{ height: "346px", objectFit: "cover", opacity: 0.85 }}
-              />
-              <div
-                className="position-absolute w-100 h-100"
-                style={{
-                  top: 0,
-                  left: 0,
-                  background:
-                    "linear-gradient(to top, rgba(0,0,0,0.7) 20%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0))",
-                }}
-              ></div>
-              <div className="card-img-overlay d-flex flex-column justify-content-end p-3" style={{ zIndex: 2 }}>
-                <h4 className="fw-bold mb-1 text-white text-center">{property?.price} KWD</h4>
-                <h6 className="fw-semibold mb-1 text-white text-center">{property?.title}</h6>
-                <p className="small mb-2 text-white text-center">
-                  {property?.description}
-                </p>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className="text-center">
-                    <span style={{ fontSize: "10px", color: "white" }}>● ● ● ●</span>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="text-center">
+                      <span style={{ fontSize: "10px", color: "white" }}>● ● ● ●</span>
+                    </div>
+                    <Button variant="link" onClick={() => router.push(`/app-pages/selected-result-page?product-id=${property?.id}`)} className="text-warning text-decoration-none p-0">
+                      More here →
+                    </Button>
                   </div>
-                  <Button variant="link" onClick={() => router.push(`/app-pages/selected-result-page?product-id=${property?.id}`)} className="text-warning text-decoration-none p-0">
-                    More here →
-                  </Button>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
         {data?.length === 0 && !loading && (
           <div className="text-center my-5">
             <h3>No properties found.</h3>
