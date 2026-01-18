@@ -54,6 +54,7 @@ export default function SelectedResultPage() {
       handleWhatsappShow(); // Opens your existing modal
     }
   };
+  
   const handleCallClick = () => {
     const phoneNumber = phone; // Replace with actual number
 
