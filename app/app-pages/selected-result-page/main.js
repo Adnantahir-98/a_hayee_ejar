@@ -37,6 +37,7 @@ export default function SelectedResultPage() {
   const handleAdvanceClose = () => setAdvanceShow(false);
   const handleAdvanceShow = () => setAdvanceShow(true);
   const handleWhatsappClose = () => setWhatsappshow(false);
+
   const handleWhatsappShow = () => setWhatsappshow(true);
   const searchParams = useSearchParams();
   const productId = searchParams.get("product-id");
@@ -45,6 +46,26 @@ export default function SelectedResultPage() {
   const [propertyTypes, setPropertyTypes] = useState([])
   const [areas, setAreas] = useState([])
   const phone = data?.whatsapp?.replace(/\D/g, '');
+  const handleWhatsappClick = () => {
+    const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = `https://wa.me/${phone}`
+    } else {
+      handleWhatsappShow(); // Opens your existing modal
+    }
+  };
+  const handleCallClick = () => {
+    const phoneNumber = phone; // Replace with actual number
+
+    // Simple check for mobile devices
+    const isMobile = /iPhone|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      window.location.href = `tel:${phoneNumber}`;
+    } else {
+      handleAdvanceShow(); // Opens your existing modal or logic for desktop
+    }
+  };
   useEffect(() => {
     if (productId) {
       dispatch(GetPropertyListingById(productId));
@@ -180,10 +201,10 @@ export default function SelectedResultPage() {
                 <h1 style={{ color: '#000' }}>{data?.price} KWD</h1>
               </div>
               <div className="col-12 col-md-12 text-center d-flex justify-content-center gap-3">
-                <button className="btn" onClick={handleAdvanceShow} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
+                <button className="btn" onClick={handleCallClick} style={{ backgroundColor: '#F7BC08', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
                   Call Estate Owner
                 </button>
-                <button className="btn" onClick={handleWhatsappShow} style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
+                <button className="btn" onClick={handleWhatsappClick} style={{ backgroundColor: '#4DB6AC', color: '#fff', padding: 10, width: '35%', fontSize: 17, fontWeight: '600' }}>
                   Whatsapp
                 </button>
               </div>

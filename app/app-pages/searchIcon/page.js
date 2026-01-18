@@ -32,14 +32,33 @@ import 'swiper/css';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '../../context/TranslationContext';
+//import villaicon from '/icons/icons/icons/SVG/villa-white.svg'
 
 const propertyTypeOptions = [
-    { id: 1, name: "Villas", icon: MdOutlineVilla },
-    { id: 2, name: "Apartment", icon: BsBuilding },
-    { id: 3, name: "Whole Floor", icon: GoStack },
-    { id: 4, name: "Store", icon: FaStore },
-    { id: 5, name: "Storage", icon: LuWarehouse },
-    { id: 6, name: "Office", icon: FiBriefcase }
+    {
+        id: 1, name: "Villas",
+        icon: <img src="/icons/icons/icons/SVG/villa-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} />
+    },
+    { 
+        id: 2, name: "Apartment", 
+        icon: <img src="/icons/icons/icons/SVG/appartments-white.svg" alt="appartments" style={{width:70,justifySelf:'center'}} /> 
+    },
+    { 
+        id: 3, name: "Whole Floor", 
+        icon: <img src="/icons/icons/icons/SVG/fullfloor-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    },
+    { 
+        id: 4, name: "Store", 
+        icon: <img src="/icons/icons/icons/SVG/store-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    },
+    { 
+        id: 5, name: "Storage", 
+        icon: <img src="/icons/icons/icons/SVG/storage-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    },
+    { 
+        id: 6, name: "Office", 
+        icon: <img src="/icons/icons/icons/SVG/office-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    }
 ];
 
 const SearchIconPage = () => {
@@ -286,13 +305,14 @@ const SearchIconPage = () => {
                                         className="pt-2 pb-1 rounded-lg text-center"
                                         style={{
                                             background: selectedType === item.id
-                                                ? "rgba(255, 255, 255, 0.25)"   // Active color
+                                                ? "#4db6ac"   // Active color
                                                 : "rgba(255, 255, 255, 0.05)", // Default
-                                            border: selectedType === item.id ? "2px solid #fff" : "2px solid transparent",
+                                            border: selectedType === item.id ? "2px solid #4db6ac" : "2px solid transparent",
                                             transition: "0.2s"
                                         }}
                                     >
-                                        <Icon className="display-5 m-auto pb-2" />
+                                        {/* <Icon className="display-5 m-auto pb-2" /> */}
+                                        {Icon}
                                         <p>{direction === 'rtl' ? item.name_Ar : item.name_En}</p>
                                     </div>
                                 </Col>

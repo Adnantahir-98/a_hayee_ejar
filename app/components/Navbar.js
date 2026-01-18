@@ -22,18 +22,29 @@ export default function MainNavbar() {
     <Navbar
       expand="lg"
       fixed="top"
+      variant="dark" // <--- This tells Bootstrap to use white text/icons
       className={`custom-navbar ${scrolled ? 'scrolled' : ''}`}
     >
       <Container>
         {/* Logo */}
         <Navbar.Brand onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
+          {direction === 'rtl' ? 
           <img
-            src="/logo-white.png"
+            src="/arabic-logo.png"
             alt="Main Logo"
             width={120}
             height={40}
             style={{ objectFit: 'contain' }}
           />
+          :
+          <img
+            src="/white-logo.png"
+            alt="Main Logo"
+            width={120}
+            height={40}
+            style={{ objectFit: 'contain' }}
+          />
+          }
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

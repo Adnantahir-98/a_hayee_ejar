@@ -19,11 +19,11 @@ import { MdPark, MdBeachAccess } from "react-icons/md";
 import { BsDot } from "react-icons/bs";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { FaBed } from "react-icons/fa";
+import axios from "axios";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 export default function SearchResultPage() {
-  const searchParams = useSearchParams();     // query params
-  console.log('searchParams:',searchParams)
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const { data, loading, status } = useSelector(state => state.propertyListing);
   const id = searchParams.get("Id");
@@ -37,7 +37,13 @@ export default function SearchResultPage() {
   const handleAdvanceShow = () => setAdvanceShow(true);
   const handleWhatsappClose = () => setWhatsappshow(false);
   const handleWhatsappShow = () => setWhatsappshow(true);
-  const [propertyList,setPropertyList]=useState([])
+  const [propertyList, setPropertyList] = useState([])
+  const [listingCount, setListingCount] = useState([])
+  console.log('listingCount:', listingCount)
+  const GetListingCount = async () => {
+    const { data } = await axios.get(`${baseURL}/admin/api/Listing/listingcount?areaId=${CityId}`)
+    setListingCount(data?.data)
+  }
   const [filterBody, setFilterBody] = useState({
     filter: {
       areas: CityId ? [Number(CityId)] : [],
@@ -62,6 +68,9 @@ export default function SearchResultPage() {
     }
   }
   useEffect(() => {
+    if (CityId) {
+      GetListingCount()
+    }
     const GetProperties = async () => {
       const res = await dispatch(GetPropertyListing(filterBody));
       if (res && res.payload) {
@@ -83,10 +92,10 @@ export default function SearchResultPage() {
       <div className="mt-40 mb-10 my-5 p-3">
         <h1 className="font-bold text-3xl mb-4 text-center text-white pt-10 w-75 mx-auto" style={{ borderBottom: '2px solid #F7BC08' }}>
           {TypeName && TypeName.trim() !== "" && (
-            <span>{TypeName}</span>
+            <span>{TypeName} -</span>
           )}
           {CityName && CityName.trim() !== "" && (
-            <span> - {CityName} - block 4 - 6 rooms - 4 bathrooms - 2 floors</span>
+            <span>  {CityName} - block 4 - 6 rooms - 4 bathrooms - 2 floors</span>
           )}
         </h1>
         <div className="row w-100">
@@ -136,9 +145,9 @@ export default function SearchResultPage() {
                     src={`https://www.google.com/maps?q=loc:${selectedId}&output=embed`}
                     width="100%" />
 
-                    <p className="pt-2">
-                      {singlePropertyData?.description}
-                    </p>
+                  <p className="pt-2">
+                    {singlePropertyData?.description}
+                  </p>
                 </>
 
               )}
@@ -163,7 +172,7 @@ export default function SearchResultPage() {
                       <div className="row g-0" >
                         <div className="col-md-8">
                           <div className="card-body">
-                            <h5 className="card-title">{property?.standardRoom+property?.maidRoom} rooms + {property?.masterRoom} master</h5>
+                            <h5 className="card-title">{(property?.standardRoom + property?.maidRoom !== 0) && (`${property?.standardRoom + property?.maidRoom} rooms +`)}  {property?.masterRoom !== 0 && `${property?.masterRoom} master`}</h5>
                             <h5 className="card-title">{property?.title}</h5>
                             <div className="d-flex gap-3" style={{ color: '#7a7a7aff' }}>
                               <div className="d-flex"><MdLabel size={24} />{property?.areaName}</div>
@@ -198,7 +207,75 @@ export default function SearchResultPage() {
           </div>
 
         </div>
-      </div>
+        <div className="row w-100 mt-10" style={{ borderTop: '5px solid yellow', marginTop: 20, padding: 10 }}>
+          {CityName && CityName.trim() !== "" && (
+            <h2 style={{ color: 'yellow' }}>More in {CityName}
+              <span
+                onClick={() => {
+                  const params = {
+                    // Ensure CityId is converted correctly if it's an array or number
+                    CityId: Array.isArray(CityId) ? CityId.join(",") : CityId || "",
+                    CityName: CityName || "",
+                    listingStatus: "Published",
+                    pageNo: "1",
+                    pageSize: "25"
+                  };
+
+                  const query = new URLSearchParams(params).toString();
+                  router.push(`/app-pages/search-result-page?${query}`);
+                }}
+              ><u style={{ fontSize: 12, fontStyle: 'unset', color: '#fff' }}>View All</u>
+              </span>
+            </h2>
+          )}
+        </div>
+        {/* Added justify-content-center to the row */}
+        {/* row stays centered for the dynamic items */}
+        <div className="row w-100 bg-warning justify-content-center align-items-center">
+          <Col sm={2} md={2} ></Col>
+          {/* The loop items will naturally occupy the center space */}
+          {listingCount?.map((item) => (
+            <Col sm={2} md={2} key={item.id}>
+              <div className="listing-count text-center my-3 shadow-sm"
+                onClick={() => {
+                  // 1. Prepare the params object for this specific item
+                  const params = {
+                    CityId: Array.isArray(CityId) ? CityId.join(",") : CityId || "",
+                    CityName: CityName || "",
+                    Id: item?.propertyTypeId || "",
+                    Name: item?.propertyTypeName || "",
+                    listingStatus: "Published",
+                    pageNo: "1",
+                    pageSize: "25"
+                  };
+
+                  // 2. Build the query string
+                  const query = new URLSearchParams(params).toString();
+
+                  // 3. Navigate
+                  router.push(`/app-pages/search-result-page?${query}`);
+                }}
+              >
+                <img src={`${baseURL}/${item?.icon}`} alt="icon" className='broswer-img' />
+                <p className="text-dark mt-0 pt-0">{item?.listingCount} {item?.propertyTypeName}</p>
+              </div>
+            </Col>
+          ))}
+
+          {/* ms-auto pushes this column to the far right of the row */}
+          <Col sm={2} md={2} className="ms-auto">
+            <div className="end-count text-center my-3 shadow-sm d-flex flex-column align-items-center justify-content-center">
+              <img
+                src={`/icons/arrow.png`}
+                alt="property icon"
+                style={{ width: '48%' }}
+                className='broswer-img'
+              />
+              <span style={{ color: '#000' }}><u>View All</u></span>
+            </div>
+          </Col>
+        </div>
+      </div >
       <SearchIconPage />
     </>
   );

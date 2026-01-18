@@ -25,6 +25,8 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { Fade, Slide } from "react-awesome-reveal";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css/pagination'; // <--- MUST IMPORT THIS CSS
 import 'swiper/css';
 import { useRouter } from 'next/navigation';
 import SearchIconPage from './app-pages/searchIcon/page';
@@ -40,12 +42,30 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 
 const propertyTypeOptions = [
-  { id: 1, name: "Villas", icon: MdOutlineVilla },
-  { id: 2, name: "Apartment", icon: BsBuilding },
-  { id: 3, name: "Whole Floor", icon: GoStack },
-  { id: 4, name: "Store", icon: FaStore },
-  { id: 5, name: "Storage", icon: LuWarehouse },
-  { id: 6, name: "Office", icon: FiBriefcase }
+  {
+    id: 1, name: "Villas",
+    icon: <img src="/icons/icons/icons/SVG/villa-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
+  },
+  {
+    id: 2, name: "Apartment",
+    icon: <img src="/icons/icons/icons/SVG/appartments-white.svg" alt="appartments" style={{ width: 70, justifySelf: 'center' }} />
+  },
+  {
+    id: 3, name: "Whole Floor",
+    icon: <img src="/icons/icons/icons/SVG/fullfloor-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
+  },
+  {
+    id: 4, name: "Store",
+    icon: <img src="/icons/icons/icons/SVG/store-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
+  },
+  {
+    id: 5, name: "Storage",
+    icon: <img src="/icons/icons/icons/SVG/storage-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
+  },
+  {
+    id: 6, name: "Office",
+    icon: <img src="/icons/icons/icons/SVG/office-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
+  }
 ];
 
 const Page = () => {
@@ -97,7 +117,7 @@ const Page = () => {
     pageNo: 1,
     pageSize: 25
   });
-  
+
   const handleToggleArrayChange = (key, value) => {
     const numericValue = Number(value);
 
@@ -181,8 +201,8 @@ const Page = () => {
 
     const { filter, listingStatus, pageNo, pageSize } = filterData;
 
-    // Build query string
-    const query = new URLSearchParams({
+    // 1. Create the params object
+    const params = {
       CityId: filter.areas?.join(",") || "",
       blocks: filter.blocks?.join(",") || "",
       Id: filter.propertyTypes?.join(",") || "",
@@ -191,7 +211,19 @@ const Page = () => {
       listingStatus: listingStatus || "",
       pageNo: pageNo?.toString() || "1",
       pageSize: pageSize?.toString() || "25"
-    }).toString();
+    };
+
+    // 2. Add the Names only if the corresponding IDs exist
+    if (filter?.propertyTypes?.length > 0 && propertyTypeName) {
+      params.Name = propertyTypeName;
+    }
+
+    if (filter?.areas?.length > 0 && areaName) {
+      params.CityName = areaName;
+    }
+
+    // 3. Convert to query string and navigate
+    const query = new URLSearchParams(params).toString();
     router.push(`/app-pages/search-result-page?${query}`);
   };
   const handleTogglePropertyType = (id) => {
@@ -507,7 +539,7 @@ const Page = () => {
             <Row className='rounded-lg mt-auto bottom-row'>
               <Fade direction="left">
                 <Row className='rounded px-5 py-4 text-dark text-center m-auto mt-5 responsive-row' style={{ background: 'rgba(255,255,255, 0.85)' }}>
-                  <Col md={3} className='m-auto'>
+                  <Col md={3} lg={3} className='m-auto'>
                     {/* <Fade direction="right" fraction={0.5} cascade delay={80}>
                       <Dropdown>
                         <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 px-4 py-2 bg-light text-dark">
@@ -573,7 +605,7 @@ const Page = () => {
                       </Dropdown> */}
                     </Fade>
                   </Col>
-                  <Col lg={3} md={3} className='text-end m-auto'>
+                  <Col md={3} lg={3} className='text-end m-auto'>
                     <Fade direction="right" fraction={0.5} cascade delay={140}>
                       <Button variant="success" className='w-100' onClick={(e) => handleSearch(e)}>
                         {translate('search')}
@@ -600,15 +632,22 @@ const Page = () => {
                   ] */}
                   {propertyTypes?.map((item, i) => (
                     <div className="property-item" key={i}>
-                      <Link href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`} className="text-decoration-none">
-                        <Button
-                          variant="secondary"
+                      <Link
+                        href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}
+                        className="text-decoration-none"
+                      >
+                        {/* Use a div with button classes to prevent form submission or hard refresh */}
+                        <div
+                          className="btn btn-secondary d-flex align-items-center gap-2 w-100 border-0"
                           style={{ fontWeight: "700" }}
-                          className="d-flex align-items-center gap-2 w-100"
                         >
-                          <img src={baseURL + '/' + item?.icon} style={{ width: "40px" }} alt={direction === 'rtl' ? item?.name_Ar : item?.name_En} />
+                          <img
+                            src={`${baseURL}/${item?.icon}`}
+                            style={{ width: "40px" }}
+                            alt={direction === 'rtl' ? item?.name_Ar : item?.name_En}
+                          />
                           <span>{direction === 'rtl' ? item?.name_Ar : item?.name_En}</span>
-                        </Button>
+                        </div>
                       </Link>
                     </div>
                   ))}
@@ -632,16 +671,18 @@ const Page = () => {
                     <h1 className="display-4 fw-bolder mb-4 text-black">{translate('browse')}. {translate('rent')}. {translate('settle')}!</h1>
                   </Col>
                   {propertyTypes?.map((type, index) => (
-                    <Col md={6} key={index} className='mobileViewOff'>
+                    <Col md={5} key={index} className='mobileViewOff'>
                       <div className="brdrd-imges text-center my-3">
-                        <img src={baseURL + '/' + type?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                        <h2 className="text-dark mt-0 pt-0">{direction === 'rtl' ? type?.name_Ar : type?.name_En}</h2>
-                        <Link href={`/app-pages/browser-page?Name=${type?.name_En}&Id=${type?.id}`}>
-                          <Button
-                            variant="success"
-                            className="px-5 font-bold my-4 myButton">
+                        <img src={`${baseURL}/${type?.icon}`} alt="property icon" className='broswer-img' />
+                        <h2 className="text-dark mt-0 pt-0">
+                          {direction === 'rtl' ? type?.name_Ar : type?.name_En}
+                        </h2>
+
+                        {/* Remove Button and use div/span styled as a button */}
+                        <Link href={`/app-pages/browser-page?Name=${encodeURIComponent(type?.name_En)}&Id=${type?.id}`} className="text-decoration-none">
+                          <div className="btn btn-success px-5 font-bold my-4 myButton">
                             {translate('expolre')}
-                          </Button>
+                          </div>
                         </Link>
                       </div>
                     </Col>
@@ -651,6 +692,11 @@ const Page = () => {
 
               <Row className="align-items-stretch d-block d-lg-none mx-auto">
                 <Swiper
+                  modules={[Pagination, Autoplay]} // <--- DON'T FORGET THIS
+                  pagination={{
+                    clickable: true,
+                    dynamicBullets: true // Optional: makes bullets smaller/larger as you scroll
+                  }}
                   spaceBetween={20}
                   slidesPerView={1}
                   loop={true}
@@ -660,17 +706,29 @@ const Page = () => {
                     768: { slidesPerView: 3 },
                     1024: { slidesPerView: 4 },
                   }}
+                  className="pb-5" // Add padding at bottom so dots don't overlap your buttons
                 >
                   {propertyTypes?.map((item, index) => (
                     <SwiperSlide key={index}>
                       <Col sm={12} md={12}>
                         <div className="brdrd-imges text-center my-3">
-                          <img src={baseURL + '/' + item?.icon} alt="browser-apartment for rent broswer-img" className='broswer-img' />
-                          <h2 className="text-dark mt-0 pt-0">{direction === 'rtl' ? item?.name_Ar : item?.name_En}</h2>
-                          <Link href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}>
-                            <Button variant="success" className="px-5 font-bold my-4 myButton">
+                          <img
+                            src={`${baseURL}/${item?.icon}`}
+                            alt="property icon"
+                            className='broswer-img'
+                          />
+                          <h2 className="text-dark mt-0 pt-0">
+                            {direction === 'rtl' ? item?.name_Ar : item?.name_En}
+                          </h2>
+
+                          {/* Changed Link and replaced Button with div */}
+                          <Link
+                            href={`/app-pages/browser-page?Name=${encodeURIComponent(item?.name_En)}&Id=${item?.id}`}
+                            className="text-decoration-none"
+                          >
+                            <div className="btn btn-success px-5 font-bold my-4 myButton">
                               {translate('expolre')}
-                            </Button>
+                            </div>
                           </Link>
                         </div>
                       </Col>
@@ -843,6 +901,7 @@ const Page = () => {
                   onClick={() => {
                     setSelectedType(item.id);
                     handleToggleArrayChange('propertyTypes', [Number(item.id)]);
+                    setPropertyTypeName(item.name_En);
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -850,13 +909,13 @@ const Page = () => {
                     className="pt-2 pb-1 rounded-lg text-center"
                     style={{
                       background: selectedType === item.id
-                        ? "rgba(255, 255, 255, 0.25)"   // Active color
+                        ? "#4db6ac"   // Active color
                         : "rgba(255, 255, 255, 0.05)", // Default
-                      border: selectedType === item.id ? "2px solid #fff" : "2px solid transparent",
+                      border: selectedType === item.id ? "2px solid #4db6ac" : "2px solid transparent",
                       transition: "0.2s"
                     }}
                   >
-                    <Icon className="display-5 m-auto pb-2" />
+                    {Icon}
                     <p>{direction === 'rtl' ? item.name_Ar : item.name_En}</p>
                   </div>
                 </Col>
@@ -865,18 +924,31 @@ const Page = () => {
           </Row>
 
           <Form.Select
-            onClick={(e) => {
+            onChange={(e) => { // Using onChange is better for accessibility than onClick
+              const selectedId = Number(e.target.value);
+
+              // 1. Find the area object that matches the selected ID
+              const selectedArea = areas?.find(area => area.id === selectedId);
+
+              // 2. Get the name based on direction
+              const name = direction === 'rtl' ? selectedArea?.name_ar : selectedArea?.name_en;
+
+              // 3. Execute your functions
               handleAreaChange(e);
-              handleToggleArrayChange('areas', [Number(e.target.value)]);
+              handleToggleArrayChange('areas', [selectedId]);
+
+              if (name) {
+                setAreaName(name); // Now sets the actual name string
+              }
             }}
-            className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+            className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('Areas')}</option>
             {areas?.map((type, index) => (
               <option key={index} value={type?.id}>{direction === 'rtl' ? type?.name_ar : type?.name_en}</option>
             ))}
           </Form.Select>
 
-          <Form.Select onChange={(e) => handleToggleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleToggleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option>{translate('SelectBlock')}</option>
             {blocks?.map((block, index) => (
               <option key={index} value={block}>{block}</option>
@@ -931,14 +1003,14 @@ const Page = () => {
           </Row>
 
           <h5>{translate('AdditionalFilters')}</h5>
-          <Form.Select onChange={(e) => handleToggleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 bg-light text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+          <Form.Select onChange={(e) => handleToggleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
             <option value={''}>{translate('Selectfeature')}</option>
             {features?.map((item, index) => (
               <option key={index} value={item?.id}>{direction === 'rtl' ? item?.name_ar : item?.name}</option>
             ))}
           </Form.Select>
 
-          {(formData?.filter?.propertyTypes?.map(Number).includes(1) || formData?.filter?.propertyTypes?.map(Number).includes(3) || formData?.filter?.propertyTypes?.map(Number).includes(4)) && (
+          {(filterData?.filter?.propertyTypes?.map(Number).includes(1) || filterData?.filter?.propertyTypes?.map(Number).includes(3) || filterData?.filter?.propertyTypes?.map(Number).includes(4)) && (
             <>
 
               <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoOfRooms')}</small>
@@ -961,7 +1033,7 @@ const Page = () => {
               </Form.Select>
             </>
           )}
-          {(formData?.filter?.propertyTypes?.map(Number).includes(5) || formData?.filter?.propertyTypes?.map(Number).includes(6) || formData?.filter?.propertyTypes?.map(Number).includes(2)) && (
+          {(filterData?.filter?.propertyTypes?.map(Number).includes(5) || filterData?.filter?.propertyTypes?.map(Number).includes(6) || filterData?.filter?.propertyTypes?.map(Number).includes(2)) && (
             <>
               <small id="emailHelp" className="form-text text-secondary pb-1">{translate('SizeMeter')}</small>
               <Form.Control type="text" size="sm" placeholder={translate('SizeMeter')} name="size" onChange={handleFilterChange} className='place-clr' />
