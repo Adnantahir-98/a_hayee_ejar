@@ -164,6 +164,13 @@ body {
   width: 73%;
 }
 
+
+:root {
+  --swiper-pagination-color: #ffffff; /* Active dot color */
+  --swiper-pagination-bullet-inactive-color: #ffffff; /* Inactive dot color */
+  --swiper-pagination-bullet-inactive-opacity: 0.5; /* Inactive dot transparency */
+}
+
 @media (max-width: 1372px) {
   .responsive-row {
     width: 80%;

@@ -665,7 +665,8 @@ const Page = () => {
         <div className="overlay">
           <Container>
             <Row className="align-items-stretch">
-              <Col md={12} lg={6} className="my-5 py-5">
+              {/* <Col md={12} lg={6} className="my-5 py-5"> */}
+              <Col md={12} lg={6} className="my-5">
                 <Row className="align-items-stretch ">
                   <Col md={12} className='d-block d-lg-none'>
                     <h1 className="display-4 fw-bolder mb-4 text-black">{translate('browse')}. {translate('rent')}. {translate('settle')}!</h1>
@@ -709,13 +710,30 @@ const Page = () => {
                   className="pb-5" // Add padding at bottom so dots don't overlap your buttons
                 >
                   {propertyTypes?.map((item, index) => (
-                    <SwiperSlide key={index}>
+                    <SwiperSlide key={index} style={{ display: 'flex', justifyContent: 'center' }}>
                       <Col sm={12} md={12}>
-                        <div className="brdrd-imges text-center my-3">
+                        <div
+                          className="brdrd-imges text-center my-3"
+                          style={{
+                            width: '100%',       // Allows it to be responsive
+                            maxWidth: '277px',   // Your desired width
+                            height: '382px',     // Your desired height
+                            display: 'flex',     // Use flex to align content inside
+                            flexDirection: 'column',
+                            justifyContent: 'space-between', // Spreads image, text, and button
+                            alignItems: 'center',
+                            padding: '20px',     // Interior spacing
+                            backgroundColor: '#fff', // Assuming it's a white card
+                            borderRadius: '12px',
+                            boxSizing: 'border-box',
+                            boxShadow: '0px 4px 15px rgba(0,0,0,0.1)' // Optional: makes card visible on white
+                          }}
+                        >
                           <img
                             src={`${baseURL}/${item?.icon}`}
                             alt="property icon"
                             className='broswer-img'
+
                           />
                           <h2 className="text-dark mt-0 pt-0">
                             {direction === 'rtl' ? item?.name_Ar : item?.name_En}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useMediaQuery, useTheme } from '@mui/material';
 import Link from "next/link";
 import { Row, Col, Button, } from 'react-bootstrap'
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -37,32 +38,36 @@ import { useTranslation } from '../../context/TranslationContext';
 const propertyTypeOptions = [
     {
         id: 1, name: "Villas",
-        icon: <img src="/icons/icons/icons/SVG/villa-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} />
+        icon: <img src="/icons/icons/icons/SVG/villa-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
     },
-    { 
-        id: 2, name: "Apartment", 
-        icon: <img src="/icons/icons/icons/SVG/appartments-white.svg" alt="appartments" style={{width:70,justifySelf:'center'}} /> 
+    {
+        id: 2, name: "Apartment",
+        icon: <img src="/icons/icons/icons/SVG/appartments-white.svg" alt="appartments" style={{ width: 70, justifySelf: 'center' }} />
     },
-    { 
-        id: 3, name: "Whole Floor", 
-        icon: <img src="/icons/icons/icons/SVG/fullfloor-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    {
+        id: 3, name: "Whole Floor",
+        icon: <img src="/icons/icons/icons/SVG/fullfloor-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
     },
-    { 
-        id: 4, name: "Store", 
-        icon: <img src="/icons/icons/icons/SVG/store-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    {
+        id: 4, name: "Store",
+        icon: <img src="/icons/icons/icons/SVG/store-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
     },
-    { 
-        id: 5, name: "Storage", 
-        icon: <img src="/icons/icons/icons/SVG/storage-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    {
+        id: 5, name: "Storage",
+        icon: <img src="/icons/icons/icons/SVG/storage-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
     },
-    { 
-        id: 6, name: "Office", 
-        icon: <img src="/icons/icons/icons/SVG/office-white.svg" alt="Villa" style={{width:70,justifySelf:'center'}} /> 
+    {
+        id: 6, name: "Office",
+        icon: <img src="/icons/icons/icons/SVG/office-white.svg" alt="Villa" style={{ width: 70, justifySelf: 'center' }} />
     }
 ];
 
 const SearchIconPage = () => {
     const { translate, direction } = useTranslation();
+    const theme = useTheme();
+    // Returns true if screen is smaller than 'md' (usually 900px) or 'sm' (600px)
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     const dispatch = useDispatch()
     const router = useRouter();
     const [areas, setAreas] = useState([])
@@ -88,7 +93,7 @@ const SearchIconPage = () => {
         pageNo: 1,
         pageSize: 25
     });
-    console.log('formData:', formData)
+
 
     const handleFilterChange = (e) => {
         setFormData({
@@ -251,6 +256,14 @@ const SearchIconPage = () => {
     }
     const [show, setShow] = useState(false);
     const [advanceshow, setAdvanceShow] = useState(false);
+    const [mobileadvanceshow, setMobileAdvanceShow] = useState(false);
+    const handleClick = () => {
+        if (isMobile) {
+            handleMobileAdvanceShow();
+        } else {
+            handleShowSearch();
+        }
+    };
     const [scrolled, setScrolled] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
 
@@ -262,6 +275,8 @@ const SearchIconPage = () => {
     // Advance button Pop-Up Modal
     const handleAdvanceClose = () => setAdvanceShow(false);
     const handleAdvanceShow = () => setAdvanceShow(true);
+    const handleMobileAdvanceClose = () => setMobileAdvanceShow(false);
+    const handleMobileAdvanceShow = () => setMobileAdvanceShow(true);
 
 
     useEffect(() => {
@@ -276,6 +291,181 @@ const SearchIconPage = () => {
         <>
 
 
+            {/* Advance mobile Modal  */}
+            <Modal show={mobileadvanceshow} onHide={handleMobileAdvanceClose} dialogClassName="custom-modal">
+                <Modal.Header className='fw-bolder' closeButton>
+                    {translate('Search')}
+                </Modal.Header>
+
+                <Modal.Body className='p-4'>
+                    <h3>{translate('PropertyType')}</h3>
+                    <Row>
+                        {propertyTypes.map((item) => {
+                            const matched = propertyTypeOptions.find((x) => x.name.toLowerCase() === item.name_En.toLowerCase());
+                            const Icon = matched?.icon;
+
+                            return (
+                                <Col
+                                    key={item.id}
+                                    xs={4}
+                                    className="text-center mb-3"
+                                    onClick={() => {
+                                        setSelectedType(item.id);
+                                        handleToggleArrayChange("propertyTypes", [Number(item.id)]);
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div
+                                        className="pt-2 pb-1 rounded-lg text-center"
+                                        style={{
+                                            background: selectedType === item.id
+                                                ? "#4db6ac"   // Active color
+                                                : "rgba(255, 255, 255, 0.05)", // Default
+                                            border: selectedType === item.id ? "2px solid #4db6ac" : "2px solid transparent",
+                                            transition: "0.2s"
+                                        }}
+                                    >
+                                        {/* <Icon className="display-5 m-auto pb-2" /> */}
+                                        {Icon}
+                                        <p>{direction === 'rtl' ? item.name_Ar : item.name_En}</p>
+                                    </div>
+                                </Col>
+                            );
+                        })}
+                    </Row>
+
+                    <Form.Select
+                        onChange={(e) => {
+                            handleAreaChange(e);
+                            handleToggleArrayChange("areas", [Number(e.target.value)]);
+                        }}
+                        className="border-0 rounded-2 px-4 py-2 mb-3 transparent-select text-dark"
+                    >
+                        <option value="">{translate('Areas')}</option>
+                        {areas?.map((type, index) => (
+                            <option key={index} value={type?.id}>
+                                {direction === 'rtl' ? type?.name_ar : type?.name_en}
+                            </option>
+                        ))}
+                    </Form.Select>
+
+                    <div className='text-center'>
+                        <Button variant="warning" onClick={handleMobileAdvanceClose} className='mt-4 mb-4 fw-bold px-5 w-100'>{translate('Search')}</Button>
+                    </div>
+
+                    <h1>
+                        {translate('AdvancedSearch')}
+                    </h1>
+
+                    <Form.Select onChange={(e) => handleToggleArrayChange("blocks", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>{translate('SelectBlock')}</option>
+                        {blocks?.map((block, index) => (
+                            <option key={index} value={block}>{block}</option>
+                        ))}
+                    </Form.Select>
+
+
+                    <Form className='text-white'>
+                        <Row className="mb-3">
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('BudgetRange')}</small>
+                            <Col>
+                                <Form.Control type="text" size="sm" placeholder="250" name="minPrice" onChange={handleFilterChange} className='place-clr' />
+                            </Col> {translate('To')}
+                            <Col>
+                                <Form.Control type="text" size="sm" placeholder="260" name="maxPrice" onChange={handleFilterChange} className='place-clr' />
+                            </Col>
+                        </Row>
+                    </Form>
+
+                    <Row>
+                        <h5>{translate('Condition')}</h5>
+
+                        {conditions?.map((condition, index) => {
+                            const isSelected =
+                                formData.filter.displayOptions.includes(condition.id);
+
+                            return (
+                                <Col
+                                    xs={4}
+                                    key={index}
+                                    onClick={() =>
+                                        handleToggleArrayChange("displayOptions", Number(condition.id))
+                                    }
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div
+                                        className="rounded-lg p-2 text-center mb-3"
+                                        style={{
+                                            background: isSelected
+                                                ? "rgba(250, 32, 32, 0.76)"
+                                                : "rgba(255, 255, 255, 0.05)",
+                                            border: isSelected
+                                                ? "2px solid #f12b2bff"
+                                                : "2px solid transparent",
+                                        }}
+                                    >
+                                        <small>
+                                            {direction === 'rtl' ? condition?.name_ar : condition?.name}
+                                        </small>
+                                    </div>
+                                </Col>
+                            );
+                        })}
+                    </Row>
+
+
+                    <h5>{translate('AdditionalFilters')}</h5>
+                    <Form.Select onChange={(e) => handleToggleArrayChange("specialFeatures", [Number(e.target.value)])} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                        <option>{translate('Selectfeature')}</option>
+                        {features?.map((item, index) => (
+                            <option key={index} value={item?.id}>
+                                {direction === 'rtl' ? item?.name_ar : item?.name}
+                            </option>
+                        ))}
+                    </Form.Select>
+
+                    {(formData.filter.propertyTypes.map(Number).includes(1) || formData.filter.propertyTypes.map(Number).includes(3) || formData.filter.propertyTypes.map(Number).includes(4)) && (
+                        <>
+
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoOfRooms')}</small>
+                            <Form.Select name="rooms" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                <option value={0}>{translate('SelectRooms')}</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                            </Form.Select>
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('NoFloors')}</small>
+                            <Form.Select name="floors" onChange={handleFilterChange} className="border-0 rounded-2 px-4 py-2 transparent-select text-dark mb-3" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
+                                <option value={0}>{translate('SelectFloors')}</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                            </Form.Select>
+                        </>
+                    )}
+                    {(formData.filter.propertyTypes.map(Number).includes(5) || formData.filter.propertyTypes.map(Number).includes(6) || formData.filter.propertyTypes.map(Number).includes(2)) && (
+                        <>
+                            <small id="emailHelp" className="form-text text-secondary pb-1">{translate('SizeMeter')}</small>
+                            <Form.Control type="text" size="sm" placeholder={translate('SizeMeter')} name="size" onChange={handleFilterChange} className='place-clr' />
+                        </>
+                    )}
+
+
+                    {/* <Form className='text-white'>
+                        <small id="radio" className="form-text text-secondary pb-1">Basement</small>
+                        <Form.Check type="radio" label="Yes" name="1" aria-label="radio 1" />
+                        <Form.Check type="radio" label="No" name="1" aria-label="radio 2" />
+                    </Form> */}
+
+                    <div className='text-center'>
+                        <Button variant="warning" onClick={handleMobileAdvanceClose} className='mt-4 fw-bold px-5'>{translate('Search')}</Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
 
             {/* Advance Button Modal  */}
             <Modal show={advanceshow} onHide={handleAdvanceClose} dialogClassName="custom-modal">
@@ -446,7 +636,7 @@ const SearchIconPage = () => {
                 </Modal.Body>
             </Modal>
 
-            <Box sx={{ '& > :not(style)': { m: 1 } }} className={`${scrolled ? '' : 'searchbtn'}`} onClick={handleShowSearch}>
+            <Box sx={{ '& > :not(style)': { m: 1 } }} className={`${scrolled ? '' : 'searchbtn'}`} onClick={handleClick}>
                 <Fab size="medium" className='bg-warning' aria-label="add" style={{ position: 'fixed', top: '12%', left: '5%', padding: '30px' }}>
                     <SearchIcon className='display-1 text-white' />
                 </Fab>
