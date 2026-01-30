@@ -723,10 +723,10 @@ const Page = () => {
                             justifyContent: 'space-between', // Spreads image, text, and button
                             alignItems: 'center',
                             padding: '20px',     // Interior spacing
-                            backgroundColor: '#fff', // Assuming it's a white card
+                            backgroundColor: '#ffffff70', // Assuming it's a white card
                             borderRadius: '12px',
                             boxSizing: 'border-box',
-                            boxShadow: '0px 4px 15px rgba(0,0,0,0.1)' // Optional: makes card visible on white
+                            boxShadow: '0px 4px 15px rgba(0,0,0,0.1)'
                           }}
                         >
                           <img
@@ -847,15 +847,15 @@ const Page = () => {
       <SearchIconPage />
       <Modal show={show}
         onHide={handleClose}
-        //style={{ marginTop: '10%' }} 
+        centered
         dialogClassName="Promote-modal"
       >
         <Modal.Header closeButton>
         </Modal.Header>
 
         <Modal.Body className='py-5'>
-          <Row className="g-3">
-            <Col md={6} className='text-center'>
+          <Row className="g-4 flex-nowrap mobile-scroll-row justify-content-md-center" style={{ overflowX: 'auto' }}>
+            <Col md={6} className='text-center flex-shrink-0'>
               <div className='bg-dark text-white rounded-lg py-5'>
                 <BsFillPersonPlusFill className='text-warning display-2 m-auto' />
                 <h3 className='text-center fw-bold mb-4'>Multi-ad</h3>

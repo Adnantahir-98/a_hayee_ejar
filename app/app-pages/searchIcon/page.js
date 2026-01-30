@@ -316,7 +316,7 @@ const SearchIconPage = () => {
                                     style={{ cursor: "pointer" }}
                                 >
                                     <div
-                                        className="pt-2 pb-1 rounded-lg text-center"
+                                        className="pt-2 pb-1 rounded-lg d-flex flex-column align-items-center justify-content-center"
                                         style={{
                                             background: selectedType === item.id
                                                 ? "#4db6ac"   // Active color

@@ -95,6 +95,7 @@ body {
 
 .navbar-toggler {
   border: none;
+  margin-right: 21px;
 }
 
 .navbar-toggler:focus {
@@ -441,7 +442,7 @@ body {
   }
 
   .custom-navbar {
-    background-color: rgba(55, 55, 55, 0.85);
+    background-color: rgb(55 55 55 / 95%);
   }
 
   .browse-text-col {
