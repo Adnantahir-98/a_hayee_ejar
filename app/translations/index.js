@@ -18,7 +18,7 @@ const common = {
     here: 'Here',
     search: 'Search',
     advance: 'Advance',
-    selectProprty:'Select Property Type',
+    selectProprty:'Property Type',
     areas:'Areas',
     browse:'Browse',
     rent:'Rent',

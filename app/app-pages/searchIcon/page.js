@@ -659,7 +659,7 @@ const SearchIconPage = () => {
                                             setAreaName(selectedName);
                                         }}
                                         className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
-                                        style={{ background: 'rgba(255, 255, 255, 0.07)', marginBottom: 10 }}
+                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
                                     >
                                         <option>{translate('Areas')}</option>
                                         {areas?.map((type, index) => (
