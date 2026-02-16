@@ -346,6 +346,8 @@ const Page = () => {
     });
   };
 
+  const [selectpropertyTypes, setSelectPropertyTypes] = useState([])
+  console.log('selectpropertyTypes:', selectpropertyTypes)
   const handleFeatureSelect = (e) => {
     // 1️⃣ Get selected options and filter out empty values
     const selectedData = Array.from(e.target.selectedOptions)
@@ -390,6 +392,30 @@ const Page = () => {
       };
     });
   };
+
+  const handleSelectPropertyTypes = (e) => {
+    const selectedId = e.target.value;
+    const selectedType = propertyTypes.find((type) => type.id.toString() === selectedId);
+
+    if (selectedType) {
+      setSelectPropertyTypes((prev) => {
+        // Ensure prev is actually an array before calling .some()
+        const currentList = Array.isArray(prev) ? prev : [];
+
+        const isDuplicate = currentList.some((item) => item.id === selectedType.id);
+
+        if (isDuplicate) {
+          return currentList;
+        }
+
+        return [...currentList, { id: selectedType.id, name: selectedType.name_En }];
+      });
+    }
+  };
+  const handleRemovePropertyType = (e, id) => {
+    e.preventDefault()
+    setSelectPropertyTypes((prev) => prev.filter((x) => x.id !== id))
+  }
   // Remove a feature by ID
   const handleRemoveFeature = (e, featureId) => {
     e.preventDefault()
@@ -468,8 +494,12 @@ const Page = () => {
   const handleShowSearch = () => setShowSearch(true);
 
   const [showSinleAd, setShowSingleAd] = useState(false);
+  const [showMultiAd, setShowMultiAd] = useState(false);
   const handleCloseSingleAd = () => setShowSingleAd(false);
   const handleShowSingleAd = () => setShowSingleAd(true);
+
+  const handleCloseMultiAd = () => setShowMultiAd(false);
+  const handleShowMultiAd = () => setShowMultiAd(true);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -868,7 +898,16 @@ const Page = () => {
                   <li>30-day ad listings</li>
                   <li>Customized packages</li>
                 </ul>
-                <Button variant="warning" className='mt-4 fw-bold px-5'>Select</Button>
+                <Button
+                  variant="warning"
+                  className='mt-4 fw-bold px-5'
+                  onClick={() => {
+                    handleClose();
+                    handleShowMultiAd();
+                  }}
+                >
+                  Select
+                </Button>
               </div>
             </Col>
 
@@ -1316,6 +1355,208 @@ const Page = () => {
                 style={{ alignContent: 'center' }}
                 className='mt-4 fw-bold px-5 w-50'
               >{saveLoading ? 'Loading...' : 'Send'}</Button>
+            </Row>
+          </form>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showMultiAd}
+        onHide={handleCloseMultiAd}
+        //style={{ marginTop: '10%' }}
+        dialogClassName="Multi Ad-modal"
+      >
+        <Modal.Header closeButton>
+        </Modal.Header>
+
+        <Modal.Body className='py-5 bg-dark text-white'>
+          <form onSubmit={(e) => HandleSave(e)}>
+            <Row className="g-3">
+              <Col md={12} className='text-center'>
+                <div style={{ display: 'flex', borderBottom: '1px solid yellow', flexDirection: 'column', paddingBottom: 10 }}>
+                  <BsFillPersonPlusFill className='text-warning display-2 m-auto' size={34} />
+                  <h5 className='text-center fw-bold'>Multi-ad Promotion Application</h5>
+                </div>
+              </Col>
+              <Col md={12} >
+                <h4 className='fw-bold'>Contact Information</h4>
+              </Col>
+              <Col md={12} >
+                <input type="text" className='form-control rounded-2' value={formData?.whatsapp} name='whatsapp' onChange={(e) => handleChange(e)} placeholder='Number' />
+              </Col>
+              <Col md={12} >
+                {/* <label className='fw-semibold mb-2'>Email (optional)</label> */}
+                <input type="text" className='form-control rounded-2' value={formData?.email} name='email' onChange={(e) => handleChange(e)} placeholder='E-mail (optional)' />
+              </Col>
+              <Col md={12} >
+                {/* <label className='fw-semibold mb-2'>Email (optional)</label> */}
+                <input type="text" className='form-control rounded-2' onChange={(e) => handleChange(e)} placeholder='Address (optional)' />
+              </Col>
+              <Col md={12} >
+                <h4 className='fw-bold'>Who is promoting?</h4>
+              </Col>
+              <Col md={12} >
+                <select className='form-select rounded-2' name='areaId' onChange={(e) => handleAreaChange(e)}>
+                  <option value={''}>Select Area</option>
+                  {areas?.map((item, index) => (
+                    <option key={index} value={item?.id}>{item?.name_en}</option>
+                  ))}
+                </select>
+              </Col>
+
+
+
+
+
+              <Col md={12} >
+                <h4><span className='fw-bold'>Property type promoted</span> <small style={{ fontSize: 12 }}>* you many select multiple</small></h4>
+              </Col>
+              <Col md={12} >
+
+                <select className='form-select rounded-2' name='propertyTypeId' onChange={(e) => handleSelectPropertyTypes(e)}>
+                  <option>Property Type</option>
+                  {propertyTypes?.map((type, index) => (
+                    <option key={index} value={type?.id}>{type?.name_En}</option>
+                  ))}
+                </select>
+              </Col>
+              <Col md={12} >
+                {selectpropertyTypes?.length > 0 && selectpropertyTypes?.map((feature, index) => (
+                  <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => handleRemovePropertyType(e, feature?.id)}
+                      style={{
+                        position: "absolute",
+                        top: "-6px",
+                        left: "-6px",
+                        background: "red",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "18px",
+                        height: "18px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        lineHeight: "18px",
+                        padding: 0,
+                      }}
+                    >
+                      X
+                    </button>
+
+                    {/* Tag/Label */}
+                    <div
+                      className="fw-semibold"
+                      style={{
+                        backgroundColor: "#4DB6AC",
+                        padding: "5px 10px",
+                        borderRadius: 6,
+                        textAlign: "center",
+                        fontSize: 9,
+                        minWidth: 60,
+                        width: 'fit-content'
+                      }}
+                    >
+                      {feature?.name}
+                    </div>
+                  </div>
+                ))}
+
+              </Col>
+
+              <Col md={12} >
+                <h4><span className='fw-bold'>Name of promoter / Individual</span></h4>
+              </Col>
+
+              <Col md={12} >
+                <input type="text" className='form-control rounded-2' onChange={(e) => handleChange(e)} placeholder='Name here' />
+              </Col>
+
+              <Col md={12} >
+                {tblListingDisplayOptions?.length > 0 && tblListingDisplayOptions?.map((condition, index) => (
+                  <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => handleRemoveCondition(e, condition?.conditionId)}
+                      style={{
+                        position: "absolute",
+                        top: "-6px",
+                        left: "-6px",
+                        background: "red",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "18px",
+                        height: "18px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        lineHeight: "18px",
+                        padding: 0,
+                      }}
+                    >
+                      X
+                    </button>
+
+                    {/* Tag/Label */}
+                    <div
+                      className="fw-semibold"
+                      style={{
+                        backgroundColor: "#4DB6AC",
+                        padding: "5px 10px",
+                        borderRadius: 6,
+                        textAlign: "center",
+                        fontSize: 9,
+                        minWidth: 60,
+                        width: 'fit-content'
+                      }}
+                    >
+                      {condition?.conditionName}
+                    </div>
+                  </div>
+                ))}
+
+              </Col>
+
+              <label className='fw-semibold mb-2'>Promotion period</label>
+
+
+              <Col md={6} className="mt-2">
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="propertyCheckbox"
+                    onChange={(e) => handleChange(e)}
+                  />
+                  <label className="form-check-label" htmlFor="propertyCheckbox">
+                    1 month
+                  </label>
+                </div>
+              </Col>
+              <Col md={6} className="mt-2">
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="propertyCheckbox"
+                    onChange={(e) => handleChange(e)}
+                  />
+                  <label className="form-check-label" htmlFor="propertyCheckbox">
+                    12 months
+                  </label>
+                </div>
+              </Col>
+
+              <div className="d-flex justify-content-center w-100">
+                <Button
+                  type='submit'
+                  variant="warning"
+                  disabled={saveLoading}
+                  className='mt-4 fw-bold px-5 w-50'
+                >
+                  {saveLoading ? 'Loading...' : 'Send'}
+                </Button>
+              </div>
             </Row>
           </form>
         </Modal.Body>

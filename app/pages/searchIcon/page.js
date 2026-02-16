@@ -89,7 +89,7 @@ const SearchIconPage = () => {
         pageSize: 25
     });
 
-    console.log('filter Icon:',filterData)
+
     const handleToggleArrayChange = (key, value) => {
         const numericValue = Number(value);
 
@@ -333,22 +333,27 @@ const SearchIconPage = () => {
                                 </Fade>
                             </Col>
                             <Col sm={12} md={5} className='m-auto'>
-                                <Fade direction="right" fraction={0.5} cascade delay={130}>
-                                    <Form.Select className="border-0 rounded-2 px-4 py-2 bg-light text-dark" style={{ background: 'rgba(255, 255, 255, 0.07)' }}>
-                                        <option>Property Type</option>
-                                        {propertyTypes?.map((item, index) => (
-                                            <option key={index} value={item?.id}>{item?.name_En}</option>
-                                        ))}
-                                    </Form.Select>
-                                    {/* <Dropdown>
-                                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 w-100 px-4 py-2 bg-light text-dark ">
-                                            Select Property Type
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem href="#/action-1">Action</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown> */}
-                                </Fade>
+                                <Form.Select
+                                    className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                                    style={{
+                                        backgroundColor: '#f8f9fa', // Manually setting the "light" color
+                                        appearance: 'none',
+                                        WebkitAppearance: 'none',
+                                        MozAppearance: 'none',
+                                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e")`,
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundPosition: 'right 1rem center !important', // Added !important
+                                        backgroundSize: '16px 12px',
+                                        paddingRight: '2.5rem',
+                                        display: 'block',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <option value="">Property Type</option>
+                                    {propertyTypes?.map((item, index) => (
+                                        <option key={index} value={item?.id}>{item?.name_En}</option>
+                                    ))}
+                                </Form.Select>
                             </Col>
                             <Col md={2} className='text-end m-auto'>
                                 <Fade direction="right" fraction={0.5} cascade delay={140}>
