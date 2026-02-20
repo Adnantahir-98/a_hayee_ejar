@@ -117,6 +117,15 @@ const Page = () => {
     pageNo: 1,
     pageSize: 25
   });
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
+
+  const handleToggleSelection = (id) => {
+    setSelectedPropertyTypes((prev) =>
+      prev.includes(id)
+        ? prev.filter((itemId) => itemId !== id) // Unselect: remove from array
+        : [...prev, id]                          // Select: add to array
+    );
+  };
 
   const handleToggleArrayChange = (key, value) => {
     const numericValue = Number(value);
@@ -347,7 +356,7 @@ const Page = () => {
   };
 
   const [selectpropertyTypes, setSelectPropertyTypes] = useState([])
-  console.log('selectpropertyTypes:', selectpropertyTypes)
+
   const handleFeatureSelect = (e) => {
     // 1️⃣ Get selected options and filter out empty values
     const selectedData = Array.from(e.target.selectedOptions)
@@ -650,23 +659,14 @@ const Page = () => {
                 </Row>
               </Fade>
 
-              <Slide direction="down" fraction={0.5} cascade delay={130}>
+              {/* <Slide direction="down" fraction={0.5} cascade delay={130}>
                 <div className="property-type-scroll m-auto py-4">
-                  {/* {[
-                    { img: "/icons/apartments.svg", text: "Apartments" },
-                    { img: "/icons/apartments-black.svg", text: "Whole Floor" },
-                    { img: "/icons/villa.svg", text: "Vilas" },
-                    { img: "/icons/artboard-6.svg", text: "Offices" },
-                    { img: "/icons/stores.svg", text: "Stores" },
-                    { img: "/icons/storage.svg", text: "Storages" },
-                  ] */}
                   {propertyTypes?.map((item, i) => (
                     <div className="property-item" key={i}>
                       <Link
-                        href={`/app-pages/browser-page?Name=${item?.name_En}&Id=${item?.id}`}
+                        href={`#`}
                         className="text-decoration-none"
                       >
-                        {/* Use a div with button classes to prevent form submission or hard refresh */}
                         <div
                           className="btn btn-secondary d-flex align-items-center gap-2 w-100 border-0"
                           style={{ fontWeight: "700" }}
@@ -681,6 +681,41 @@ const Page = () => {
                       </Link>
                     </div>
                   ))}
+                </div>
+              </Slide> */}
+
+              <Slide direction="down" fraction={0.5} cascade delay={130}>
+                <div className="property-type-scroll m-auto py-4">
+                  {propertyTypes?.map((item, i) => {
+                    // Check if this specific item is selected
+                    const isSelected = selectedPropertyTypes.includes(item.id);
+
+                    return (
+                      <div className="property-item" key={item.id || i}>
+                        <div
+                          onClick={() => handleToggleSelection(item.id)}
+                          className={`btn d-flex align-items-center gap-2 w-100 border-0 ${isSelected ? "btn-success" : "btn-secondary"
+                            }`}
+                          style={{
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            boxShadow: isSelected ? "0px 4px 10px rgba(0,0,0,0.2)" : "none"
+                          }}
+                        >
+                          <img
+                            src={`${baseURL}/${item?.icon}`}
+                            style={{
+                              width: "40px",
+                              filter: isSelected ? "brightness(0) invert(1)" : "none" // Optional: turn icon white if selected
+                            }}
+                            alt={direction === 'rtl' ? item?.name_Ar : item?.name_En}
+                          />
+                          <span>{direction === 'rtl' ? item?.name_Ar : item?.name_En}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </Slide>
 

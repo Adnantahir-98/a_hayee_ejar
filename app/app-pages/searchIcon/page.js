@@ -658,8 +658,19 @@ const SearchIconPage = () => {
                                             setAreaId(selectedId);
                                             setAreaName(selectedName);
                                         }}
-                                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
-                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
+                                        // 'shadow-none' prevents the blue glow on click
+                                        // 'appearance-none' or style appearance: 'none' hides default browser icon
+                                        className="form-select border-0 rounded-2 px-4 py-2 bg-light text-dark shadow-none"
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.07)',
+                                            appearance: 'none',
+                                            WebkitAppearance: 'none',
+                                            MozAppearance: 'none',
+                                            // Space for the icon depending on language direction
+                                            paddingRight: direction === 'rtl' ? '1rem' : '2.5rem',
+                                            paddingLeft: direction === 'rtl' ? '2.5rem' : '1rem',
+                                            cursor: 'pointer'
+                                        }}
                                     >
                                         <option>{translate('Areas')}</option>
                                         {areas?.map((type, index) => (
@@ -679,8 +690,15 @@ const SearchIconPage = () => {
                                             setPropertyTypeId(selectedId);
                                             setPropertyTypeName(selectedName);
                                         }}
-                                        className="border-0 rounded-2 px-4 py-2 bg-light text-dark"
-                                        style={{ background: 'rgba(255, 255, 255, 0.07)' }}
+                                        // Adding 'form-select' explicitly ensures the background-image arrow is present
+                                        className="form-select border-0 rounded-2 px-4 py-2 bg-light text-dark"
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.07)',
+                                            backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%23343a40\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'m2 5 6 6 6-6\'/%3e%3c/svg%3e")',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: direction === 'rtl' ? 'left 0.75rem center' : 'right 0.75rem center',
+                                            backgroundSize: '16px 12px'
+                                        }}
                                     >
                                         <option>{translate('PropertyType')}</option>
                                         {propertyTypes?.map((item, index) => (
@@ -689,14 +707,6 @@ const SearchIconPage = () => {
                                             </option>
                                         ))}
                                     </Form.Select>
-                                    {/* <Dropdown>
-                                        <DropdownToggle variant="default" id="dropdown-basic" className="border-0 rounded-2 w-100 px-4 py-2 bg-light text-dark ">
-                                            Select Property Type
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem href="#/action-1">Action</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown> */}
                                 </Fade>
                             </Col>
                             <Col md={2} className='text-end m-auto'>
