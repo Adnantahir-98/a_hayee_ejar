@@ -663,13 +663,10 @@ const SearchIconPage = () => {
                                         className="form-select border-0 rounded-2 px-4 py-2 bg-light text-dark shadow-none"
                                         style={{
                                             background: 'rgba(255, 255, 255, 0.07)',
-                                            appearance: 'none',
-                                            WebkitAppearance: 'none',
-                                            MozAppearance: 'none',
-                                            // Space for the icon depending on language direction
-                                            paddingRight: direction === 'rtl' ? '1rem' : '2.5rem',
-                                            paddingLeft: direction === 'rtl' ? '2.5rem' : '1rem',
-                                            cursor: 'pointer'
+                                            backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%23343a40\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'m2 5 6 6 6-6\'/%3e%3c/svg%3e")',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: direction === 'rtl' ? 'left 0.75rem center' : 'right 0.75rem center',
+                                            backgroundSize: '16px 12px'
                                         }}
                                     >
                                         <option>{translate('Areas')}</option>
