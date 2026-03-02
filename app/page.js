@@ -35,8 +35,10 @@ import { GetPropertyTypes } from './store/app/propertyTypes/slice';
 import { GetAreas } from './store/app/areas/slice';
 import { GetFeatures } from './store/app/features/slice';
 import { AddPropertyListing } from './store/app/propertyListing/slice';
+import { SubmitMultiPromotion } from './store/app/promotion/slice';
 import { GetConditions } from './store/app/conditions/slice';
 import { useTranslation } from './context/TranslationContext';
+import toast from 'react-hot-toast'
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -540,6 +542,127 @@ const Page = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+
+
+  // multi add promotion
+  const [multiAddData, setMultiAddData] = useState({
+    contactNumber: '',
+    email: '',
+    createdAt: new Date().toISOString(),
+    applicationType: '',
+    promoterName: '',
+    promotionArea: '',
+    promotionPeriod: '',
+    propertyTypes: '',
+    address: ''
+  });
+
+  const [selectedPropertyNames, setSelectedPropertyNames] = useState([]);
+
+  const handleAddProperty = (id, name) => {
+    // Convert current IDs string to an array for easy checking
+    const currentIds = multiAddData.propertyTypes
+      ? multiAddData.propertyTypes.split(',')
+      : [];
+
+    // Prevent duplicates
+    if (currentIds.includes(id.toString())) return;
+
+    // 1. Update IDs in main state
+    const updatedIds = [...currentIds, id].join(',');
+    setMultiAddData({ ...multiAddData, propertyTypes: updatedIds });
+
+    // 2. Update Names in UI state
+    setSelectedPropertyNames([...selectedPropertyNames, { id, name }]);
+  };
+
+  const handleRemoveProperty = (idToRemove) => {
+    // 1. Remove from IDs string
+    const updatedIds = multiAddData.propertyTypes
+      .split(',')
+      .filter(id => id !== idToRemove.toString())
+      .join(',');
+
+    setMultiAddData({ ...multiAddData, propertyTypes: updatedIds });
+
+    // 2. Remove from Names array
+    setSelectedPropertyNames(
+      selectedPropertyNames.filter(item => item.id !== idToRemove)
+    );
+  };
+
+  console.log("multiAddData", multiAddData);
+  // 2. Universal Handle Change function
+  const handleMultiAddChange = (e) => {
+    const { name, value } = e.target;
+
+    // Contact Number Validation: Only allow digits
+    if (name === 'contactNumber') {
+      const onlyNums = value.replace(/[^0-9]/g, '');
+      setMultiAddData(prev => ({ ...prev, [name]: onlyNums }));
+      return;
+    }
+
+    setMultiAddData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+  const handleMultiAddSubmit = async (e) => {
+    e.preventDefault();
+
+    // --- VALIDATION LOGIC ---
+    const { contactNumber, email, applicationType, promoterName, propertyTypes, promotionPeriod } = multiAddData;
+
+    // 1. Required Fields Check
+    if (!contactNumber || !applicationType || !promoterName || !propertyTypes || !promotionPeriod) {
+      toast.error("Please fill in all required fields (Contact, Type, Name, Property Types, and Period)");
+      return;
+    }
+
+    // 2. Email Verification (Only if email is provided, since it's optional)
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
+    }
+
+    // 3. Contact Number Length (Example: min 8 digits)
+    if (contactNumber.length < 8) {
+      toast.error("Please enter a valid contact number");
+      return;
+    }
+
+    // --- SUBMISSION LOGIC ---
+    const submissionData = {
+      ...multiAddData,
+      createdAt: new Date().toISOString()
+    };
+
+    const result = await dispatch(SubmitMultiPromotion(submissionData));
+
+    if (result.meta.requestStatus === 'fulfilled') {
+      // Reset States
+      setMultiAddData({
+        contactNumber: '',
+        email: '',
+        createdAt: new Date().toISOString(),
+        applicationType: '',
+        promoterName: '',
+        promotionArea: '',
+        promotionPeriod: '',
+        propertyTypes: '',
+        address: ''
+      });
+      setSelectedPropertyNames([]); // Clear the chips too
+      handleCloseMultiAd();
+    }
+  };
+
+
 
   return (
     <>
@@ -1404,7 +1527,7 @@ const Page = () => {
         </Modal.Header>
 
         <Modal.Body className='py-5 bg-dark text-white'>
-          <form onSubmit={(e) => HandleSave(e)}>
+          <form onSubmit={(e) => handleMultiAddSubmit(e)}>
             <Row className="g-3">
               <Col md={12} className='text-center'>
                 <div style={{ display: 'flex', borderBottom: '1px solid yellow', flexDirection: 'column', paddingBottom: 10 }}>
@@ -1416,25 +1539,26 @@ const Page = () => {
                 <h4 className='fw-bold'>Contact Information</h4>
               </Col>
               <Col md={12} >
-                <input type="text" className='form-control rounded-2' value={formData?.whatsapp} name='whatsapp' onChange={(e) => handleChange(e)} placeholder='Number' />
+                <input type="text" required className='form-control rounded-2' value={multiAddData?.contactNumber} name='contactNumber' onChange={(e) => handleMultiAddChange(e)} placeholder='Number' />
               </Col>
               <Col md={12} >
                 {/* <label className='fw-semibold mb-2'>Email (optional)</label> */}
-                <input type="text" className='form-control rounded-2' value={formData?.email} name='email' onChange={(e) => handleChange(e)} placeholder='E-mail (optional)' />
+                <input type="text" className='form-control rounded-2' value={multiAddData?.email} name='email' onChange={(e) => handleMultiAddChange(e)} placeholder='E-mail (optional)' />
               </Col>
               <Col md={12} >
                 {/* <label className='fw-semibold mb-2'>Email (optional)</label> */}
-                <input type="text" className='form-control rounded-2' onChange={(e) => handleChange(e)} placeholder='Address (optional)' />
+                <input type="text" className='form-control rounded-2' value={multiAddData?.address} name='address' onChange={(e) => handleMultiAddChange(e)} placeholder='Address (optional)' />
               </Col>
               <Col md={12} >
                 <h4 className='fw-bold'>Who is promoting?</h4>
               </Col>
               <Col md={12} >
-                <select className='form-select rounded-2' name='areaId' onChange={(e) => handleAreaChange(e)}>
-                  <option value={''}>Select Area</option>
-                  {areas?.map((item, index) => (
-                    <option key={index} value={item?.id}>{item?.name_en}</option>
-                  ))}
+                <select className='form-select rounded-2' required name='applicationType' onChange={(e) => handleMultiAddChange(e)}>
+                  <option value={''}>Select Please</option>
+                  <option value={'Real Estate Company'}>Real Estate Company</option>
+                  <option value={'Real Estate Agent'}>Real Estate Agent</option>
+                  <option value={'Developer'}>Developer</option>
+                  <option value={'Individual'}>Individual</option>
                 </select>
               </Col>
 
@@ -1447,7 +1571,14 @@ const Page = () => {
               </Col>
               <Col md={12} >
 
-                <select className='form-select rounded-2' name='propertyTypeId' onChange={(e) => handleSelectPropertyTypes(e)}>
+                <select className='form-select rounded-2' name='propertyTypeId'
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    const selectedName = e.target.options[e.target.selectedIndex].text;
+                    if (selectedId) handleAddProperty(selectedId, selectedName);
+                    e.target.value = ""; // Reset dropdown
+                  }}
+                >
                   <option>Property Type</option>
                   {propertyTypes?.map((type, index) => (
                     <option key={index} value={type?.id}>{type?.name_En}</option>
@@ -1455,11 +1586,11 @@ const Page = () => {
                 </select>
               </Col>
               <Col md={12} >
-                {selectpropertyTypes?.length > 0 && selectpropertyTypes?.map((feature, index) => (
+                {selectedPropertyNames.map((item, index) => (
                   <div key={index} style={{ position: "relative", display: "inline-block", marginLeft: 10 }}>
                     {/* Remove button */}
                     <button
-                      onClick={(e) => handleRemovePropertyType(e, feature?.id)}
+                      onClick={() => handleRemoveProperty(item.id)}
                       style={{
                         position: "absolute",
                         top: "-6px",
@@ -1492,7 +1623,7 @@ const Page = () => {
                         width: 'fit-content'
                       }}
                     >
-                      {feature?.name}
+                      {item?.name}
                     </div>
                   </div>
                 ))}
@@ -1504,7 +1635,7 @@ const Page = () => {
               </Col>
 
               <Col md={12} >
-                <input type="text" className='form-control rounded-2' onChange={(e) => handleChange(e)} placeholder='Name here' />
+                <input type="text" className='form-control rounded-2' value={multiAddData?.promoterName} name='promoterName' onChange={(e) => handleMultiAddChange(e)} placeholder='Name here' />
               </Col>
 
               <Col md={12} >
@@ -1558,10 +1689,12 @@ const Page = () => {
               <Col md={6} className="mt-2">
                 <div className="form-check">
                   <input
-                    type="checkbox"
+                    type="radio" // Changed to radio so only one can be selected
                     className="form-check-input"
-                    id="propertyCheckbox"
-                    onChange={(e) => handleChange(e)}
+                    name='promotionPeriod'
+                    value="1 month"
+                    checked={multiAddData.promotionPeriod === "1 month"}
+                    onChange={handleMultiAddChange}
                   />
                   <label className="form-check-label" htmlFor="propertyCheckbox">
                     1 month
@@ -1571,10 +1704,12 @@ const Page = () => {
               <Col md={6} className="mt-2">
                 <div className="form-check">
                   <input
-                    type="checkbox"
+                    type="radio"
                     className="form-check-input"
-                    id="propertyCheckbox"
-                    onChange={(e) => handleChange(e)}
+                    name='promotionPeriod'
+                    value="12 months"
+                    checked={multiAddData.promotionPeriod === "12 months"}
+                    onChange={handleMultiAddChange}
                   />
                   <label className="form-check-label" htmlFor="propertyCheckbox">
                     12 months
